@@ -5,16 +5,6 @@ import HealthIdVerification from './components/health-id-verification/healthIdVe
 function App() {
   const [healthId, setHealthId] = useState('');
 
-  function handleChange (e) {
-    setHealthId(e.target.value);
-  }
-
-  function handleClick (e) {
-    const patientInfo = {};
-    patientInfo.healthId = healthId;
-    window.parent.postMessage({message: "patient Information", value: patientInfo}, "*");
-  }
-
   return (
     <HealthIdVerification />
   );
