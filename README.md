@@ -1,11 +1,11 @@
 # NDHM Health ID Verification 
-### `TODO`
+## `TODO`
 1.Disable action on parent window ie. registration screen when in NDHM UI iframe.
 2. Show blank or with less opacity background page i.e. registration screen.
 3. Design ndhm ui to look better. 
 5. Migrate confirm api call already implemented in angularjs.
 
-# Getting Started with Create React App
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
