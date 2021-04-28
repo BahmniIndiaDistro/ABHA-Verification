@@ -1,0 +1,41 @@
+.NDHM-template {
+  .NDHMDetails {
+    td, th {
+      width: 50%;
+      text-align: center;
+      border: 0.5px solid rgb(190, 190, 190);
+      word-wrap: break-word;
+    }
+
+    table-layout: fixed;
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .userAuth, .finalButtons {
+    table, tr, td {
+      border: none;
+      background: white;
+    }
+    div {
+      background-color: black;
+      background: white;
+    }
+  }
+
+  .finalButtons {
+    text-align: center;
+  }
+
+  table {
+    margin-top: 3%;
+  }
+
+  .req {
+    font-size: 90%;
+    font-style: italic;
+    color: red;
+  }
+}
