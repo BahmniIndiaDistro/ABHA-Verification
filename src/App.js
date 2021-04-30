@@ -1,10 +1,8 @@
 import './App.css';
-import React, {useState} from "react";
+import React from "react";
 import HealthIdVerification from './components/health-id-verification/healthIdVerification';
 
 function App() {
-  const [healthId, setHealthId] = useState('');
-
   return (
     <HealthIdVerification />
   );

@@ -1,5 +1,6 @@
 import React, {Fragment, useEffect, useState} from "react";
-import axios from 'axios';
+
+import {verifyHealthIdSrv, initAuthSrv} from "./healthIdVerficationService";
 import './healthIdVerification.scss';
 
 const HealthIdVerification = props => {
@@ -8,7 +9,7 @@ const HealthIdVerification = props => {
     const [selAuthMode, setSelAuthMode] = useState('');
     const [showHealthId, setShowHealthId] = useState(true);
     const [showOtpField, setShowOtpField] = useState(false);
-    var hipData;
+    var hipUrl;
 
     let authModesList = authModes.length > 0
         && authModes.map((item, i) => {
@@ -17,10 +18,11 @@ const HealthIdVerification = props => {
             )
         });
     useEffect(() =>{
-        {window.addEventListener("message", function (hipData) {
-            hipData = hipData;
+        window.addEventListener("message", function (hipData) {
+            hipUrl = hipData.data.value;
+            console.log("HIP URL received from registration page" + hipUrl);
         }, false)}
-    } );
+     ,[]);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
@@ -30,37 +32,26 @@ const HealthIdVerification = props => {
         setSelAuthMode(e.target.value);
     }
 
+    const verifyHealthId = async (e) => {
+        const response =  await verifyHealthIdSrv(healthId);
+        if (response.error) {
+            //TODO when fails ?
+        } else {
+            setAuthModes(response.result.authModes);
+            setShowHealthId(false);
+        }
+    };
+    const initAuth = async (e) => {
+        const response = await initAuthSrv(healthId, selAuthMode);
+        if (response.error) {
+            //TODO when fails ?
+        } else {
+            setShowOtpField(true);
+        };
+    };
+
     function confirmAuth(e) {
         window.parent.postMessage(healthId, "*");
-    }
-
-    async function verifyHealthId(e) {
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        const data = {
-            "healthId": healthId,
-            "purpose": "KYC_AND_LINK"
-        }
-        await axios.post("http://localhost:9052/v0.5/hip/fetch-modes", data, headers).then(res => {
-            setAuthModes(res.data.authModes);
-            setShowHealthId(false);
-        });
-    }
-
-    async function initAuth(e) {
-        const headers = {
-            'Content-Type': 'application/json'
-        }
-        const data = {
-            "healthId": healthId,
-            "authMode": selAuthMode,
-            "purpose": "KYC_AND_LINK"
-        }
-        await axios.post("http://localhost:9052/v0.5/hip/auth/init", data, headers).then(res => {
-            setShowOtpField(true);
-        });
-
     }
 
     return (
