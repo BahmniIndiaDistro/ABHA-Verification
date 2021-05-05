@@ -12,7 +12,7 @@ function App() {
 			const bahmniUrl = parentWindow.data.value.bahmniUrl;
 			localStorage.setItem("hipServiceUrl", hipUrl);
 			localStorage.setItem("bahmniUrl", bahmniUrl);
-		}	
+		}
     }, false);
   }, []);
 
