@@ -1,10 +1,21 @@
 import './App.css';
-import React from "react";
-import HealthIdVerification from './components/health-id-verification/healthIdVerification';
+import React, {useEffect} from "react";
+import VerifyHealthId from './components/verifyHealthId/verifyHealthId';
+import './ndhm.scss';
 
 function App() {
+
+  useEffect(() =>{
+    window.addEventListener("message", function (hipData) {
+        let hipUrl = hipData.data.value;
+        localStorage.setItem("hipServiceUrl", hipUrl);
+    }, false)}
+  );
+
   return (
-    <HealthIdVerification />
+    <div className="app">
+      <VerifyHealthId />
+    </div>
   );
 }
 

@@ -1,0 +1,25 @@
+.verify-health-id, .auth-modes {
+    display: flex;
+    width: 100%;
+    margin-top: 20px;
+
+    label {
+        width: 50%;
+    }
+
+    .verify-health-id-input-btn, .auth-modes-select-btn {
+        width: 50%;
+    }
+
+    .verify-health-id-input, .auth-modes-select {
+        input, select {
+            padding: 2px;
+        }
+        margin-bottom: 10px;
+    }
+
+    button {
+        margin: 2px;
+        padding: 3px 10px;
+    }
+}
