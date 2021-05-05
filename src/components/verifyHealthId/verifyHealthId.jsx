@@ -11,10 +11,10 @@ const VerifyHealthId = () => {
         setHealthId(e.target.value);
     }
 
-    function verifyHealthId() {
-        const response = getAuthModes(healthId);
+    async function verifyHealthId() {
+        const response = await getAuthModes(healthId);
         setShowAuthModes(true);
-        setAuthModes(response.authModes);
+        setAuthModes(response);
     }
 
     return (

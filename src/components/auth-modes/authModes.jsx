@@ -17,9 +17,8 @@ const AuthModes = (props) => {
         setSelectedAuthMode(e.target.value);
     }
 
-    function authenticate() {
-        const response = authInit(healthId, selectedAuthMode);
-        window.parent.postMessage(healthId, "*");
+    async function authenticate() {
+        await authInit(healthId, selectedAuthMode);
         setShowOtpField(true);
     }
 
