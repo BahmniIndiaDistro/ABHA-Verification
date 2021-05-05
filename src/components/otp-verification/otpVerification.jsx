@@ -14,11 +14,11 @@ const OtpVerification = (props) => {
 
     return (
         <div className="otp-verify" >
-            <div className="otp-verify-input">
-                <label >Enter OTP </label>
-                <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
-            </div>
-            <div className="otp-verify-btn" >
+            <label htmlFor="otp">Enter OTP </label>
+            <div className="otp-verify-input-btn" >
+                <div className="otp-verify-input">
+                    <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
+                </div>
                 <button id="confirm" type="button" onClick={confirmAuth}>Confirm</button>
             </div>
         </div>
