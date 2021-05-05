@@ -1,4 +1,4 @@
-.verify-health-id, .auth-modes {
+.verify-health-id, .auth-modes, .otp-verify{
     display: flex;
     width: 100%;
     margin-top: 20px;
@@ -7,11 +7,11 @@
         width: 50%;
     }
 
-    .verify-health-id-input-btn, .auth-modes-select-btn {
+    .verify-health-id-input-btn, .auth-modes-select-btn ,  .otp-verify-btn{
         width: 50%;
     }
 
-    .verify-health-id-input, .auth-modes-select {
+    .verify-health-id-input, .auth-modes-select , .otp-verify-input{
         input, select {
             padding: 2px;
         }
