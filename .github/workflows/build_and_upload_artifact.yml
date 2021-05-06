@@ -1,7 +1,8 @@
 name: Build NHDM React App
 on:
  push:
-    branches: [ git-actions-test ]
+    branches:
+     - git-actions-test
  workflow_dispatch:
 
 jobs:
