@@ -1,4 +1,4 @@
-name: Build Default Config
+name: NDHM React App
 
 on:
   push:
@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: borales/actions-yarn@v2.0.0
-          with:
-            cmd: install # will run `yarn install` command
-            - uses: borales/actions-yarn@v2.0.0
-              with:
-                cmd: build # will run `yarn build` command
+        with:
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build # will run `yarn build` command
       - uses: actions/upload-artifact@v2
         with:
           name: NDHMReact
