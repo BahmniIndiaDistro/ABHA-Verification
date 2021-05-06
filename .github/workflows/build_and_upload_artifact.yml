@@ -1,5 +1,4 @@
 name: Build NDHM React App
-
 on:
   push:
     branches: [ git-actions-test ]
