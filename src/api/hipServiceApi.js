@@ -11,8 +11,8 @@ export const getAuthModes = async (healthId) => {
         "healthId": healthId,
         "purpose": "KYC_AND_LINK"
     };
-   //const response = await axios.post(hipServiceUrl + "/fetch-modes", data, headers);
-   return ["MOBILE_OTP", "AADHAR_OTP"];
+   const response = await axios.post(hipServiceUrl + "/fetch-modes", data, headers);
+   return response.data.authModes;
 };
 
 export const authInit = async (healthId, authMode) => {
@@ -22,8 +22,8 @@ export const authInit = async (healthId, authMode) => {
         "purpose": "KYC_AND_LINK"
     };
 
-    //const response = await axios.post(hipServiceUrl + "/auth/init", data, headers);
-    return {};
+    const response = await axios.post(hipServiceUrl + "/auth/init", data, headers);
+    return response;
 };
 
 export const authConfirm = async (healthId, otp) => {
@@ -31,18 +31,8 @@ export const authConfirm = async (healthId, otp) => {
         "authCode": otp,
         "healthId": healthId
     };
-    // const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
-    return {
-        gender: "M",
-        name: "Surya pal",
-        yearOfBirth: "2002",
-        address: {
-            line: "line",
-            district: "sklm",
-            state: "AP",
-            pincode: "532474"
-        }
-    };
+     const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
+     return response.data.patient;
 }
 
 export const fetchPatientDetailsFromBahmni = async (patient) => {

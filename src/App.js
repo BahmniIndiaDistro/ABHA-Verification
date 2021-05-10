@@ -7,7 +7,7 @@ function App() {
 
   useEffect(() => {
     window.addEventListener("message", function (parentWindow) {
-		if (parentWindow.call === "parentData") {
+		if (parentWindow.data.call === "parentData") {
 			const hipUrl = parentWindow.data.value.hipUrl;
 			const bahmniUrl = parentWindow.data.value.bahmniUrl;
 			localStorage.setItem("hipServiceUrl", hipUrl);
