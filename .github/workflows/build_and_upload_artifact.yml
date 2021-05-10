@@ -20,8 +20,8 @@ jobs:
       - uses: borales/actions-yarn@v2.0.0
         with:
           cmd: build
-      - run: zip -r ndhm-react.zip ./build/
+      - run: zip -r ndhm-react.zip build
       - uses: actions/upload-artifact@v2
         with:
           name: NDHMReact
-          path: .ndhm-react.zip
+          path: ndhm-react.zip
