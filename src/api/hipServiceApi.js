@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const hipServiceUrl = localStorage.getItem("hipServiceUrl");
+const bahmniUrl = localStorage.getItem("bahmniUrl");
 const headers = {
     'Content-Type': 'application/json'
 };
@@ -30,6 +31,16 @@ export const authConfirm = async (healthId, otp) => {
         "authCode": otp,
         "healthId": healthId
     };
-    const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
-    return response;
+     const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
+     return response.data.patient;
+}
+
+export const fetchPatientDetailsFromBahmni = async (patient) => {
+    const params = {
+        "patientName": patient.name,
+        "patientYearOfBirth": patient.yearOfBirth,
+        "patientGender": patient.gender
+    }
+    const response = await axios.get(bahmniUrl + "/existingPatients", {params}, headers);
+    return response.data;
 }

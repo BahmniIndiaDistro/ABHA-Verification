@@ -1,0 +1,23 @@
+.pateint-details {
+    table {
+        width: 80%;
+        margin: auto;
+        border-collapse: collapse;
+    }
+
+    table, th, td {
+        border: 1px solid black;
+        text-align: center;
+        padding: 6px;
+        word-wrap: break-word;
+    }
+}
+.action-btns {
+    width: 80%;
+    margin: auto;
+    margin-top: 15px;
+    button {
+        margin-left: 45%;
+        padding: 3px 10px;
+    }
+}
