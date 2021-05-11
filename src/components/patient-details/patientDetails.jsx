@@ -14,7 +14,6 @@ const PatientDetails = (props) => {
     }, []);
 
     async function fetchBahmniDetails() {
-        console.log(ndhmDetails);
         const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
         parsePatientAddress(patient);
         setBahmniDetails(patient);
