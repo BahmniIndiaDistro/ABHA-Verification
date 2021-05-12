@@ -5,9 +5,11 @@ import OtpVerification from '../otp-verification/otpVerification';
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
     const [showOtpField, setShowOtpField] = useState(false);
+    const [errorHealthId, setErrorHealthId] = useState('');
+    const [showError, setShowError] = useState(false);
     const healthId = props.healthId;
     const authModes = props.authModes;
-    let authModesList = authModes.length > 0 && authModes.map((item, i) => {
+    let authModesList = authModes !== undefined && authModes.length > 0 && authModes.map((item, i) => {
         return (
             <option key={i} value={item}>{item}</option>
         )
@@ -18,8 +20,17 @@ const AuthModes = (props) => {
     }
 
     async function authenticate() {
-        await authInit(healthId, selectedAuthMode);
-        setShowOtpField(true);
+   const response = await authInit(healthId, selectedAuthMode);
+        if (response.error !== undefined) {
+            setShowError(true)
+            setErrorHealthId(response.error.message);
+            console.log(response.error.code);
+            console.log(response.error.message);
+        }
+        else {
+            setShowError(false)
+            setShowOtpField(true);
+        }
     }
 
     return (
@@ -34,6 +45,7 @@ const AuthModes = (props) => {
                         </select>
                     </div>
                     <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}

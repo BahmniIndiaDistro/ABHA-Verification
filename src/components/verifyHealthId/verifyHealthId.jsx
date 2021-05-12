@@ -6,6 +6,8 @@ const VerifyHealthId = () => {
     const [healthId, setHealthId] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
+    const [errorHealthId, setErrorHealthId] = useState('');
+    const [showError, setShowError] = useState(false);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
@@ -13,8 +15,17 @@ const VerifyHealthId = () => {
 
     async function verifyHealthId() {
         const response = await getAuthModes(healthId);
-        setShowAuthModes(true);
-        setAuthModes(response);
+        if (response.error !== undefined ){
+            setShowError(true)
+            setErrorHealthId(response.error.message);
+            console.log(response.error.code);
+            console.log(response.error.message);
+        }
+        else {
+            setShowError(false);
+            setShowAuthModes(true);
+            setAuthModes(response.authModes);
+        }
     }
 
     return (
@@ -26,6 +37,7 @@ const VerifyHealthId = () => {
                         <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler}/>
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
