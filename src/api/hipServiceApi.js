@@ -11,8 +11,16 @@ export const getAuthModes = async (healthId) => {
         "healthId": healthId,
         "purpose": "KYC_AND_LINK"
     };
-   const response = await axios.post(hipServiceUrl + "/fetch-modes", data, headers);
-   return response.data.authModes;
+
+    try{
+        const response = await axios.post(hipServiceUrl + "/fetch-modes", data, headers);
+        return response.data;
+    }
+    catch(error){
+        console.log(error.response.data);
+        return error.response.data;
+    }
+
 };
 
 export const authInit = async (healthId, authMode) => {
@@ -21,9 +29,14 @@ export const authInit = async (healthId, authMode) => {
         "authMode": authMode,
         "purpose": "KYC_AND_LINK"
     };
-
-    const response = await axios.post(hipServiceUrl + "/auth/init", data, headers);
-    return response;
+    try{
+        const response = await axios.post(hipServiceUrl + "/auth/init", data, headers);
+        return response;
+    }
+    catch(error){
+        console.log(error.response.data);
+        return error.response.data;
+    }
 };
 
 export const authConfirm = async (healthId, otp) => {
