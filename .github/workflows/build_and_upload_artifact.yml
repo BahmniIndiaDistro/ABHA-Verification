@@ -1,0 +1,27 @@
+name: Build NHDM React App
+on:
+ push:
+    branches:
+     - main
+ workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env: 
+      CI: false
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: '135-demographic-fetch'
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+      - run: zip -r ndhm-react.zip build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: NDHMReact
+          path: ndhm-react.zip

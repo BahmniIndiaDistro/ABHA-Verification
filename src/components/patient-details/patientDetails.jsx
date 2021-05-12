@@ -15,8 +15,10 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
-        parsePatientAddress(patient);
-        setBahmniDetails(patient);
+        if (patient.error === undefined) {
+            parsePatientAddress(patient);
+            setBahmniDetails(patient);
+        }
     }
 
     function parsePatientAddress(patient) {

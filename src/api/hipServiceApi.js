@@ -31,8 +31,8 @@ export const authConfirm = async (healthId, otp) => {
         "authCode": otp,
         "healthId": healthId
     };
-     const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
-     return response.data.patient;
+    const response = await axios.post(hipServiceUrl + "/auth/confirm" ,data, headers);
+    return response.data.patient;
 }
 
 export const fetchPatientDetailsFromBahmni = async (patient) => {
