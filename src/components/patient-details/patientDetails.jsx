@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { fetchPatientDetailsFromBahmni } from '../../api/hipServiceApi';
 import './patientDetails.scss';
 
 const PatientDetails = (props) => {
+    const [showBahmni, setShowBahmni] = useState(true);
     const [bahmniDetails, setBahmniDetails] = useState({});
     const [changedDetails, setChangedDetails] = useState({});
 
@@ -15,9 +16,13 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
+
         if (patient.error === undefined) {
             parsePatientAddress(patient);
             setBahmniDetails(patient);
+        }
+        else {
+            setShowBahmni(false);
         }
     }
 
@@ -27,7 +32,7 @@ const PatientDetails = (props) => {
     }
 
     function checkBoxChangeHandler(key) {
-        switch(key) {
+        switch (key) {
             case 'address':
                 changedDetails.address = {
                     'countyDistrict': ndhmDetails.addressObj.district,
@@ -49,10 +54,10 @@ const PatientDetails = (props) => {
                 changedDetails.age = calculateAge("01/01/" + ndhmDetails.yearOfBirth);
                 break;
         }
-        setChangedDetails({...changedDetails});
+        setChangedDetails({ ...changedDetails });
     }
 
-    function calculateAge (birthDate) {
+    function calculateAge(birthDate) {
         const dob = new Date(birthDate);
         var dobYear = dob.getYear();
         var dobMonth = dob.getMonth();
@@ -65,18 +70,18 @@ const PatientDetails = (props) => {
         var yearAge = currentYear - dobYear;
         if (currentMonth >= dobMonth) monthAge = currentMonth - dobMonth;
         else {
-                yearAge--;
-                monthAge = 12 + currentMonth - dobMonth;
+            yearAge--;
+            monthAge = 12 + currentMonth - dobMonth;
         }
         var dateAge;
         if (currentDate >= dobDate) dateAge = currentDate - dobDate;
         else {
-                monthAge--;
-                dateAge = 31 + currentDate - dobDate;
-                if (monthAge < 0) {
-                        monthAge = 11;
-                        yearAge--;
-                }
+            monthAge--;
+            dateAge = 31 + currentDate - dobDate;
+            if (monthAge < 0) {
+                monthAge = 11;
+                yearAge--;
+            }
         }
 
         return {
@@ -87,10 +92,31 @@ const PatientDetails = (props) => {
     }
 
     function save() {
-        const patient = {
-            "healthId": healthId,
-            "changedDetails": changedDetails
-        };
+        let patient;
+        if (showBahmni) {
+            patient = {
+                "healthId": healthId,
+                "changedDetails": changedDetails
+            };
+        } else {
+            const name = ndhmDetails.name.split(" ", 2);
+            patient = {
+                "healthId": healthId,
+                "changedDetails": {
+                    "address": {
+                        'countyDistrict': ndhmDetails.addressObj.district,
+                        'address1': ndhmDetails.addressObj.line,
+                        'stateProvince': ndhmDetails.addressObj.state
+                    },
+                    "name": {
+                        'givenName': name[0],
+                        'familyName': name[1]
+                    },
+                    "gender": ndhmDetails.gender,
+                    "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth)
+                }
+            }
+        }
         window.parent.postMessage({"patient" : patient}, "*");
     }
 
@@ -100,34 +126,34 @@ const PatientDetails = (props) => {
                 <table>
                     <thead>
                         <th></th>
-                        <th>Bahmni</th>
+                        {showBahmni && <th>Bahmni</th>}
                         <th>NDHM</th>
-                        <th>Fetch records from NDHM?</th>
+                        {showBahmni && <th>Fetch records from NDHM?</th>}
                     </thead>
                     <tbody>
                         <tr>
                             <td>Name</td>
-                            <td>{bahmniDetails.name}</td>
+                            {showBahmni && <td>{bahmniDetails.name}</td>}
                             <td>{ndhmDetails.name}</td>
-                            <td><input type="checkbox" onChange={() => checkBoxChangeHandler('name')}/></td>
+                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('name')} /></td>}
                         </tr>
                         <tr>
                             <td>Gender</td>
-                            <td>{bahmniDetails.gender}</td>
+                            {showBahmni && <td>{bahmniDetails.gender}</td>}
                             <td>{ndhmDetails.gender}</td>
-                            <td><input type="checkbox" onChange={() => checkBoxChangeHandler('gender')}/></td>
+                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('gender')} /></td>}
                         </tr>
                         <tr>
                             <td>Year Of Birth</td>
-                            <td>{bahmniDetails.yearOfBirth}</td>
+                            {showBahmni && <td>{bahmniDetails.yearOfBirth}</td>}
                             <td>{ndhmDetails.yearOfBirth}</td>
-                            <td><input type="checkbox" onChange={() => checkBoxChangeHandler('age')}/></td>
+                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('age')} /></td>}
                         </tr>
                         <tr>
                             <td>Address</td>
-                            <td>{bahmniDetails.address}</td>
+                            {showBahmni && <td>{bahmniDetails.address}</td>}
                             <td>{ndhmDetails.address}</td>
-                            <td><input type="checkbox" onChange={() => checkBoxChangeHandler('address')}/></td>
+                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('address')} /></td>}
                         </tr>
                     </tbody>
                 </table>
