@@ -9,6 +9,7 @@ const PatientDetails = (props) => {
 
     const ndhmDetails = props.ndhmDetails;
     const healthId = props.healthId;
+    const january_1 = "01/01/";
 
     useEffect(() => {
         fetchBahmniDetails();
@@ -51,7 +52,7 @@ const PatientDetails = (props) => {
                 changedDetails.gender = ndhmDetails.gender;
                 break;
             default:
-                changedDetails.age = calculateAge("01/01/" + ndhmDetails.yearOfBirth);
+                changedDetails.age = calculateAge(january_1 + ndhmDetails.yearOfBirth);
                 break;
         }
         setChangedDetails({ ...changedDetails });
@@ -122,7 +123,7 @@ const PatientDetails = (props) => {
 
     return (
         <div>
-            <div className="pateint-details">
+            <div className="patient-details">
                 <table>
                     <thead>
                         <th></th>
