@@ -20,7 +20,7 @@ export const getAuthModes = async (healthId) => {
 
     try{
        const response = await axios.post(hipServiceUrl + authModesUrl, data, headers);
-       return response.data.authModes;
+       return response.data;
     }
     catch(error){
         return error.response.data;
@@ -63,6 +63,11 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         "patientYearOfBirth": patient.yearOfBirth,
         "patientGender": patient.gender
     }
-    const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
-    return response.data;
+    try{
+        const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
+        return response.data;
+    }
+    catch(error){
+         return error.response.data;
+    }
 }
