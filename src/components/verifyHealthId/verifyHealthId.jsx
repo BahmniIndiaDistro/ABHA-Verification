@@ -18,8 +18,6 @@ const VerifyHealthId = () => {
         if (response.error !== undefined ){
             setShowError(true)
             setErrorHealthId(response.error.message);
-            console.log(response.error.code);
-            console.log(response.error.message);
         }
         else {
             setShowError(false);
@@ -37,7 +35,7 @@ const VerifyHealthId = () => {
                         <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler}/>
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
-                    {showError && <h6 className="error">{errorHealthId}</h6>}
+                    {showError && <div className="error">{errorHealthId}</div>}
                 </div>
             </div>
             {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}

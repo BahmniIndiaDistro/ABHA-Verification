@@ -20,12 +20,10 @@ const AuthModes = (props) => {
     }
 
     async function authenticate() {
-   const response = await authInit(healthId, selectedAuthMode);
+        const response = await authInit(healthId, selectedAuthMode);
         if (response.error !== undefined) {
             setShowError(true)
             setErrorHealthId(response.error.message);
-            console.log(response.error.code);
-            console.log(response.error.message);
         }
         else {
             setShowError(false)
@@ -45,7 +43,7 @@ const AuthModes = (props) => {
                         </select>
                     </div>
                     <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
-                    {showError && <h6 className="error">{errorHealthId}</h6>}
+                    {showError && <div className="error">{errorHealthId}</div>}
                 </div>
             </div>
             {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}
