@@ -29,10 +29,11 @@ const AuthModes = (props) => {
                 <div className="auth-modes-select-btn">
                     <div className="auth-modes-select">
                         <select id="auth-modes" onChange={onAuthModeSelected}>
+                            <option>Select auth mode..</option>
                             {authModesList}
                         </select>
                     </div>
-                    <button onClick={authenticate}>Authenticate</button>
+                    <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
                 </div>
             </div>
             {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}
