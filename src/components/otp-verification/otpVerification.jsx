@@ -6,14 +6,23 @@ const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
     const [showDetailsComparision, setShowDetailsComparision] = useState(false);
     const [ndhmDetails, setNdhmDetails] = useState({});
+    const [errorHealthId, setErrorHealthId] = useState('');
+    const [showError, setShowError] = useState(false);
 
     const healthId = props.healthId;
     const selectedAuthMode = props.selectedAuthMode;
 
     async function confirmAuth() {
-        const patient = await authConfirm(healthId, otp);
-        setNdhmDetails(parseNdhmDetails(patient));
-        setShowDetailsComparision(true);
+        const response = await authConfirm(healthId, otp);
+        if (response.error !== undefined ){
+            setShowError(true)
+            setErrorHealthId(response.error.message);
+        }
+        else {
+            setShowError(false);
+            setNdhmDetails(parseNdhmDetails(response));
+            setShowDetailsComparision(true);
+        }
     }
 
     function otpOnChangeHandler(e) {
@@ -48,6 +57,7 @@ const OtpVerification = (props) => {
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
                     <button type="button" disabled={showDetailsComparision} onClick={confirmAuth}>Confirm</button>
+                    {showError && <div className="error">{errorHealthId}</div>}
                 </div>
             </div>
             {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} healthId={healthId}/>}
