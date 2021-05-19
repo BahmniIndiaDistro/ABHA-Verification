@@ -1,19 +1,18 @@
 import './App.css';
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import VerifyHealthId from './components/verifyHealthId/verifyHealthId';
 import './ndhm.scss';
-import OtpVerification from './components/otp-verification/otpVerification';
 
 function App() {
 
   useEffect(() => {
     window.addEventListener("message", function (parentWindow) {
-		if (parentWindow.data.call === "parentData") {
-			const hipUrl = parentWindow.data.value.hipUrl;
-			const bahmniUrl = parentWindow.data.value.bahmniUrl;
-			localStorage.setItem("hipServiceUrl", hipUrl);
-			localStorage.setItem("bahmniUrl", bahmniUrl);
-		}
+      if (parentWindow.data.call === "parentData") {
+        const hipUrl = parentWindow.data.value.hipUrl;
+        const bahmniUrl = parentWindow.data.value.bahmniUrl;
+        localStorage.setItem("hipServiceUrl", hipUrl);
+        localStorage.setItem("bahmniUrl", bahmniUrl);
+      }
     }, false);
   }, []);
 

@@ -43,7 +43,7 @@ const AuthModes = (props) => {
                         </select>
                     </div>
                     <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
-                    {showError && <div className="error">{errorHealthId}</div>}
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}

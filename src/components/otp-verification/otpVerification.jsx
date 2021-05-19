@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {authConfirm} from '../../api/hipServiceApi';
+import { authConfirm } from '../../api/hipServiceApi';
 import PatientDetails from '../patient-details/patientDetails';
 
 const OtpVerification = (props) => {
@@ -14,7 +14,7 @@ const OtpVerification = (props) => {
 
     async function confirmAuth() {
         const response = await authConfirm(healthId, otp);
-        if (response.error !== undefined ){
+        if (response.error !== undefined) {
             setShowError(true)
             setErrorHealthId(response.error.message);
         }
@@ -43,7 +43,7 @@ const OtpVerification = (props) => {
     function addressAsString(address) {
         var addressString = "";
         for (var key in address) {
-            addressString += address[key] + ", " ;
+            addressString += address[key] + ", ";
         }
         return addressString;
     }
@@ -57,10 +57,10 @@ const OtpVerification = (props) => {
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
                     <button type="button" disabled={showDetailsComparision} onClick={confirmAuth}>Confirm</button>
-                    {showError && <div className="error">{errorHealthId}</div>}
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
-            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} healthId={healthId}/>}
+            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} healthId={healthId} />}
         </div>
     );
 }
