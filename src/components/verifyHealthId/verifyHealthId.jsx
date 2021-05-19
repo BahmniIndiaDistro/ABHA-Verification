@@ -1,20 +1,27 @@
 import React, {useState} from "react";
-import {getAuthModes} from '../../api/hipServiceApi';
+import {getAuthModes, fetchPatientFromBahmniWithHealthId} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
+import './verifyHealthId.scss';
 
 const VerifyHealthId = () => {
     const [healthId, setHealthId] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
+    const [matchingPatientFound, setMatchingPatientFound] = useState(false);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
     }
 
     async function verifyHealthId() {
-        const response = await getAuthModes(healthId);
-        setShowAuthModes(true);
-        setAuthModes(response);
+        const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
+        if (matchingPatient.error === undefined) {
+            setMatchingPatientFound(true);
+        } else {
+            const response = await getAuthModes(healthId);
+            setShowAuthModes(true);
+            setAuthModes(response);
+        }
     }
 
     return (
@@ -28,6 +35,9 @@ const VerifyHealthId = () => {
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
                 </div>
             </div>
+            {matchingPatientFound && <div className="patient-existed">
+                Matching record with Health ID found
+            </div>}
             {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
         </div>
     );
