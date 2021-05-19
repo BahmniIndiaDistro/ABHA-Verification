@@ -8,6 +8,7 @@ const VerifyHealthId = () => {
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
     const [matchingPatientFound, setMatchingPatientFound] = useState(false);
+    const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
@@ -17,11 +18,16 @@ const VerifyHealthId = () => {
         const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
         if (matchingPatient.error === undefined) {
             setMatchingPatientFound(true);
+            setMatchingPatientUuid(matchingPatient);
         } else {
             const response = await getAuthModes(healthId);
             setShowAuthModes(true);
             setAuthModes(response);
         }
+    }
+
+    function redirectToPatientDashboard() {
+        window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
     }
 
     return (
@@ -35,7 +41,7 @@ const VerifyHealthId = () => {
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
                 </div>
             </div>
-            {matchingPatientFound && <div className="patient-existed">
+            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                 Matching record with Health ID found
             </div>}
             {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
