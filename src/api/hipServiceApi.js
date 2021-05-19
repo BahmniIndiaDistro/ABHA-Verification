@@ -50,3 +50,8 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
     const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
     return response.data;
 }
+
+export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
+    const response = await axios.get(bahmniUrl + existingPatientUrl + "/" + healthId, headers);
+    return response.data;
+}
