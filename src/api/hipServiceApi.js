@@ -34,7 +34,7 @@ export const authInit = async (healthId, authMode) => {
 
 export const authConfirm = async (healthId, otp) => {
     const data = {
-        "authCode": otp,
+        "authCode": btoa(otp),
         "healthId": healthId
     };
     const response = await axios.post(hipServiceUrl + authConfirmUrl ,data, headers);
