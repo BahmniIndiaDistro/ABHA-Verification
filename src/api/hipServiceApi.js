@@ -17,8 +17,15 @@ export const getAuthModes = async (healthId) => {
         "healthId": healthId,
         "purpose": "KYC_AND_LINK"
     };
-   const response = await axios.post(hipServiceUrl + authModesUrl, data, headers);
-   return response.data.authModes;
+
+    try{
+       const response = await axios.post(hipServiceUrl + authModesUrl, data, headers);
+       return response.data;
+    }
+    catch(error){
+        return error.response.data;
+    }
+
 };
 
 export const authInit = async (healthId, authMode) => {
@@ -27,9 +34,13 @@ export const authInit = async (healthId, authMode) => {
         "authMode": authMode,
         "purpose": purpose
     };
-
-    const response = await axios.post(hipServiceUrl + authInitUrl, data, headers);
-    return response;
+    try{
+        const response = await axios.post(hipServiceUrl + authInitUrl, data, headers);
+        return response;
+    }
+    catch(error){
+        return error.response.data;
+    }
 };
 
 export const authConfirm = async (healthId, otp) => {
@@ -37,8 +48,13 @@ export const authConfirm = async (healthId, otp) => {
         "authCode": otp,
         "healthId": healthId
     };
-    const response = await axios.post(hipServiceUrl + authConfirmUrl ,data, headers);
-    return response.data.patient;
+    try{
+        const response = await axios.post(hipServiceUrl + authConfirmUrl ,data, headers);
+        return response.data.patient;
+    }
+    catch(error){
+         return error.response.data;
+    }
 }
 
 export const fetchPatientDetailsFromBahmni = async (patient) => {
@@ -47,6 +63,11 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         "patientYearOfBirth": patient.yearOfBirth,
         "patientGender": patient.gender
     }
-    const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
-    return response.data;
+    try{
+        const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
+        return response.data;
+    }
+    catch(error){
+         return error.response.data;
+    }
 }

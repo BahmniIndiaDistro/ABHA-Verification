@@ -1,11 +1,13 @@
-import React, {useState} from "react";
-import {getAuthModes} from '../../api/hipServiceApi';
+import React, { useState } from "react";
+import { getAuthModes } from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 
 const VerifyHealthId = () => {
     const [healthId, setHealthId] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
+    const [errorHealthId, setErrorHealthId] = useState('');
+    const [showError, setShowError] = useState(false);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
@@ -13,8 +15,15 @@ const VerifyHealthId = () => {
 
     async function verifyHealthId() {
         const response = await getAuthModes(healthId);
-        setShowAuthModes(true);
-        setAuthModes(response);
+        if (response.error !== undefined) {
+            setShowError(true)
+            setErrorHealthId(response.error.message);
+        }
+        else {
+            setShowError(false);
+            setShowAuthModes(true);
+            setAuthModes(response.authModes);
+        }
     }
 
     return (
@@ -23,12 +32,13 @@ const VerifyHealthId = () => {
                 <label htmlFor="healthId" className="label">Enter Health ID: </label>
                 <div className="verify-health-id-input-btn">
                     <div className="verify-health-id-input">
-                        <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler}/>
+                        <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler} />
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
-            {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
+            {showAuthModes && <AuthModes healthId={healthId} authModes={authModes} />}
         </div>
     );
 }

@@ -118,7 +118,7 @@ const PatientDetails = (props) => {
                 }
             }
         }
-        window.parent.postMessage({"patient" : patient}, "*");
+        window.parent.postMessage({ "patient": patient }, "*");
     }
 
     return (
