@@ -1,6 +1,10 @@
 import axios from 'axios';
 import * as Constants from './constants';
 export const getAuthModes = async (healthId) => {
+    let error = isValidHealthId(healthId);
+    if (error) {
+        return error;
+    }
     const data = {
         "healthId": healthId,
         "purpose": Constants.purpose
@@ -19,6 +23,9 @@ export const getAuthModes = async (healthId) => {
 };
 
 export const authInit = async (healthId, authMode) => {
+    let error = isValidAuthMode(authMode);
+    if (error)
+        return error;
     const data = {
         "healthId": healthId,
         "authMode": authMode,
@@ -37,6 +44,10 @@ export const authInit = async (healthId, authMode) => {
 };
 
 export const authConfirm = async (healthId, otp) => {
+    let error = isValidOTP(otp);
+    if (error) {
+        return error;
+    }
     const data = {
         "authCode": otp,
         "healthId": healthId
@@ -69,4 +80,29 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         else
             return Constants.serviceUnavailableError;
     }
+}
+
+const isValidHealthId = (healthId) => {
+    if (!(IsValidHealthId(healthId) || IsValidHealthNumber(healthId)))
+        return Constants.invalidHealthId;
+}
+
+const isValidAuthMode = (authMode) => {
+    if (authMode === '')
+        return Constants.invalidAuthMode;
+}
+
+const isValidOTP = (otp) => {
+    if (otp === '')
+        return Constants.emptyOTP;
+}
+
+const IsValidHealthId = (healthId) => {
+    let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
+    return healthId.match(pattern);
+}
+
+const IsValidHealthNumber = (healthId) => {
+    let pattern = "^(\[0-9]{14})$";
+    return healthId.match(pattern);
 }
