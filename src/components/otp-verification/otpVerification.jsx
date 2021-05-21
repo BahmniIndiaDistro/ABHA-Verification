@@ -13,13 +13,13 @@ const OtpVerification = (props) => {
     const selectedAuthMode = props.selectedAuthMode;
 
     async function confirmAuth() {
-        setShowError(false);
         const response = await authConfirm(healthId, otp);
         if (response.error !== undefined) {
             setShowError(true)
             setErrorHealthId(response.error.message);
         }
         else {
+            setShowError(false);
             setNdhmDetails(parseNdhmDetails(response));
             setShowDetailsComparision(true);
         }

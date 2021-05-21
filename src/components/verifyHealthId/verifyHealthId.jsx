@@ -14,13 +14,13 @@ const VerifyHealthId = () => {
     }
 
     async function verifyHealthId() {
-        setShowError(false);
         const response = await getAuthModes(healthId);
         if (response.error !== undefined) {
             setShowError(true)
             setErrorHealthId(response.error.message);
         }
         else {
+            setShowError(false);
             setShowAuthModes(true);
             setAuthModes(response.authModes);
         }

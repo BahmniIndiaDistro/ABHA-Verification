@@ -1,38 +1,45 @@
 import axios from 'axios';
-import * as Constants from './constants';
+
+const hipServiceUrl = localStorage.getItem("hipServiceUrl");
+const bahmniUrl = localStorage.getItem("bahmniUrl");
+const headers = {
+    'Content-Type': 'application/json'
+};
+const purpose = "KYC_AND_LINK";
+
+const authModesUrl = "/v0.5/hip/fetch-modes";
+const authInitUrl = "/v0.5/hip/auth/init";
+const authConfirmUrl = "/v0.5/hip/auth/confirm";
+const existingPatientUrl = "/existingPatients";
+
 export const getAuthModes = async (healthId) => {
     const data = {
         "healthId": healthId,
-        "purpose": Constants.purpose
+        "purpose": "KYC_AND_LINK"
     };
 
-    try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.authModesUrl, data, Constants.headers);
-        return response.data;
+    try{
+       const response = await axios.post(hipServiceUrl + authModesUrl, data, headers);
+       return response.data;
     }
-    catch (error) {
-        if (error.response !== undefined)
-            return error.response.data;
-        else
-            return Constants.serviceUnavailableError;
+    catch(error){
+        return error.response.data;
     }
+
 };
 
 export const authInit = async (healthId, authMode) => {
     const data = {
         "healthId": healthId,
         "authMode": authMode,
-        "purpose": Constants.purpose
+        "purpose": purpose
     };
-    try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.authInitUrl, data, Constants.headers);
+    try{
+        const response = await axios.post(hipServiceUrl + authInitUrl, data, headers);
         return response;
     }
-    catch (error) {
-        if (error.response !== undefined)
-            return error.response.data;
-        else
-            return Constants.serviceUnavailableError;
+    catch(error){
+        return error.response.data;
     }
 };
 
@@ -41,15 +48,12 @@ export const authConfirm = async (healthId, otp) => {
         "authCode": otp,
         "healthId": healthId
     };
-    try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.authConfirmUrl, data, Constants.headers);
+    try{
+        const response = await axios.post(hipServiceUrl + authConfirmUrl ,data, headers);
         return response.data.patient;
     }
-    catch (error) {
-        if (error.response !== undefined)
-            return error.response.data;
-        else
-            return Constants.serviceUnavailableError;
+    catch(error){
+         return error.response.data;
     }
 }
 
@@ -59,14 +63,11 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         "patientYearOfBirth": patient.yearOfBirth,
         "patientGender": patient.gender
     }
-    try {
-        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl, { params }, Constants.headers);
+    try{
+        const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
         return response.data;
     }
-    catch (error) {
-        if (error.response !== undefined)
-            return error.response.data;
-        else
-            return Constants.serviceUnavailableError;
+    catch(error){
+         return error.response.data;
     }
 }
