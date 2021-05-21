@@ -83,7 +83,7 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
 }
 
 const isValidHealthId = (healthId) => {
-    if (!(IsValidHealthId(healthId) || IsValidHealthNumber(healthId)))
+    if (!(IsValidHealthIdWithSuffix(healthId) || IsValidHealthNumber(healthId)))
         return Constants.invalidHealthId;
 }
 
@@ -97,12 +97,12 @@ const isValidOTP = (otp) => {
         return Constants.emptyOTP;
 }
 
-const IsValidHealthId = (healthId) => {
+const IsValidHealthIdWithSuffix = (healthId) => {
     let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
     return healthId.match(pattern);
 }
 
 const IsValidHealthNumber = (healthId) => {
-    let pattern = "^(\[0-9]{14})$";
+    let pattern = "^([0-9]{14})$";
     return healthId.match(pattern);
 }
