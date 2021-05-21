@@ -3,7 +3,7 @@ import { fetchPatientDetailsFromBahmni } from '../../api/hipServiceApi';
 import './patientDetails.scss';
 
 const PatientDetails = (props) => {
-    const [showBahmni, setShowBahmni] = useState(true);
+    const [showBahmni, setShowBahmni] = useState(false);
     const [bahmniDetails, setBahmniDetails] = useState({});
     const [changedDetails, setChangedDetails] = useState({});
 
@@ -17,13 +17,11 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
-
+        setShowBahmni(false);
         if (patient.error === undefined) {
+            setShowBahmni(true);
             parsePatientAddress(patient);
             setBahmniDetails(patient);
-        }
-        else {
-            setShowBahmni(false);
         }
     }
 
