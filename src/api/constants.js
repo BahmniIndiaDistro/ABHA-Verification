@@ -14,20 +14,3 @@ export const serviceUnavailableError = {
         "message": "Service Unavailable. Please try again later"
     }
 }
-export const invalidHealthId = {
-    "error": {
-        "message": "Health Id is invalid. Must contain at least 4 letters. " +
-            " We only allow alphabets and numbers and" +
-            " do not allow special character except dot (.)"
-    }
-}
-export const invalidAuthMode = {
-    "error": {
-        "message": "Please choose a valid auth mode."
-    }
-}
-export const emptyOTP = {
-    "error": {
-        "message": "OTP cannot be empty."
-    }
-}
