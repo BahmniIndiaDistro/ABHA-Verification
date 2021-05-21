@@ -20,13 +20,13 @@ const AuthModes = (props) => {
     }
 
     async function authenticate() {
+        setShowError(false)
         const response = await authInit(healthId, selectedAuthMode);
         if (response.error !== undefined) {
             setShowError(true)
             setErrorHealthId(response.error.message);
         }
         else {
-            setShowError(false)
             setShowOtpField(true);
         }
     }
