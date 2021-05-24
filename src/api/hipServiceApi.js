@@ -49,7 +49,7 @@ export const authConfirm = async (healthId, otp) => {
         return error;
     }
     const data = {
-        "authCode": otp,
+        "authCode": btoa(otp),
         "healthId": healthId
     };
     try {
