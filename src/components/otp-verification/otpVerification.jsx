@@ -26,7 +26,8 @@ const OtpVerification = (props) => {
             name: patient.name,
             yearOfBirth: patient.yearOfBirth,
             address: addressAsString(patient.address),
-            addressObj: patient.address
+            addressObj: patient.address,
+            identifiers: patient.identifiers
         };
         return ndhm;
     }
