@@ -9,20 +9,29 @@ const VerifyHealthId = () => {
     const [showAuthModes, setShowAuthModes] = useState(false);
     const [matchingPatientFound, setMatchingPatientFound] = useState(false);
     const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
+    const [errorHealthId, setErrorHealthId] = useState('');
+    const [showError, setShowError] = useState(false);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
     }
 
     async function verifyHealthId() {
+        setShowError(false);
         const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
         if (matchingPatient.error === undefined) {
             setMatchingPatientFound(true);
             setMatchingPatientUuid(matchingPatient);
         } else {
             const response = await getAuthModes(healthId);
-            setShowAuthModes(true);
-            setAuthModes(response);
+            if (response.error !== undefined) {
+                setShowError(true)
+                setErrorHealthId(response.error.message);
+            }
+            else {
+                setShowAuthModes(true);
+                setAuthModes(response.authModes);
+            }
         }
     }
 
@@ -36,9 +45,10 @@ const VerifyHealthId = () => {
                 <label htmlFor="healthId" className="label">Enter Health ID: </label>
                 <div className="verify-health-id-input-btn">
                     <div className="verify-health-id-input">
-                        <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler}/>
+                        <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler} />
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>

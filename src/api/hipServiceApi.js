@@ -1,44 +1,67 @@
 import axios from 'axios';
-
-const hipServiceUrl = localStorage.getItem("hipServiceUrl");
-const bahmniUrl = localStorage.getItem("bahmniUrl");
-const headers = {
-    'Content-Type': 'application/json'
-};
-const purpose = "KYC_AND_LINK";
-
-const authModesUrl = "/v0.5/hip/fetch-modes";
-const authInitUrl = "/v0.5/hip/auth/init";
-const authConfirmUrl = "/v0.5/hip/auth/confirm";
-const existingPatientUrl = "/existingPatients";
-
+import * as Constants from './constants';
 export const getAuthModes = async (healthId) => {
+    let error = isValidHealthId(healthId);
+    if (error) {
+        return error;
+    }
     const data = {
         "healthId": healthId,
-        "purpose": "KYC_AND_LINK"
+        "purpose": Constants.purpose
     };
-   const response = await axios.post(hipServiceUrl + authModesUrl, data, headers);
-   return response.data.authModes;
+
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authModesUrl, data, Constants.headers);
+        return response.data;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
 };
 
 export const authInit = async (healthId, authMode) => {
+    let error = isValidAuthMode(authMode);
+    if (error)
+        return error;
     const data = {
         "healthId": healthId,
         "authMode": authMode,
-        "purpose": purpose
+        "purpose": Constants.purpose
     };
-
-    const response = await axios.post(hipServiceUrl + authInitUrl, data, headers);
-    return response;
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authInitUrl, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
 };
 
 export const authConfirm = async (healthId, otp) => {
+    let error = isValidOTP(otp);
+    if (error) {
+        return error;
+    }
     const data = {
-        "authCode": otp,
+        "authCode": btoa(otp),
         "healthId": healthId
     };
-    const response = await axios.post(hipServiceUrl + authConfirmUrl ,data, headers);
-    return response.data.patient;
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authConfirmUrl, data, Constants.headers);
+        return response.data.patient;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
 }
 
 export const fetchPatientDetailsFromBahmni = async (patient) => {
@@ -47,11 +70,43 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         "patientYearOfBirth": patient.yearOfBirth,
         "patientGender": patient.gender
     }
-    const response = await axios.get(bahmniUrl + existingPatientUrl, {params}, headers);
-    return response.data;
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl, { params }, Constants.headers);
+        return response.data;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+const isValidHealthId = (healthId) => {
+    if (!(IsValidHealthIdWithSuffix(healthId) || IsValidHealthNumber(healthId)))
+        return Constants.invalidHealthId;
+}
+
+const isValidAuthMode = (authMode) => {
+    if (authMode === '')
+        return Constants.invalidAuthMode;
+}
+
+const isValidOTP = (otp) => {
+    if (otp === '')
+        return Constants.emptyOTP;
 }
 
 export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
-    const response = await axios.get(bahmniUrl + existingPatientUrl + "/" + healthId, headers);
+    const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/" + healthId, Constants.headers);
     return response.data;
+}
+const IsValidHealthIdWithSuffix = (healthId) => {
+    let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
+    return healthId.match(pattern);
+}
+
+const IsValidHealthNumber = (healthId) => {
+    let pattern = "^([0-9]{14})$";
+    return healthId.match(pattern);
 }
