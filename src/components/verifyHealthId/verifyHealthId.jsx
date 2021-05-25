@@ -1,11 +1,14 @@
-import React, { useState } from "react";
-import { getAuthModes } from '../../api/hipServiceApi';
+import React, {useState} from "react";
+import {getAuthModes, fetchPatientFromBahmniWithHealthId} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
+import './verifyHealthId.scss';
 
 const VerifyHealthId = () => {
     const [healthId, setHealthId] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
+    const [matchingPatientFound, setMatchingPatientFound] = useState(false);
+    const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
 
@@ -15,15 +18,25 @@ const VerifyHealthId = () => {
 
     async function verifyHealthId() {
         setShowError(false);
-        const response = await getAuthModes(healthId);
-        if (response.error !== undefined) {
-            setShowError(true)
-            setErrorHealthId(response.error.message);
+        const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
+        if (matchingPatient.error === undefined) {
+            setMatchingPatientFound(true);
+            setMatchingPatientUuid(matchingPatient);
+        } else {
+            const response = await getAuthModes(healthId);
+            if (response.error !== undefined) {
+                setShowError(true)
+                setErrorHealthId(response.error.message);
+            }
+            else {
+                setShowAuthModes(true);
+                setAuthModes(response.authModes);
+            }
         }
-        else {
-            setShowAuthModes(true);
-            setAuthModes(response.authModes);
-        }
+    }
+
+    function redirectToPatientDashboard() {
+        window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
     }
 
     return (
@@ -38,7 +51,10 @@ const VerifyHealthId = () => {
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
-            {showAuthModes && <AuthModes healthId={healthId} authModes={authModes} />}
+            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
+                Matching record with Health ID found
+            </div>}
+            {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
         </div>
     );
 }
