@@ -68,7 +68,8 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
     const params = {
         "patientName": patient.name,
         "patientYearOfBirth": patient.yearOfBirth,
-        "patientGender": patient.gender
+        "patientGender": patient.gender,
+        "phoneNumber": encodeURI(patient.identifiers[0].value)
     }
     try {
         const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl, { params }, Constants.headers);

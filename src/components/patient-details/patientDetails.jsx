@@ -6,6 +6,8 @@ const PatientDetails = (props) => {
     const [showBahmni, setShowBahmni] = useState(false);
     const [bahmniDetails, setBahmniDetails] = useState({});
     const [changedDetails, setChangedDetails] = useState({});
+    const [selectedPatient, setSelectedPatient] = useState({});
+    const [patients, setPatients] = useState([]);
 
     const ndhmDetails = props.ndhmDetails;
     const healthId = props.healthId;
@@ -16,12 +18,18 @@ const PatientDetails = (props) => {
     }, []);
 
     async function fetchBahmniDetails() {
-        const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
+        const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         setShowBahmni(false);
-        if (patient.error === undefined) {
+        if (response.error === undefined) {
             setShowBahmni(true);
-            parsePatientAddress(patient);
-            setBahmniDetails(patient);
+            if (response.length == 1) {
+                parsePatientAddress(response);
+                setBahmniDetails(response);
+            } else {
+                const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+                console.log(parsedPatients);
+                setPatients(parsedPatients);
+            }
         }
     }
 
@@ -118,10 +126,33 @@ const PatientDetails = (props) => {
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
+    function getPatientDetailsAsString(patient) {
+        let patientString = "";
+        patientString = patientString + patient.name + ", ";
+        patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
+        patientString = patientString + (patient.gender === "M" ? "Male" : "Female") + ", ";
+        patientString = patientString + patient.address;
+        return patientString;
+    }
+    function prepareMatchingPatientsList() {
+        return patients.map((patient, i) => {
+            return (
+                <div className="matching-patient">
+                    <span className="details"><b>Bahmni Record: </b>{getPatientDetailsAsString(patient)}</span>
+                    <span className="radio-btn"><input type="radio" value={i} name="patient"/></span>
+                </div>
+            );
+        });
+    }
 
     return (
         <div>
-            <div className="patient-details">
+            {patients.length > 1 && <div className="matching-patients">
+                <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
+                <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
+                {prepareMatchingPatientsList()}
+            </div>}
+            {patients.length <= 1 && <div className="patient-details">
                 <table>
                     <thead>
                         <th></th>
@@ -156,10 +187,10 @@ const PatientDetails = (props) => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div className="action-btns">
+            </div>}
+            {patients.length <= 1 && <div className="action-btns">
                 <button type="button" onClick={save}>Update</button>
-            </div>
+            </div>}
         </div>
     );
 };
