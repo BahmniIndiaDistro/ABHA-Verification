@@ -8,6 +8,7 @@ const PatientDetails = (props) => {
     const [changedDetails, setChangedDetails] = useState({});
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
+    const [showTabularFormat, setShowTabularFormat] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
     const healthId = props.healthId;
@@ -19,15 +20,14 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
-        setShowBahmni(false);
         if (response.error === undefined) {
-            setShowBahmni(true);
             if (response.length == 1) {
-                parsePatientAddress(response);
-                setBahmniDetails(response);
+                setShowBahmni(true);
+                setShowTabularFormat(true);
+                parsePatientAddress(response[0]);
+                setBahmniDetails(response[0]);
             } else {
                 const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
-                console.log(parsedPatients);
                 setPatients(parsedPatients);
             }
         }
@@ -134,25 +134,47 @@ const PatientDetails = (props) => {
         patientString = patientString + patient.address;
         return patientString;
     }
+    function onSelectMatchingPatient(e) {
+        const index = e.target.value;
+        setSelectedPatient(patients[index]);
+    }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
                 <div className="matching-patient">
                     <span className="details"><b>Bahmni Record: </b>{getPatientDetailsAsString(patient)}</span>
-                    <span className="radio-btn"><input type="radio" value={i} name="patient"/></span>
+                    <span className="radio-btn"><input type="radio" value={i} name="patient" onChange={onSelectMatchingPatient}/></span>
                 </div>
             );
         });
     }
+    function isSelectedPatientEmpty() {
+        return JSON.stringify(selectedPatient) === JSON.stringify({})
+    }
+    function confirmSelection() {
+        setShowBahmni(true);
+        setShowTabularFormat(true);
+        setBahmniDetails(selectedPatient);
+    }
+    function createNewRecord() {
+        setShowBahmni(false);
+        setShowTabularFormat(true);
+    }
 
     return (
         <div>
-            {patients.length > 1 && <div className="matching-patients">
-                <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
-                {prepareMatchingPatientsList()}
+            {!showTabularFormat && <div>
+                <div className="matching-patients">
+                    <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
+                    <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
+                    {prepareMatchingPatientsList()}
+                </div>
+                <div className="create-confirm-btns">
+                    <button onClick={createNewRecord}> Create New Record </button>
+                    <button disabled={isSelectedPatientEmpty()} onClick={confirmSelection}> Confirm Selection </button>
+                </div>
             </div>}
-            {patients.length <= 1 && <div className="patient-details">
+            {showTabularFormat && <div className="patient-details">
                 <table>
                     <thead>
                         <th></th>
@@ -188,7 +210,7 @@ const PatientDetails = (props) => {
                     </tbody>
                 </table>
             </div>}
-            {patients.length <= 1 && <div className="action-btns">
+            {showTabularFormat && <div className="action-btns">
                 <button type="button" onClick={save}>Update</button>
             </div>}
         </div>
