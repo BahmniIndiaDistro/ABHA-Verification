@@ -21,3 +21,23 @@
         padding: 3px 10px;
     }
 }
+.matching-patients {
+    .matching-patient {
+        display: flex;
+        width: 100%;
+        margin: 10px;
+        .details {
+            width: 80%;
+        }
+        .radio-btn {
+            width: 20%;
+        }
+    }
+}
+.create-confirm-btns {
+    display: flex;
+    width: 70%;
+    margin-left: 5%;
+    margin-top: 10px;
+    justify-content: space-between;
+}

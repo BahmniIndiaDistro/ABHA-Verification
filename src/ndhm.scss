@@ -1,3 +1,7 @@
+button {
+    margin: 2px;
+    padding: 3px 10px;
+}
 .verify-health-id, .auth-modes, .otp-verify, .patient-details{
     display: flex;
     width: 100%;
@@ -17,12 +21,6 @@
         }
         margin-bottom: 10px;
     }
-
-    button {
-        margin: 2px;
-        padding: 3px 10px;
-    }
-
     .error {
         margin-top: 10px;
         width: 100%;

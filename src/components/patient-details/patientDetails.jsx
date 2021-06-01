@@ -6,6 +6,9 @@ const PatientDetails = (props) => {
     const [showBahmni, setShowBahmni] = useState(false);
     const [bahmniDetails, setBahmniDetails] = useState({});
     const [changedDetails, setChangedDetails] = useState({});
+    const [selectedPatient, setSelectedPatient] = useState({});
+    const [patients, setPatients] = useState([]);
+    const [showTabularFormat, setShowTabularFormat] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
     const healthId = props.healthId;
@@ -16,12 +19,17 @@ const PatientDetails = (props) => {
     }, []);
 
     async function fetchBahmniDetails() {
-        const patient = await fetchPatientDetailsFromBahmni(ndhmDetails);
-        setShowBahmni(false);
-        if (patient.error === undefined) {
-            setShowBahmni(true);
-            parsePatientAddress(patient);
-            setBahmniDetails(patient);
+        const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
+        if (response.error === undefined) {
+            if (response.length == 1) {
+                setShowBahmni(true);
+                setShowTabularFormat(true);
+                parsePatientAddress(response[0]);
+                setBahmniDetails(response[0]);
+            } else {
+                const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+                setPatients(parsedPatients);
+            }
         }
     }
 
@@ -118,10 +126,55 @@ const PatientDetails = (props) => {
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
+    function getPatientDetailsAsString(patient) {
+        let patientString = "";
+        patientString = patientString + patient.name + ", ";
+        patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
+        patientString = patientString + (patient.gender === "M" ? "Male" : "Female") + ", ";
+        patientString = patientString + patient.address;
+        return patientString;
+    }
+    function onSelectMatchingPatient(e) {
+        const index = e.target.value;
+        setSelectedPatient(patients[index]);
+    }
+    function prepareMatchingPatientsList() {
+        return patients.map((patient, i) => {
+            return (
+                <div className="matching-patient">
+                    <span className="details"><b>Bahmni Record: </b>{getPatientDetailsAsString(patient)}</span>
+                    <span className="radio-btn"><input type="radio" value={i} name="patient" onChange={onSelectMatchingPatient}/></span>
+                </div>
+            );
+        });
+    }
+    function isSelectedPatientEmpty() {
+        return JSON.stringify(selectedPatient) === JSON.stringify({})
+    }
+    function confirmSelection() {
+        setShowBahmni(true);
+        setShowTabularFormat(true);
+        setBahmniDetails(selectedPatient);
+    }
+    function createNewRecord() {
+        setShowBahmni(false);
+        setShowTabularFormat(true);
+    }
 
     return (
         <div>
-            <div className="patient-details">
+            {!showTabularFormat && <div>
+                <div className="matching-patients">
+                    <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
+                    <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
+                    {prepareMatchingPatientsList()}
+                </div>
+                <div className="create-confirm-btns">
+                    <button onClick={createNewRecord}> Create New Record </button>
+                    <button disabled={isSelectedPatientEmpty()} onClick={confirmSelection}> Confirm Selection </button>
+                </div>
+            </div>}
+            {showTabularFormat && <div className="patient-details">
                 <table>
                     <thead>
                         <th></th>
@@ -156,10 +209,10 @@ const PatientDetails = (props) => {
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div className="action-btns">
+            </div>}
+            {showTabularFormat && <div className="action-btns">
                 <button type="button" onClick={save}>Update</button>
-            </div>
+            </div>}
         </div>
     );
 };
