@@ -31,7 +31,7 @@ const AuthModes = (props) => {
                 setShowOtpField(true);
             }
         } else {
-            setErrorHealthId("Currently we are not supporting this auth mode");
+            setErrorHealthId("The selected Authentication Mode is currently not supported!");
             setShowError(true);
         }
     }
