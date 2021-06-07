@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { authConfirm } from '../../api/hipServiceApi';
 import PatientDetails from '../patient-details/patientDetails';
+import Spinner from '../spinner/spinner';
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
@@ -8,11 +9,13 @@ const OtpVerification = (props) => {
     const [ndhmDetails, setNdhmDetails] = useState({});
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
+    const [loader, setLoader] = useState(false);
 
     const healthId = props.healthId;
     const selectedAuthMode = props.selectedAuthMode;
 
     async function confirmAuth() {
+        setLoader(true);
         setShowError(false);
         const response = await authConfirm(healthId, otp);
         if (response.error !== undefined) {
@@ -23,6 +26,7 @@ const OtpVerification = (props) => {
             setNdhmDetails(parseNdhmDetails(response));
             setShowDetailsComparision(true);
         }
+        setLoader(false);
     }
 
     function otpOnChangeHandler(e) {
@@ -61,6 +65,7 @@ const OtpVerification = (props) => {
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
+            {loader && <Spinner />}
             {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} healthId={healthId} />}
         </div>
     );

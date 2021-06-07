@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { authInit } from '../../api/hipServiceApi';
 import OtpVerification from '../otp-verification/otpVerification';
+import Spinner from '../spinner/spinner';
 
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
     const [showOtpField, setShowOtpField] = useState(false);
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
+    const [loader, setLoader] = useState(false);
+
     const healthId = props.healthId;
     const authModes = props.authModes;
     let authModesList = authModes !== undefined && authModes.length > 0 && authModes.map((item, i) => {
@@ -20,6 +23,7 @@ const AuthModes = (props) => {
     }
 
     async function authenticate() {
+        setLoader(true);
         if (selectedAuthMode !== "DEMOGRAPHICS") {
             setShowError(false)
             const response = await authInit(healthId, selectedAuthMode);
@@ -34,6 +38,7 @@ const AuthModes = (props) => {
             setErrorHealthId("The selected Authentication Mode is currently not supported!");
             setShowError(true);
         }
+        setLoader(false);
     }
 
     return (
@@ -51,6 +56,7 @@ const AuthModes = (props) => {
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
+            {loader && <Spinner />}
             {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}
         </div>
     );

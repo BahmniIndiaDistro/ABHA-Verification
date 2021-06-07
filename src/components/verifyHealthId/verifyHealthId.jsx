@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import {getAuthModes, fetchPatientFromBahmniWithHealthId} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
+import Spinner from '../spinner/spinner';
 import './verifyHealthId.scss';
 
 const VerifyHealthId = () => {
@@ -11,12 +12,14 @@ const VerifyHealthId = () => {
     const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
+    const [loader, setLoader] = useState(false);
 
     function healthIdOnChangeHandler(e) {
         setHealthId(e.target.value);
     }
 
     async function verifyHealthId() {
+        setLoader(true);
         setShowError(false);
         const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
         if (matchingPatient.error === undefined) {
@@ -33,6 +36,7 @@ const VerifyHealthId = () => {
                 setAuthModes(response.authModes);
             }
         }
+        setLoader(false);
     }
 
     function redirectToPatientDashboard() {
@@ -54,6 +58,7 @@ const VerifyHealthId = () => {
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                 Matching record with Health ID found
             </div>}
+            {loader && <Spinner />}
             {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
         </div>
     );
