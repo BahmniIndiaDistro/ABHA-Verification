@@ -24,14 +24,19 @@ const AuthModes = (props) => {
 
     async function authenticate() {
         setLoader(true);
-        setShowError(false)
-        const response = await authInit(healthId, selectedAuthMode);
-        if (response.error !== undefined) {
-            setShowError(true)
-            setErrorHealthId(response.error.message);
-        }
-        else {
-            setShowOtpField(true);
+        if (selectedAuthMode !== "DEMOGRAPHICS") {
+            setShowError(false)
+            const response = await authInit(healthId, selectedAuthMode);
+            if (response.error !== undefined) {
+                setShowError(true)
+                setErrorHealthId(response.error.message);
+            }
+            else {
+                setShowOtpField(true);
+            }
+        } else {
+            setErrorHealthId("The selected Authentication Mode is currently not supported!");
+            setShowError(true);
         }
         setLoader(false);
     }
