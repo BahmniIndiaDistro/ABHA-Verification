@@ -218,7 +218,6 @@ const PatientDetails = (props) => {
                             <td>{ndhmDetails.address}</td>
                             {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('address')} /></td>}
                         </tr>
-
                     </tbody>
                 </table>
             </div>}
