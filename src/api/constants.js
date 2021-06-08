@@ -31,3 +31,8 @@ export const emptyOTP = {
         "message": "OTP cannot be empty."
     }
 }
+export const openMrsDown = {
+    "Error": {
+        "message": "OpenMRS-REST is Unhealthy,OpenMRS-FHIR is Unhealthy"
+    }
+}
