@@ -57,6 +57,9 @@ const PatientDetails = (props) => {
             case 'gender':
                 changedDetails.gender = ndhmDetails.gender;
                 break;
+            case 'phoneNumber':
+                 changedDetails.phoneNumber = ndhmDetails.identifiers[0].value.replace("+91", "+91-");
+                 break;
             default:
                 changedDetails.age = calculateAge(january_1 + ndhmDetails.yearOfBirth);
                 break;
@@ -121,7 +124,8 @@ const PatientDetails = (props) => {
                         'familyName': name[1]
                     },
                     "gender": ndhmDetails.gender,
-                    "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth)
+                    "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
+                    "primaryContact": ndhmDetails.identifiers[0].value
                 }
             }
         }
@@ -203,11 +207,18 @@ const PatientDetails = (props) => {
                             {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('age')} /></td>}
                         </tr>
                         <tr>
+                            <td>Phone </td>
+                            {showBahmni && <td>{bahmniDetails.phoneNumber}</td>}
+                            <td>{ndhmDetails.identifiers[0].value}</td>
+                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('phoneNumber')} /></td>}
+                        </tr>
+                        <tr>
                             <td>Address</td>
                             {showBahmni && <td>{bahmniDetails.address}</td>}
                             <td>{ndhmDetails.address}</td>
                             {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('address')} /></td>}
                         </tr>
+
                     </tbody>
                 </table>
             </div>}
