@@ -99,8 +99,12 @@ const isValidOTP = (otp) => {
 }
 
 export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
-    const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/" + healthId, Constants.headers);
-    return response.data;
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/" + healthId, Constants.headers);
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
+    }
 }
 const IsValidHealthIdWithSuffix = (healthId) => {
     let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";

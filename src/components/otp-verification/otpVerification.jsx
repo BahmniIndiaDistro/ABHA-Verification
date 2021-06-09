@@ -18,9 +18,9 @@ const OtpVerification = (props) => {
         setLoader(true);
         setShowError(false);
         const response = await authConfirm(healthId, otp);
-        if (response.error !== undefined) {
+        if (response.error !== undefined || response.Error !== undefined) {
             setShowError(true)
-            setErrorHealthId(response.error.message);
+            setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
         }
         else {
             setNdhmDetails(parseNdhmDetails(response));

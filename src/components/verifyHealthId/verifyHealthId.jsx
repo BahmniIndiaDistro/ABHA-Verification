@@ -22,19 +22,24 @@ const VerifyHealthId = () => {
         setLoader(true);
         setShowError(false);
         const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
-        if (matchingPatient.error === undefined) {
-            setMatchingPatientFound(true);
-            setMatchingPatientUuid(matchingPatient);
+        if (matchingPatient.Error === undefined) {
+            if (matchingPatient.error === undefined) {
+                setMatchingPatientFound(true);
+                setMatchingPatientUuid(matchingPatient);
+            } else {
+                const response = await getAuthModes(healthId);
+                if (response.error !== undefined) {
+                    setShowError(true)
+                    setErrorHealthId(response.error.message);
+                }
+                else {
+                    setShowAuthModes(true);
+                    setAuthModes(response.authModes);
+                }
+            }
         } else {
-            const response = await getAuthModes(healthId);
-            if (response.error !== undefined) {
-                setShowError(true)
-                setErrorHealthId(response.error.message);
-            }
-            else {
-                setShowAuthModes(true);
-                setAuthModes(response.authModes);
-            }
+            setShowError(true)
+            setErrorHealthId(matchingPatient.Error.message);
         }
         setLoader(false);
     }
