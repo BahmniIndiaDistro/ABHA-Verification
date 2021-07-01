@@ -131,11 +131,23 @@ const PatientDetails = (props) => {
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
+    function getPatientGender(gender) {
+        switch(gender) {
+            case "M":
+                return "Male";
+            case "F":
+                return "Female";
+            case "U":
+                return "Undisclosed";
+            default:
+                return "Other";
+        }
+    }
     function getPatientDetailsAsString(patient) {
         let patientString = "";
         patientString = patientString + patient.name + ", ";
         patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
-        patientString = patientString + (patient.gender === "M" ? "Male" : "Female") + ", ";
+        patientString = patientString + getPatientGender(patient.gender) + ", ";
         patientString = patientString + patient.address;
         return patientString;
     }
