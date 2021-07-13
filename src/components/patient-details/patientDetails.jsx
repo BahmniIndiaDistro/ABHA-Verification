@@ -48,10 +48,11 @@ const PatientDetails = (props) => {
                 };
                 break;
             case 'name':
-                const name = ndhmDetails.name.split(" ", 2);
+                const name = ndhmDetails.name.split(" ", 3);
                 changedDetails.name = {
                     'givenName': name[0],
-                    'familyName': name[1]
+                    'middleName': name.length == 3 ? name[1] : '',
+                    'familyName': name.length == 3 ? name[2] : name[1]
                 };
                 break;
             case 'gender':
@@ -110,7 +111,7 @@ const PatientDetails = (props) => {
                 "uuid" : bahmniDetails.uuid
             };
         } else {
-            const name = ndhmDetails.name.split(" ", 2);
+            const name = ndhmDetails.name.split(" ", 3);
             patient = {
                 "healthId": healthId,
                 "changedDetails": {
@@ -121,7 +122,8 @@ const PatientDetails = (props) => {
                     },
                     "name": {
                         'givenName': name[0],
-                        'familyName': name[1]
+                        'middleName': name.length == 3 ? name[1] : '',
+                        'familyName': name.length == 3 ? name[2] : name[1]
                     },
                     "gender": ndhmDetails.gender,
                     "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
@@ -148,6 +150,7 @@ const PatientDetails = (props) => {
         patientString = patientString + patient.name + ", ";
         patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
         patientString = patientString + getPatientGender(patient.gender) + ", ";
+        patientString = patientString + (patient.phoneNumber || patient.identifiers[0].value) + ", ";
         patientString = patientString + patient.address;
         return patientString;
     }
@@ -183,7 +186,7 @@ const PatientDetails = (props) => {
             {!showTabularFormat && <div>
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
+                    <p>Please select your matching bahmni record, incase of no match proceed with new card creation</p>
                     {prepareMatchingPatientsList()}
                 </div>
                 <div className="create-confirm-btns">
