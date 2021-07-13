@@ -60,6 +60,7 @@ const PatientDetails = (props) => {
                 break;
             case 'phoneNumber':
                  changedDetails.phoneNumber = ndhmDetails.identifiers[0].value.replace("+91", "+91-");
+                 changedDetails.phoneNumber = changedDetails.phoneNumber.replace("--", "-");
                  break;
             default:
                 changedDetails.age = calculateAge(january_1 + ndhmDetails.yearOfBirth);
