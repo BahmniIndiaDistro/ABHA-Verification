@@ -48,10 +48,11 @@ const PatientDetails = (props) => {
                 };
                 break;
             case 'name':
-                const name = ndhmDetails.name.split(" ", 2);
+                const name = ndhmDetails.name.split(" ", 3);
                 changedDetails.name = {
                     'givenName': name[0],
-                    'familyName': name[1]
+                    'middleName': name.length == 3 ? name[1] : '',
+                    'familyName': name.length == 3 ? name[2] : name[1]
                 };
                 break;
             case 'gender':
@@ -110,7 +111,7 @@ const PatientDetails = (props) => {
                 "uuid" : bahmniDetails.uuid
             };
         } else {
-            const name = ndhmDetails.name.split(" ", 2);
+            const name = ndhmDetails.name.split(" ", 3);
             patient = {
                 "healthId": healthId,
                 "changedDetails": {
@@ -121,7 +122,8 @@ const PatientDetails = (props) => {
                     },
                     "name": {
                         'givenName': name[0],
-                        'familyName': name[1]
+                        'middleName': name.length == 3 ? name[1] : '',
+                        'familyName': name.length == 3 ? name[2] : name[1]
                     },
                     "gender": ndhmDetails.gender,
                     "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
