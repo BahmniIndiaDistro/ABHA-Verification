@@ -21,15 +21,8 @@ const PatientDetails = (props) => {
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         if (response.error === undefined) {
-            if (response.length == 1) {
-                setShowBahmni(true);
-                setShowTabularFormat(true);
-                parsePatientAddress(response[0]);
-                setBahmniDetails(response[0]);
-            } else {
                 const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
                 setPatients(parsedPatients);
-            }
         }
     }
 
