@@ -9,6 +9,7 @@ export const authModesUrl = "/v0.5/hip/fetch-modes";
 export const authInitUrl = "/v0.5/hip/auth/init";
 export const authConfirmUrl = "/v0.5/hip/auth/confirm";
 export const existingPatientUrl = "/existingPatients";
+export const ndhmDemographics = "/v0.5/hip/ndhm-demographics";
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"

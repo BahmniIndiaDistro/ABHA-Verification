@@ -22,6 +22,27 @@ export const getAuthModes = async (healthId) => {
     }
 };
 
+export const saveDemographics = async (healthId,ndhmDetails) => {
+    const data = {
+            "healthId": healthId,
+            "name": ndhmDetails.name,
+            "gender": ndhmDetails.gender,
+            "dateOfBirth": ndhmDetails.yearOfBirth,
+            "phoneNumber": ndhmDetails.identifiers[0].value
+    };
+
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.ndhmDemographics, data, Constants.headers);
+        return response.data;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
 export const authInit = async (healthId, authMode) => {
     let error = isValidAuthMode(authMode);
     if (error)

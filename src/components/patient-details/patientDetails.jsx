@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPatientDetailsFromBahmni } from '../../api/hipServiceApi';
+import { fetchPatientDetailsFromBahmni, saveDemographics } from '../../api/hipServiceApi';
 import './patientDetails.scss';
 
 const PatientDetails = (props) => {
@@ -103,6 +103,10 @@ const PatientDetails = (props) => {
         };
     }
 
+    function getDemographics(){
+        save();
+        saveDemographics(healthId,ndhmDetails);
+    }
     function save() {
         let patient;
         if (showBahmni) {
@@ -238,7 +242,7 @@ const PatientDetails = (props) => {
                 </table>
             </div>}
             {showTabularFormat && <div className="action-btns">
-                <button type="button" onClick={save}>Update</button>
+                <button type="button" onClick={getDemographics}>Update</button>
             </div>}
         </div>
     );
