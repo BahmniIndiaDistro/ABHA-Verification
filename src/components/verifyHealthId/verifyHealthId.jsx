@@ -51,7 +51,7 @@ const VerifyHealthId = () => {
     return (
         <div>
             <div className="verify-health-id">
-                <label htmlFor="healthId" className="label">Enter Health ID: </label>
+                <label htmlFor="healthId" className="label">Enter Health ID/PHR Address: </label>
                 <div className="verify-health-id-input-btn">
                     <div className="verify-health-id-input">
                         <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler} />

@@ -106,7 +106,8 @@ const PatientDetails = (props) => {
             patient = {
                 "healthId": healthId,
                 "changedDetails": changedDetails,
-                "uuid" : bahmniDetails.uuid
+                "uuid": bahmniDetails.uuid,
+                "healthNumber": getHealthNumber()
             };
         } else {
             const name = ndhmDetails.name.split(" ", 3);
@@ -155,6 +156,15 @@ const PatientDetails = (props) => {
     function onSelectMatchingPatient(e) {
         const index = e.target.value;
         setSelectedPatient(patients[index]);
+    }
+    function getHealthNumber() {
+        let healthNumber;
+        ndhmDetails.identifiers.forEach(id => {
+            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
+                healthNumber = id.value;
+            }
+        })
+        return healthNumber;
     }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
