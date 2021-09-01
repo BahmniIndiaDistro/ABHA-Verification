@@ -5,7 +5,7 @@ import Spinner from '../spinner/spinner';
 import './verifyHealthId.scss';
 
 const VerifyHealthId = () => {
-    const [healthId, setHealthId] = useState('');
+    const [id, setId] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const [showAuthModes, setShowAuthModes] = useState(false);
     const [matchingPatientFound, setMatchingPatientFound] = useState(false);
@@ -14,20 +14,20 @@ const VerifyHealthId = () => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
 
-    function healthIdOnChangeHandler(e) {
-        setHealthId(e.target.value);
+    function idOnChangeHandler(e) {
+        setId(e.target.value);
     }
 
     async function verifyHealthId() {
         setLoader(true);
         setShowError(false);
-        const matchingPatient = await fetchPatientFromBahmniWithHealthId(healthId);
+        const matchingPatient = await fetchPatientFromBahmniWithHealthId(id);
         if (matchingPatient.Error === undefined) {
             if (matchingPatient.error === undefined) {
                 setMatchingPatientFound(true);
                 setMatchingPatientUuid(matchingPatient);
             } else {
-                const response = await getAuthModes(healthId);
+                const response = await getAuthModes(id);
                 if (response.error !== undefined) {
                     setShowError(true)
                     setErrorHealthId(response.error.message);
@@ -54,17 +54,17 @@ const VerifyHealthId = () => {
                 <label htmlFor="healthId" className="label">Enter Health ID/PHR Address: </label>
                 <div className="verify-health-id-input-btn">
                     <div className="verify-health-id-input">
-                        <input type="text" id="healthId" name="healthId" value={healthId} onChange={healthIdOnChangeHandler} />
+                        <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
-                Matching record with Health ID found
+                Matching record with Health ID/PHR Address found
             </div>}
             {loader && <Spinner />}
-            {showAuthModes && <AuthModes healthId={healthId} authModes={authModes}/>}
+            {showAuthModes && <AuthModes id={id} authModes={authModes}/>}
         </div>
     );
 }

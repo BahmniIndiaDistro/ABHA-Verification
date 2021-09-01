@@ -11,7 +11,7 @@ const PatientDetails = (props) => {
     const [showTabularFormat, setShowTabularFormat] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
-    const healthId = props.healthId;
+    const id = props.id;
     const january_1 = "01/01/";
 
     useEffect(() => {
@@ -21,8 +21,8 @@ const PatientDetails = (props) => {
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         if (response.error === undefined) {
-                const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
-                setPatients(parsedPatients);
+            const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+            setPatients(parsedPatients);
         }
     }
 
@@ -98,13 +98,14 @@ const PatientDetails = (props) => {
 
     function getDemographics(){
         save();
-        saveDemographics(healthId,ndhmDetails);
+        saveDemographics(id,ndhmDetails);
     }
     function save() {
         let patient;
         if (showBahmni) {
             patient = {
-                "healthId": healthId,
+                "healthId": ndhmDetails.id,
+                "id": id,
                 "changedDetails": changedDetails,
                 "uuid": bahmniDetails.uuid,
                 "healthNumber": getHealthNumber()
@@ -112,7 +113,7 @@ const PatientDetails = (props) => {
         } else {
             const name = ndhmDetails.name.split(" ", 3);
             patient = {
-                "healthId": healthId,
+                "id": id,
                 "changedDetails": {
                     "address": {
                         'countyDistrict': ndhmDetails.addressObj.district,
