@@ -104,11 +104,11 @@ const PatientDetails = (props) => {
         let patient;
         if (showBahmni) {
             patient = {
-                "healthId": ndhmDetails.id,
+                "healthId": getHealthNumber(),
                 "id": id,
                 "changedDetails": changedDetails,
                 "uuid": bahmniDetails.uuid,
-                "healthNumber": getHealthNumber()
+                "healthNumber": ndhmDetails.id
             };
         } else {
             const name = ndhmDetails.name.split(" ", 3);
