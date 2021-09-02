@@ -11,7 +11,7 @@ const PatientDetails = (props) => {
     const [showTabularFormat, setShowTabularFormat] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
-    const healthId = props.healthId;
+    const id = props.id;
     const january_1 = "01/01/";
 
     useEffect(() => {
@@ -21,8 +21,8 @@ const PatientDetails = (props) => {
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         if (response.error === undefined) {
-                const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
-                setPatients(parsedPatients);
+            const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+            setPatients(parsedPatients);
         }
     }
 
@@ -44,8 +44,8 @@ const PatientDetails = (props) => {
                 const name = ndhmDetails.name.split(" ", 3);
                 changedDetails.name = {
                     'givenName': name[0],
-                    'middleName': name.length == 3 ? name[1] : '',
-                    'familyName': name.length == 3 ? name[2] : name[1]
+                    'middleName': name.length === 3 ? name[1] : '',
+                    'familyName': name.length === 3 ? name[2] : name[1]
                 };
                 break;
             case 'gender':
@@ -98,20 +98,22 @@ const PatientDetails = (props) => {
 
     function getDemographics(){
         save();
-        saveDemographics(healthId,ndhmDetails);
+        saveDemographics(id,ndhmDetails);
     }
     function save() {
         let patient;
         if (showBahmni) {
             patient = {
-                "healthId": healthId,
+                "healthId": getHealthNumber(),
+                "id": id,
                 "changedDetails": changedDetails,
-                "uuid" : bahmniDetails.uuid
+                "uuid": bahmniDetails.uuid,
+                "healthNumber": ndhmDetails.id
             };
         } else {
             const name = ndhmDetails.name.split(" ", 3);
             patient = {
-                "healthId": healthId,
+                "id": id,
                 "changedDetails": {
                     "address": {
                         'countyDistrict': ndhmDetails.addressObj.district,
@@ -120,8 +122,8 @@ const PatientDetails = (props) => {
                     },
                     "name": {
                         'givenName': name[0],
-                        'middleName': name.length == 3 ? name[1] : '',
-                        'familyName': name.length == 3 ? name[2] : name[1]
+                        'middleName': name.length === 3 ? name[1] : '',
+                        'familyName': name.length === 3 ? name[2] : name[1]
                     },
                     "gender": ndhmDetails.gender,
                     "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
@@ -155,6 +157,15 @@ const PatientDetails = (props) => {
     function onSelectMatchingPatient(e) {
         const index = e.target.value;
         setSelectedPatient(patients[index]);
+    }
+    function getHealthNumber() {
+        let healthNumber;
+        ndhmDetails.identifiers.forEach(id => {
+            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
+                healthNumber = id.value;
+            }
+        })
+        return healthNumber;
     }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {

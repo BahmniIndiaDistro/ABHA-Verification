@@ -11,13 +11,13 @@ const OtpVerification = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
 
-    const healthId = props.healthId;
+    const id = props.id;
     const selectedAuthMode = props.selectedAuthMode;
 
     async function confirmAuth() {
         setLoader(true);
         setShowError(false);
-        const response = await authConfirm(healthId, otp);
+        const response = await authConfirm(id, otp);
         if (response.error !== undefined || response.Error !== undefined) {
             setShowError(true)
             setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
@@ -35,6 +35,7 @@ const OtpVerification = (props) => {
 
     function parseNdhmDetails(patient) {
         const ndhm = {
+            id: patient.id,
             gender: patient.gender,
             name: patient.name,
             yearOfBirth: patient.yearOfBirth,
@@ -66,7 +67,7 @@ const OtpVerification = (props) => {
                 </div>
             </div>
             {loader && <Spinner />}
-            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} healthId={healthId} />}
+            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
         </div>
     );
 }

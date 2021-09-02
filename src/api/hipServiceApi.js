@@ -105,7 +105,7 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
 }
 
 const isValidHealthId = (healthId) => {
-    if (!(IsValidHealthIdWithSuffix(healthId) || IsValidHealthNumber(healthId)))
+    if (!(IsValidPHRAddress(healthId) || IsValidHealthId(healthId)))
         return Constants.invalidHealthId;
 }
 
@@ -127,12 +127,12 @@ export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
         return Constants.openMrsDown;
     }
 }
-const IsValidHealthIdWithSuffix = (healthId) => {
+const IsValidPHRAddress = (healthId) => {
     let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
     return healthId.match(pattern);
 }
 
-const IsValidHealthNumber = (healthId) => {
-    let pattern = "^([0-9]{14})$";
+const IsValidHealthId = (healthId) => {
+    let pattern = "^([0-9]{14})$|^[0-9]{2}[-][0-9]{4}[-][0-9]{4}[-][0-9]{4}$";
     return healthId.match(pattern);
 }
