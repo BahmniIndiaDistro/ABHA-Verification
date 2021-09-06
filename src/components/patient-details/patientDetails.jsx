@@ -21,14 +21,15 @@ const PatientDetails = (props) => {
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         if (response.error === undefined) {
-            const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+            const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
         }
     }
 
-    function parsePatientAddress(patient) {
+    function parsePatient(patient) {
         patient.address = patient.address.replace(/null,|null/gm, "").trim();
         patient.address = patient.address.replace(",", ", ");
+        patient.name = patient.name.replace(null,"");
     }
 
     function checkBoxChangeHandler(key) {
