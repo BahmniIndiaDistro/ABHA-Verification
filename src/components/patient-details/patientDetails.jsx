@@ -126,7 +126,7 @@ const PatientDetails = (props) => {
                     },
                     "gender": ndhmDetails.gender,
                     "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
-                    "primaryContact": ndhmDetails.identifiers[0].value
+                    "phoneNumber": ndhmDetails.identifiers[0].value
                 }
             }
         }
