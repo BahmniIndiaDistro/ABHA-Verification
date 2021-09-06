@@ -102,8 +102,7 @@ const PatientDetails = (props) => {
     }
 
     function save() {
-        let patient;
-        patient = {
+        let patient = {
             "id": id,
             "healthId": getHealthNumber(),
             "healthNumber": ndhmDetails.id
