@@ -100,39 +100,38 @@ const PatientDetails = (props) => {
         save();
         saveDemographics(id,ndhmDetails);
     }
+
     function save() {
-        let patient;
+        let patient = {
+            "id": id,
+            "healthId": getHealthNumber(),
+            "healthNumber": ndhmDetails.id
+        }
+
         if (showBahmni) {
-            patient = {
-                "healthId": getHealthNumber(),
-                "id": id,
-                "changedDetails": changedDetails,
-                "uuid": bahmniDetails.uuid,
-                "healthNumber": ndhmDetails.id
-            };
+            patient["changedDetails"] = changedDetails;
+            patient["uuid"] = bahmniDetails.uuid;
         } else {
             const name = ndhmDetails.name.split(" ", 3);
-            patient = {
-                "id": id,
-                "changedDetails": {
-                    "address": {
-                        'countyDistrict': ndhmDetails.addressObj.district,
-                        'address1': ndhmDetails.addressObj.line,
-                        'stateProvince': ndhmDetails.addressObj.state
-                    },
-                    "name": {
-                        'givenName': name[0],
-                        'middleName': name.length === 3 ? name[1] : '',
-                        'familyName': name.length === 3 ? name[2] : name[1]
-                    },
-                    "gender": ndhmDetails.gender,
-                    "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
-                    "primaryContact": ndhmDetails.identifiers[0].value
-                }
-            }
+            patient["changedDetails"] = {
+                "address": {
+                    'countyDistrict': ndhmDetails.addressObj.district,
+                    'address1': ndhmDetails.addressObj.line,
+                    'stateProvince': ndhmDetails.addressObj.state
+                },
+                "name": {
+                    'givenName': name[0],
+                    'middleName': name.length === 3 ? name[1] : '',
+                    'familyName': name.length === 3 ? name[2] : name[1]
+                },
+                "gender": ndhmDetails.gender,
+                "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
+                "primaryContact": ndhmDetails.identifiers[0].value
+            };
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
+
     function getPatientGender(gender) {
         switch(gender) {
             case "M":
