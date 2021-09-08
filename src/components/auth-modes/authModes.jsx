@@ -10,7 +10,7 @@ const AuthModes = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
 
-    const healthId = props.healthId;
+    const id = props.id;
     const authModes = props.authModes;
     let authModesList = authModes !== undefined && authModes.length > 0 && authModes.map((item, i) => {
         return (
@@ -26,7 +26,7 @@ const AuthModes = (props) => {
         setLoader(true);
         if (selectedAuthMode !== "DEMOGRAPHICS") {
             setShowError(false)
-            const response = await authInit(healthId, selectedAuthMode);
+            const response = await authInit(id, selectedAuthMode);
             if (response.error !== undefined) {
                 setShowError(true)
                 setErrorHealthId(response.error.message);
@@ -57,7 +57,7 @@ const AuthModes = (props) => {
                 </div>
             </div>
             {loader && <Spinner />}
-            {showOtpField && <OtpVerification healthId={healthId} selectedAuthMode={selectedAuthMode} />}
+            {showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} />}
         </div>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchPatientDetailsFromBahmni } from '../../api/hipServiceApi';
+import { fetchPatientDetailsFromBahmni, saveDemographics } from '../../api/hipServiceApi';
 import './patientDetails.scss';
 
 const PatientDetails = (props) => {
@@ -11,7 +11,7 @@ const PatientDetails = (props) => {
     const [showTabularFormat, setShowTabularFormat] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
-    const healthId = props.healthId;
+    const id = props.id;
     const january_1 = "01/01/";
 
     useEffect(() => {
@@ -21,15 +21,8 @@ const PatientDetails = (props) => {
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
         if (response.error === undefined) {
-            if (response.length == 1) {
-                setShowBahmni(true);
-                setShowTabularFormat(true);
-                parsePatientAddress(response[0]);
-                setBahmniDetails(response[0]);
-            } else {
-                const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
-                setPatients(parsedPatients);
-            }
+            const parsedPatients = response.map(patient => {parsePatientAddress(patient); return patient});
+            setPatients(parsedPatients);
         }
     }
 
@@ -48,10 +41,11 @@ const PatientDetails = (props) => {
                 };
                 break;
             case 'name':
-                const name = ndhmDetails.name.split(" ", 2);
+                const name = ndhmDetails.name.split(" ", 3);
                 changedDetails.name = {
                     'givenName': name[0],
-                    'familyName': name[1]
+                    'middleName': name.length === 3 ? name[1] : '',
+                    'familyName': name.length === 3 ? name[2] : name[1]
                 };
                 break;
             case 'gender':
@@ -102,47 +96,75 @@ const PatientDetails = (props) => {
         };
     }
 
+    function getDemographics(){
+        save();
+        saveDemographics(id,ndhmDetails);
+    }
+
     function save() {
-        let patient;
+        let patient = {
+            "id": id,
+            "healthId": getHealthNumber(),
+            "healthNumber": ndhmDetails.id
+        }
+
         if (showBahmni) {
-            patient = {
-                "healthId": healthId,
-                "changedDetails": changedDetails,
-                "uuid" : bahmniDetails.uuid
-            };
+            patient["changedDetails"] = changedDetails;
+            patient["uuid"] = bahmniDetails.uuid;
         } else {
-            const name = ndhmDetails.name.split(" ", 2);
-            patient = {
-                "healthId": healthId,
-                "changedDetails": {
-                    "address": {
-                        'countyDistrict': ndhmDetails.addressObj.district,
-                        'address1': ndhmDetails.addressObj.line,
-                        'stateProvince': ndhmDetails.addressObj.state
-                    },
-                    "name": {
-                        'givenName': name[0],
-                        'familyName': name[1]
-                    },
-                    "gender": ndhmDetails.gender,
-                    "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
-                    "phoneNumber": ndhmDetails.identifiers[0].value
-                }
-            }
+            const name = ndhmDetails.name.split(" ", 3);
+            patient["changedDetails"] = {
+                "address": {
+                    'countyDistrict': ndhmDetails.addressObj.district,
+                    'address1': ndhmDetails.addressObj.line,
+                    'stateProvince': ndhmDetails.addressObj.state
+                },
+                "name": {
+                    'givenName': name[0],
+                    'middleName': name.length === 3 ? name[1] : '',
+                    'familyName': name.length === 3 ? name[2] : name[1]
+                },
+                "gender": ndhmDetails.gender,
+                "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
+                "phoneNumber": ndhmDetails.identifiers[0].value
+            };
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
+
+    function getPatientGender(gender) {
+        switch(gender) {
+            case "M":
+                return "Male";
+            case "F":
+                return "Female";
+            case "U":
+                return "Undisclosed";
+            default:
+                return "Other";
+        }
+    }
     function getPatientDetailsAsString(patient) {
         let patientString = "";
-        patientString = patientString + patient.name + ", ";
+        patientString = patientString + patient.name.replace(null,"") + ", ";
         patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
-        patientString = patientString + (patient.gender === "M" ? "Male" : "Female") + ", ";
+        patientString = patientString + getPatientGender(patient.gender) + ", ";
+        patientString = patientString + (patient.phoneNumber || patient.identifiers[0].value) + ", ";
         patientString = patientString + patient.address;
         return patientString;
     }
     function onSelectMatchingPatient(e) {
         const index = e.target.value;
         setSelectedPatient(patients[index]);
+    }
+    function getHealthNumber() {
+        let healthNumber;
+        ndhmDetails.identifiers.forEach(id => {
+            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
+                healthNumber = id.value;
+            }
+        })
+        return healthNumber;
     }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
@@ -172,7 +194,7 @@ const PatientDetails = (props) => {
             {!showTabularFormat && <div>
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    <p>Please select your matching bahmni record, incase of no match procedd with new card creation</p>
+                    <p>Please select your matching bahmni record, incase of no match proceed with new card creation</p>
                     {prepareMatchingPatientsList()}
                 </div>
                 <div className="create-confirm-btns">
@@ -223,7 +245,7 @@ const PatientDetails = (props) => {
                 </table>
             </div>}
             {showTabularFormat && <div className="action-btns">
-                <button type="button" onClick={save}>Update</button>
+                <button type="button" onClick={getDemographics}>Update</button>
             </div>}
         </div>
     );
