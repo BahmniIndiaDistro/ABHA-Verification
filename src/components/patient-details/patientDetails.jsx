@@ -195,7 +195,9 @@ const PatientDetails = (props) => {
             {!showTabularFormat && <div>
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    <p>Please select your matching bahmni record, incase of no match proceed with new card creation</p>
+                    <p>Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
+                    <p>Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
+                    <p>Following Found</p>
                     {prepareMatchingPatientsList()}
                 </div>
                 <div className="create-confirm-btns">
