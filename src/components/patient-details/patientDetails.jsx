@@ -5,6 +5,7 @@ import './patientDetails.scss';
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
+    const [noRecords, setNoRecords] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
     const id = props.id;
@@ -16,9 +17,13 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
+        console.log(response);
         if (response.error === undefined) {
             const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
+        }
+        else{
+            setNoRecords(true);
         }
     }
 
@@ -146,9 +151,12 @@ const PatientDetails = (props) => {
     return (
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    <p>Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
-                    <p>Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
-                    <p>Following Found</p>
+                    {!noRecords && <div className="note">
+                        <p>Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
+                        <p>Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
+                    </div>}
+                    {noRecords && <p>No Bahmni Record Found</p>}
+                    {!noRecords && <p>Following Found</p>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
                         <button onClick={updateRecord}> Create New Record </button>
