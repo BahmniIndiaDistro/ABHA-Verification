@@ -152,11 +152,11 @@ const PatientDetails = (props) => {
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
                     {!noRecords && <div className="note">
-                        <p>Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
-                        <p>Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
+                        <p>* Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
+                        <p>* Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
                     </div>}
-                    {noRecords && <p>No Bahmni Record Found</p>}
-                    {!noRecords && <p>Following Found</p>}
+                    {noRecords && <b>No Bahmni Record Found</b>}
+                    {!noRecords && <b>Following Found</b>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
                         <button onClick={updateRecord}> Create New Record </button>
