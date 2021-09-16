@@ -3,12 +3,9 @@ import { fetchPatientDetailsFromBahmni, saveDemographics } from '../../api/hipSe
 import './patientDetails.scss';
 
 const PatientDetails = (props) => {
-    const [showBahmni, setShowBahmni] = useState(false);
-    const [bahmniDetails, setBahmniDetails] = useState({});
-    const [changedDetails, setChangedDetails] = useState({});
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
-    const [showTabularFormat, setShowTabularFormat] = useState(false);
+    const [noRecords, setNoRecords] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
     const id = props.id;
@@ -24,43 +21,15 @@ const PatientDetails = (props) => {
             const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
         }
+        else{
+            setNoRecords(true);
+        }
     }
 
     function parsePatient(patient) {
         patient.address = patient.address.replace(/null,|null/gm, "").trim();
         patient.address = patient.address.replace(",", ", ");
         patient.name = patient.name.replace(null,"");
-    }
-
-    function checkBoxChangeHandler(key) {
-        switch (key) {
-            case 'address':
-                changedDetails.address = {
-                    'countyDistrict': ndhmDetails.addressObj.district,
-                    'address1': ndhmDetails.addressObj.line,
-                    'stateProvince': ndhmDetails.addressObj.state
-                };
-                break;
-            case 'name':
-                const name = ndhmDetails.name.split(" ", 3);
-                changedDetails.name = {
-                    'givenName': name[0],
-                    'middleName': name.length === 3 ? name[1] : '',
-                    'familyName': name.length === 3 ? name[2] : name[1]
-                };
-                break;
-            case 'gender':
-                changedDetails.gender = ndhmDetails.gender;
-                break;
-            case 'phoneNumber':
-                 changedDetails.phoneNumber = ndhmDetails.identifiers[0].value.replace("+91", "+91-");
-                 changedDetails.phoneNumber = changedDetails.phoneNumber.replace("--", "-");
-                 break;
-            default:
-                changedDetails.age = calculateAge(january_1 + ndhmDetails.yearOfBirth);
-                break;
-        }
-        setChangedDetails({ ...changedDetails });
     }
 
     function calculateAge(birthDate) {
@@ -97,7 +66,7 @@ const PatientDetails = (props) => {
         };
     }
 
-    function getDemographics(){
+    function updateRecord(){
         save();
         saveDemographics(id,ndhmDetails);
     }
@@ -108,27 +77,24 @@ const PatientDetails = (props) => {
             "healthId": getHealthNumber(),
             "healthNumber": ndhmDetails.id
         }
-
-        if (showBahmni) {
-            patient["changedDetails"] = changedDetails;
-            patient["uuid"] = bahmniDetails.uuid;
-        } else {
-            const name = ndhmDetails.name.split(" ", 3);
-            patient["changedDetails"] = {
-                "address": {
-                    'countyDistrict': ndhmDetails.addressObj.district,
-                    'address1': ndhmDetails.addressObj.line,
-                    'stateProvince': ndhmDetails.addressObj.state
-                },
-                "name": {
-                    'givenName': name[0],
-                    'middleName': name.length === 3 ? name[1] : '',
-                    'familyName': name.length === 3 ? name[2] : name[1]
-                },
-                "gender": ndhmDetails.gender,
-                "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
-                "phoneNumber": ndhmDetails.identifiers[0].value
-            };
+        const name = ndhmDetails.name.split(" ", 3);
+        patient["changedDetails"] = {
+            "address": {
+                'countyDistrict': ndhmDetails.addressObj.district,
+                'address1': ndhmDetails.addressObj.line,
+                'stateProvince': ndhmDetails.addressObj.state
+             },
+            "name": {
+                'givenName': name[0],
+                'middleName': name.length === 3 ? name[1] : '',    
+                'familyName': name.length === 3 ? name[2] : name[1]
+            },
+            "gender": ndhmDetails.gender,
+            "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
+            "phoneNumber": ndhmDetails.identifiers[0].value
+        };
+        if(selectedPatient.uuid != undefined){
+            patient["uuid"] = selectedPatient.uuid;
         }
         window.parent.postMessage({ "patient": patient }, "*");
     }
@@ -180,75 +146,22 @@ const PatientDetails = (props) => {
     function isSelectedPatientEmpty() {
         return JSON.stringify(selectedPatient) === JSON.stringify({})
     }
-    function confirmSelection() {
-        setShowBahmni(true);
-        setShowTabularFormat(true);
-        setBahmniDetails(selectedPatient);
-    }
-    function createNewRecord() {
-        setShowBahmni(false);
-        setShowTabularFormat(true);
-    }
 
     return (
-        <div>
-            {!showTabularFormat && <div>
                 <div className="matching-patients">
                     <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    <p>Please select your matching bahmni record, incase of no match proceed with new card creation</p>
+                    {!noRecords && <div className="note">
+                        <p>* Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
+                        <p>* Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
+                    </div>}
+                    {noRecords && <b>No Bahmni Record Found</b>}
+                    {!noRecords && <b>Following Found</b>}
                     {prepareMatchingPatientsList()}
+                    <div className="create-confirm-btns">
+                        <button onClick={updateRecord}> Create New Record </button>
+                        <button disabled={isSelectedPatientEmpty()}  onClick={updateRecord}> Confirm Selection </button>
+                    </div>
                 </div>
-                <div className="create-confirm-btns">
-                    <button onClick={createNewRecord}> Create New Record </button>
-                    <button disabled={isSelectedPatientEmpty()} onClick={confirmSelection}> Confirm Selection </button>
-                </div>
-            </div>}
-            {showTabularFormat && <div className="patient-details">
-                <table>
-                    <thead>
-                        <th></th>
-                        {showBahmni && <th>Bahmni</th>}
-                        <th>NDHM</th>
-                        {showBahmni && <th>Fetch records from NDHM?</th>}
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Name</td>
-                            {showBahmni && <td>{bahmniDetails.name}</td>}
-                            <td>{ndhmDetails.name}</td>
-                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('name')} /></td>}
-                        </tr>
-                        <tr>
-                            <td>Gender</td>
-                            {showBahmni && <td>{bahmniDetails.gender}</td>}
-                            <td>{ndhmDetails.gender}</td>
-                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('gender')} /></td>}
-                        </tr>
-                        <tr>
-                            <td>Year Of Birth</td>
-                            {showBahmni && <td>{bahmniDetails.yearOfBirth}</td>}
-                            <td>{ndhmDetails.yearOfBirth}</td>
-                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('age')} /></td>}
-                        </tr>
-                        <tr>
-                            <td>Phone </td>
-                            {showBahmni && <td>{bahmniDetails.phoneNumber}</td>}
-                            <td>{ndhmDetails.identifiers[0].value}</td>
-                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('phoneNumber')} /></td>}
-                        </tr>
-                        <tr>
-                            <td>Address</td>
-                            {showBahmni && <td>{bahmniDetails.address}</td>}
-                            <td>{ndhmDetails.address}</td>
-                            {showBahmni && <td><input type="checkbox" onChange={() => checkBoxChangeHandler('address')} /></td>}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>}
-            {showTabularFormat && <div className="action-btns">
-                <button type="button" onClick={getDemographics}>Update</button>
-            </div>}
-        </div>
     );
 };
 export default PatientDetails;
