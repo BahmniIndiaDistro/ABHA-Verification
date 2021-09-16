@@ -17,7 +17,6 @@ const PatientDetails = (props) => {
 
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
-        console.log(response);
         if (response.error === undefined) {
             const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
