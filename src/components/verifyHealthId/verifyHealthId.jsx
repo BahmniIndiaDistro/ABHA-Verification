@@ -10,6 +10,7 @@ const VerifyHealthId = () => {
     const [showAuthModes, setShowAuthModes] = useState(false);
     const [matchingPatientFound, setMatchingPatientFound] = useState(false);
     const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
+    const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
@@ -23,7 +24,9 @@ const VerifyHealthId = () => {
         setShowError(false);
         const matchingPatient = await fetchPatientFromBahmniWithHealthId(id);
         if (matchingPatient.Error === undefined) {
-            if (matchingPatient.error === undefined) {
+            if(matchingPatient.voided === true)
+                setHealthIdIsVoided(true);
+            else if (matchingPatient.error === undefined) {
                 setMatchingPatientFound(true);
                 setMatchingPatientUuid(matchingPatient);
             } else {
@@ -62,6 +65,9 @@ const VerifyHealthId = () => {
             </div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                 Matching record with Health ID/PHR Address found
+            </div>}
+            {healthIdIsVoided && <div className="id-deactivated">
+                Health ID is deactivated
             </div>}
             {loader && <Spinner />}
             {showAuthModes && <AuthModes id={id} authModes={authModes}/>}
