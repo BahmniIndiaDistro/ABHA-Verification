@@ -122,6 +122,17 @@ const isValidOTP = (otp) => {
 export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
     try {
         const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/" + healthId, Constants.headers);
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
+    }
+}
+
+export const getHealthIdStatus = async (patientUuid) => {
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/IdDeactivationStatus/" + patientUuid, Constants.headers);
+        console.log(response)
         return response.data;
     } catch (error) {
         return Constants.openMrsDown;

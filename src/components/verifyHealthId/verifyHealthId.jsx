@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {getAuthModes, fetchPatientFromBahmniWithHealthId} from '../../api/hipServiceApi';
+import {getAuthModes, fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 import Spinner from '../spinner/spinner';
 import './verifyHealthId.scss';
@@ -22,13 +22,14 @@ const VerifyHealthId = () => {
     async function verifyHealthId() {
         setLoader(true);
         setShowError(false);
-        const matchingPatient = await fetchPatientFromBahmniWithHealthId(id);
-        if (matchingPatient.Error === undefined) {
-            if(matchingPatient.voided === true)
+        const matchingPatientId = await fetchPatientFromBahmniWithHealthId(id);
+        const healthIdStatus = await getHealthIdStatus(matchingPatientId);
+        if (matchingPatientId.Error === undefined) {
+            if(healthIdStatus === true)
                 setHealthIdIsVoided(true);
-            else if (matchingPatient.error === undefined) {
+            else if (matchingPatientId.error === undefined) {
                 setMatchingPatientFound(true);
-                setMatchingPatientUuid(matchingPatient);
+                setMatchingPatientUuid(matchingPatientId);
             } else {
                 const response = await getAuthModes(id);
                 if (response.error !== undefined) {
@@ -42,7 +43,7 @@ const VerifyHealthId = () => {
             }
         } else {
             setShowError(true)
-            setErrorHealthId(matchingPatient.Error.message);
+            setErrorHealthId(matchingPatientId.Error.message);
         }
         setLoader(false);
     }
