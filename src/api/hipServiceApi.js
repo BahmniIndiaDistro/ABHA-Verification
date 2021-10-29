@@ -127,6 +127,15 @@ export const fetchPatientFromBahmniWithHealthId = async (healthId) => {
         return Constants.openMrsDown;
     }
 }
+
+export const getHealthIdStatus = async (patientUuid) => {
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/IdDeactivationStatus/" + patientUuid, Constants.headers);
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
+    }
+}
 const IsValidPHRAddress = (healthId) => {
     let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
     return healthId.match(pattern);
