@@ -27,6 +27,7 @@ const VerifyHealthId = () => {
                 setMatchingPatientFound(true);
                 setMatchingPatientUuid(matchingPatient);
             } else {
+                setMatchingPatientFound(false);
                 const response = await getAuthModes(id);
                 if (response.error !== undefined) {
                     setShowError(true)
