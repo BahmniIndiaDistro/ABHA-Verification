@@ -72,6 +72,7 @@ const PatientDetails = (props) => {
     }
 
     function save() {
+        let isNewPatient = false;
         let patient = {
             "id": id,
             "healthId": getHealthNumber(),
@@ -96,7 +97,11 @@ const PatientDetails = (props) => {
         if(selectedPatient.uuid != undefined){
             patient["uuid"] = selectedPatient.uuid;
         }
-        window.parent.postMessage({ "patient": patient }, "*");
+        else
+        {
+            isNewPatient = true;
+        }
+        window.parent.postMessage({ "patient": patient,"isNewPatient": isNewPatient}, "*");
     }
 
     function getPatientGender(gender) {
