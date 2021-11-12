@@ -67,11 +67,14 @@ const PatientDetails = (props) => {
     }
 
     function updateRecord(){
-        save();
-        saveDemographics(id,ndhmDetails);
+        save(false);
     }
 
-    function save() {
+    function confirmSelection(){
+        save(true);
+    }
+
+    function save(isConfirmSelected) {
         let patient = {
             "id": id,
             "healthId": getHealthNumber(),
@@ -93,10 +96,11 @@ const PatientDetails = (props) => {
             "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
             "phoneNumber": ndhmDetails.identifiers[0].value
         };
-        if(selectedPatient.uuid != undefined){
+        if(isConfirmSelected && selectedPatient.uuid !== undefined){
             patient["uuid"] = selectedPatient.uuid;
         }
         window.parent.postMessage({ "patient": patient }, "*");
+        saveDemographics(id,ndhmDetails)
     }
 
     function getPatientGender(gender) {
@@ -159,7 +163,7 @@ const PatientDetails = (props) => {
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
                         <button onClick={updateRecord}> Create New Record </button>
-                        <button disabled={isSelectedPatientEmpty()}  onClick={updateRecord}> Confirm Selection </button>
+                        <button disabled={isSelectedPatientEmpty()}  onClick={confirmSelection}> Confirm Selection </button>
                     </div>
                 </div>
     );
