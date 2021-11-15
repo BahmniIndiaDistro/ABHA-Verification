@@ -23,8 +23,8 @@ const VerifyHealthId = () => {
         setLoader(true);
         setShowError(false);
         const matchingPatientId = await fetchPatientFromBahmniWithHealthId(id);
+        const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
         if (matchingPatientId.Error === undefined) {
-            const healthIdStatus = await getHealthIdStatus(matchingPatientId);
             if(healthIdStatus === true)
                 setHealthIdIsVoided(true);
             else if (matchingPatientId.error === undefined) {
