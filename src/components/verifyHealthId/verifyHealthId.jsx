@@ -55,7 +55,7 @@ const VerifyHealthId = () => {
         setLoader(false);
     }
 
-    function handleScan(scannedData) {
+    async function handleScan(scannedData) {
         if (scannedData != null) {
             var patient = JSON.parse(scannedData.text)
             const ndhmDetails = {
@@ -84,7 +84,24 @@ const VerifyHealthId = () => {
             setNdhmDetails(ndhmDetails);
             setId(patient.hid);
             setScanningStatus(false);
-            setShowDetailsComparision(true);
+            const matchingPatientId = await fetchPatientFromBahmniWithHealthId(ndhmDetails.id);
+            const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
+            if (matchingPatientId.Error === undefined) {
+                if (healthIdStatus === true)
+                    setHealthIdIsVoided(true);
+                else if (matchingPatientId.error === undefined) {
+                    setMatchingPatientFound(true);
+                    setMatchingPatientUuid(matchingPatientId);
+                    setShowDetailsComparision(false);
+
+                } else {
+                    setShowDetailsComparision(true);
+                    setMatchingPatientFound(false);
+                }
+            } else {
+                setShowError(true)
+                setErrorHealthId(matchingPatientId.Error.message);
+            }
         }
     }
 
@@ -109,13 +126,6 @@ const VerifyHealthId = () => {
                     {showError && <span className="error">{errorHealthId}</span>}
                 </div>
             </div>
-            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
-                Matching record with Health ID/PHR Address found
-            </div>}
-            {healthIdIsVoided && <div className="id-deactivated">
-                Health ID is deactivated
-            </div>}
-            {loader && <Spinner />}
             <div className="alternative-text">
                 OR
             </div>
@@ -127,6 +137,13 @@ const VerifyHealthId = () => {
                         style={{ width: '60%', margin: '50px' }}
                 />}
             </div>
+            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
+                Matching record with Health ID/PHR Address found
+            </div>}
+            {healthIdIsVoided && <div className="id-deactivated">
+                Health ID is deactivated
+            </div>}
+            {loader && <Spinner />}
             {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
 
             {showAuthModes && <AuthModes id={id} authModes={authModes}/>}
