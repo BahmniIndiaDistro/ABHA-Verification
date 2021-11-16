@@ -55,34 +55,37 @@ const VerifyHealthId = () => {
         setLoader(false);
     }
 
+    function mapToNdhmDetails(scannedData) {
+        var patient = JSON.parse(scannedData.text)
+        return {
+            id: patient['hid'],
+            gender: patient['gender'],
+            name: patient['name'],
+            yearOfBirth: getYear(patient['dob']),
+            address: patient['address'],
+            addressObj: {
+                line: patient['address'],
+                district: patient['district_name'],
+                state: patient['state name']
+            },
+            identifiers: [
+                {
+                    "type": "MOBILE",
+                    "value": patient['mobile']
+                },
+                {
+                    "type": "HEALTH_NUMBER",
+                    "value": patient['hidn']
+                }
+            ]
+        };
+    }
+
     async function handleScan(scannedData) {
         if (scannedData != null) {
-            var patient = JSON.parse(scannedData.text)
-            const ndhmDetails = {
-                id: patient['hid'],
-                gender: patient['gender'],
-                name: patient['name'],
-                yearOfBirth: getYear(patient['dob']),
-                address: patient['address'],
-                addressObj: {
-                    line: patient['address'],
-                    district: patient['district_name'],
-                    state: patient['state name']
-                },
-                identifiers: [
-                    {
-                        "type": "MOBILE",
-                        "value": patient['mobile']
-                    },
-                    {
-                        "type": "HEALTH_NUMBER",
-                        "value": patient['hidn']
-                    }
-                ]
-            };
-
+            var ndhmDetails = mapToNdhmDetails(scannedData)
             setNdhmDetails(ndhmDetails);
-            setId(patient.hid);
+            setId(ndhmDetails.id);
             setScanningStatus(false);
             const matchingPatientId = await fetchPatientFromBahmniWithHealthId(ndhmDetails.id);
             const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
@@ -131,10 +134,10 @@ const VerifyHealthId = () => {
             </div>
             <div className="qr-code-scanner">
                 <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || showDetailsComparision}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
-                    {scanningStatus && <QrReader
-                        delay={10}
-                        onScan={handleScan}
-                        style={{ width: '60%', margin: '50px' }}
+                {scanningStatus && <QrReader
+                    delay={10}
+                    onScan={handleScan}
+                    style={{ width: '60%', margin: '50px' }}
                 />}
             </div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
@@ -144,9 +147,8 @@ const VerifyHealthId = () => {
                 Health ID is deactivated
             </div>}
             {loader && <Spinner />}
+            {showAuthModes && <AuthModes id={id} authModes={authModes} />}
             {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
-
-            {showAuthModes && <AuthModes id={id} authModes={authModes}/>}
         </div>
     );
 }
