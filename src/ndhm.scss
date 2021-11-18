@@ -2,7 +2,7 @@ button {
     margin: 2px;
     padding: 3px 10px;
 }
-.verify-health-id, .auth-modes, .otp-verify, .patient-details{
+.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text{
     display: flex;
     width: 100%;
     margin-top: 20px;
@@ -13,6 +13,10 @@ button {
 
     .verify-health-id-input-btn, .auth-modes-select-btn ,  .otp-verify-input-btn{
         width: 50%;
+    }
+
+    .qr-code-scanner{
+        text-align: center;
     }
 
     .verify-health-id-input, .auth-modes-select , .otp-verify-input{

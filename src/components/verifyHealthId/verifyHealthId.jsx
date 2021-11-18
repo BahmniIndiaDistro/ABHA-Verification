@@ -2,6 +2,9 @@ import React, {useState} from "react";
 import {getAuthModes, fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 import Spinner from '../spinner/spinner';
+import QrReader from 'react-qr-scanner';
+import PatientDetails from '../patient-details/patientDetails';
+import { FcWebcam } from 'react-icons/fc';
 import './verifyHealthId.scss';
 
 const VerifyHealthId = () => {
@@ -14,6 +17,9 @@ const VerifyHealthId = () => {
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
+    const [scanningStatus, setScanningStatus] = useState(false);
+    const [showDetailsComparision, setShowDetailsComparision] = useState(false);
+    const [ndhmDetails, setNdhmDetails] = useState({});
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -49,6 +55,64 @@ const VerifyHealthId = () => {
         setLoader(false);
     }
 
+    function mapToNdhmDetails(scannedData) {
+        var patient = JSON.parse(scannedData.text)
+        return {
+            id: patient['hid'],
+            gender: patient['gender'],
+            name: patient['name'],
+            yearOfBirth: getYear(patient['dob']),
+            address: patient['address'],
+            addressObj: {
+                line: patient['address'],
+                district: patient['district_name'],
+                state: patient['state name']
+            },
+            identifiers: [
+                {
+                    "type": "MOBILE",
+                    "value": patient['mobile']
+                },
+                {
+                    "type": "HEALTH_NUMBER",
+                    "value": patient['hidn']
+                }
+            ]
+        };
+    }
+
+    async function handleScan(scannedData) {
+        if (scannedData != null) {
+            var ndhmDetails = mapToNdhmDetails(scannedData)
+            setNdhmDetails(ndhmDetails);
+            setId(ndhmDetails.id);
+            setScanningStatus(false);
+            const matchingPatientId = await fetchPatientFromBahmniWithHealthId(ndhmDetails.id);
+            const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
+            if (matchingPatientId.Error === undefined) {
+                if (healthIdStatus === true)
+                    setHealthIdIsVoided(true);
+                else if (matchingPatientId.error === undefined) {
+                    setMatchingPatientFound(true);
+                    setMatchingPatientUuid(matchingPatientId);
+                    setShowDetailsComparision(false);
+
+                } else {
+                    setShowDetailsComparision(true);
+                    setMatchingPatientFound(false);
+                }
+            } else {
+                setShowError(true)
+                setErrorHealthId(matchingPatientId.Error.message);
+            }
+        }
+    }
+
+    function getYear(dob) {
+        var date = new Date(dob);
+        return date.getYear();
+    }
+
     function redirectToPatientDashboard() {
         window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
     }
@@ -61,9 +125,20 @@ const VerifyHealthId = () => {
                     <div className="verify-health-id-input">
                         <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
                     </div>
-                    <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes}>Verify</button>
-                    {showError && <h6 className="error">{errorHealthId}</h6>}
+                    <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || showDetailsComparision}>Verify</button>
+                    {showError && <span className="error">{errorHealthId}</span>}
                 </div>
+            </div>
+            <div className="alternative-text">
+                OR
+            </div>
+            <div className="qr-code-scanner">
+                <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || showDetailsComparision}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
+                {scanningStatus && <QrReader
+                    delay={10}
+                    onScan={handleScan}
+                    style={{ width: '60%', margin: '50px' }}
+                />}
             </div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                 Matching record with Health ID/PHR Address found
@@ -72,7 +147,8 @@ const VerifyHealthId = () => {
                 Health ID is deactivated
             </div>}
             {loader && <Spinner />}
-            {showAuthModes && <AuthModes id={id} authModes={authModes}/>}
+            {showAuthModes && <AuthModes id={id} authModes={authModes} />}
+            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
         </div>
     );
 }

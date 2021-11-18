@@ -89,7 +89,7 @@ const PatientDetails = (props) => {
              },
             "name": {
                 'givenName': name[0],
-                'middleName': name.length === 3 ? name[1] : '',    
+                'middleName': name.length === 3 ? name[1] : '',
                 'familyName': name.length === 3 ? name[2] : name[1]
             },
             "gender": ndhmDetails.gender,
