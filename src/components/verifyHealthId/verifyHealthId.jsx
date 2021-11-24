@@ -109,8 +109,9 @@ const VerifyHealthId = () => {
     }
 
     function getYear(dob) {
-        var date = new Date(dob);
-        return date.getYear();
+        var datearray = dob.split("/");
+        var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
+        return new Date(newdate).getFullYear();
     }
 
     function redirectToPatientDashboard() {
