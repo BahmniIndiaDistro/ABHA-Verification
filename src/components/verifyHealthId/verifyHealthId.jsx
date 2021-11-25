@@ -57,14 +57,15 @@ const VerifyHealthId = () => {
 
     function mapToNdhmDetails(scannedData) {
         var patient = JSON.parse(scannedData.text)
+        var patientAddress = patient.address == '-' ? '' : patient.address
         return {
             id: patient['hid'],
             gender: patient['gender'],
             name: patient['name'],
             yearOfBirth: getYear(patient['dob']),
-            address: patient['address'],
+            address: patientAddress,
             addressObj: {
-                line: patient['address'],
+                line: patientAddress,
                 district: patient['district_name'],
                 state: patient['state name']
             },

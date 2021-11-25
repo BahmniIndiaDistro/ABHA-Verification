@@ -121,9 +121,20 @@ const PatientDetails = (props) => {
         patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
         patientString = patientString + getPatientGender(patient.gender) + ", ";
         patientString = patientString + (patient.phoneNumber || patient.identifiers[0].value) + ", ";
-        patientString = patientString + patient.address;
+        patientString = patientString + (patient.addressObj !== undefined ? getCustomAddress(patient.addressObj) : patient.address)
         return patientString;
     }
+
+    function getCustomAddress(addressObj) {
+        var customAddress = [];
+        for (var key in addressObj) {
+            if (addressObj[key] !== '-' && addressObj[key] !== '') {
+                customAddress.push(addressObj[key]);
+            }
+        }
+        return customAddress.toString().split(',').join(', ');
+    }
+
     function onSelectMatchingPatient(e) {
         const index = e.target.value;
         setSelectedPatient(patients[index]);
