@@ -164,9 +164,9 @@ const PatientDetails = (props) => {
 
     return (
                 <div className="matching-patients">
-                    <b>NDHM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
+                    <b>ABDM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
                     {!noRecords && <div className="note">
-                        <p>* Select the appropriate Bahmni record to update the Name, Age, Gender as per NDHM records and click on Confirm.</p>
+                        <p>* Select the appropriate Bahmni record to update the Name, Age, Gender as per ABDM records and click on Confirm.</p>
                         <p>* Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
                     </div>}
                     {noRecords && <b>No Bahmni Record Found</b>}
