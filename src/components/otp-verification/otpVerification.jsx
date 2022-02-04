@@ -62,7 +62,7 @@ const OtpVerification = (props) => {
                     <div className="otp-verify-input">
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
-                    <button type="button" disabled={showDetailsComparision} onClick={confirmAuth}>Fetch NDHM Data</button>
+                    <button type="button" disabled={showDetailsComparision} onClick={confirmAuth}>Fetch ABDM Data</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
