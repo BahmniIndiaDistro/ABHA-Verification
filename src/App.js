@@ -5,17 +5,6 @@ import './ndhm.scss';
 
 function App() {
 
-  useEffect(() => {
-    window.addEventListener("message", function (parentWindow) {
-      if (parentWindow.data.call === "parentData") {
-        const hipUrl = parentWindow.data.value.hipUrl;
-        const bahmniUrl = parentWindow.data.value.bahmniUrl;
-        localStorage.setItem("hipServiceUrl", hipUrl);
-        localStorage.setItem("bahmniUrl", bahmniUrl);
-      }
-    }, false);
-  }, []);
-
   return (
     <div className="app">
       <VerifyHealthId />
