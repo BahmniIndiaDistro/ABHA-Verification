@@ -107,7 +107,7 @@ export class FhirPatient {
     constructor(id,identifier,name,gender,dob,address,telecom,contact) {
         this.id = id
         this.gender = gender
-        this.identifiers= [identifier]
+        this.identifiers= identifier
         this.names = [name]
         this.birthDate = dob
         this.address = [address]

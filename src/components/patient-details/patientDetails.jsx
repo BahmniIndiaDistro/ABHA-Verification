@@ -78,7 +78,7 @@ const PatientDetails = (props) => {
     function save(isConfirmSelected) {
 
         var healthNumber = new Identifier(new Type("ABHA"),getHealthNumber())
-        var healthId = new Identifier(new Type("ABHA ADDRESS"),ndhmDetails.id)
+        var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails.id)
 
         const name = ndhmDetails.name.split(" ", 3);
         var familyName = name.length === 3 ? name[2] : name[1]
@@ -86,8 +86,8 @@ const PatientDetails = (props) => {
         var firstName= name[0]
         var names = new Name(familyName,[firstName,middleName])
 
-        var gender = getPatientGender(ndhmDetails.gender)
-        var dob = ndhmDetails.yearOfBirth + "01-01"
+        var gender = ndhmDetails.gender
+        var dob = ndhmDetails.yearOfBirth + "01-01-"
 
         var telecom = new Telecom("phone",ndhmDetails.identifiers[0].value)
 
