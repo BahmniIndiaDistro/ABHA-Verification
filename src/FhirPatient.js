@@ -95,6 +95,7 @@ export const GENDER = {
 }
 
 export class FhirPatient {
+    id : string
     identifiers: Array<Identifier>
     gender : GENDER
     names : Array<Name>
@@ -103,7 +104,8 @@ export class FhirPatient {
     telecom : Array<Telecom>
     contact : Array<Contact>
 
-    constructor(identifier,name,gender,dob,address,telecom,contact) {
+    constructor(id,identifier,name,gender,dob,address,telecom,contact) {
+        this.id = id
         this.gender = gender
         this.identifiers= [identifier]
         this.names = [name]
