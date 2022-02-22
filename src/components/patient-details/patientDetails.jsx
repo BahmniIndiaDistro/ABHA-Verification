@@ -87,7 +87,7 @@ const PatientDetails = (props) => {
         var names = new Name(familyName,[firstName,middleName])
 
         var gender = ndhmDetails.gender
-        var dob = ndhmDetails.yearOfBirth + "01-01-"
+        var dob = ndhmDetails.yearOfBirth
 
         var telecom = new Telecom("phone",ndhmDetails.identifiers[0].value)
 

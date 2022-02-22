@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useEffect } from "react";
+import React from "react";
 import VerifyHealthId from './components/verifyHealthId/verifyHealthId';
 import './ndhm.scss';
 
