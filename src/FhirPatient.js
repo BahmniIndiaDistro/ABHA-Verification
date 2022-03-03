@@ -22,10 +22,10 @@ export class Name {
     givenName : Array<string>
     use : string
 
-    constructor(familyName,givenName){
+    constructor(familyName,givenName,use=""){
         this.familyName = familyName
         this.givenName = givenName
-        this.use = "preferred"
+        this.use = use;
     }
 }
 
@@ -101,7 +101,7 @@ export class FhirPatient {
     names : Array<Name>
     birthDate : string
     address: Array<Address>
-    telecom : Array<Telecom>
+    contactPoint : Array<Telecom>
     contact : Array<Contact>
 
     constructor(id,identifier,name,gender,dob,address,telecom,contact) {
@@ -111,7 +111,7 @@ export class FhirPatient {
         this.names = [name]
         this.birthDate = dob
         this.address = [address]
-        this.telecom = [telecom]
+        this.contactPoint = [telecom]
         this.contact = [contact]
     }
 }

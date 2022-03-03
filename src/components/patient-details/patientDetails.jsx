@@ -98,7 +98,7 @@ const PatientDetails = (props) => {
         }
 
         let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,address,telecom,"")
-        console.log(patient)
+
         window.parent.postMessage({ "patient": patient }, "*");
         saveDemographics(id,ndhmDetails)
     }
