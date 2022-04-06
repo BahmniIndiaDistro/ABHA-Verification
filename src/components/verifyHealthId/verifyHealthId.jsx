@@ -67,7 +67,8 @@ const VerifyHealthId = () => {
             addressObj: {
                 line: patientAddress,
                 district: patient['district_name'],
-                state: patient['state name']
+                state: patient['state name'],
+                pincode: patient['pincode']
             },
             identifiers: [
                 {

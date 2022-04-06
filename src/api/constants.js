@@ -1,9 +1,10 @@
-export const hipServiceUrl = localStorage.getItem("hipServiceUrl");
-export const bahmniUrl = localStorage.getItem("bahmniUrl");
+
 export const headers = {
     'Content-Type': 'application/json'
 };
 export const purpose = "KYC_AND_LINK";
+export const bahmniUrl = "/openmrs/ws/rest/v1/hip";
+export const hipServiceUrl ="/hiprovider";
 
 export const authModesUrl = "/v0.5/hip/fetch-modes";
 export const authInitUrl = "/v0.5/hip/auth/init";

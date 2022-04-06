@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { fetchPatientDetailsFromBahmni, saveDemographics } from '../../api/hipServiceApi';
+import React, {useEffect, useState} from 'react';
+import {fetchPatientDetailsFromBahmni, saveDemographics} from '../../api/hipServiceApi';
 import './patientDetails.scss';
+import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -75,30 +76,29 @@ const PatientDetails = (props) => {
     }
 
     function save(isConfirmSelected) {
-        let patient = {
-            "id": id,
-            "healthId": getHealthNumber(),
-            "healthNumber": ndhmDetails.id
-        }
-        const name = ndhmDetails.name.split(" ", 3);
-        patient["changedDetails"] = {
-            "address": {
-                'countyDistrict': ndhmDetails.addressObj.district,
-                'address1': ndhmDetails.addressObj.line,
-                'stateProvince': ndhmDetails.addressObj.state
-             },
-            "name": {
-                'givenName': name[0],
-                'middleName': name.length === 3 ? name[1] : '',
-                'familyName': name.length === 3 ? name[2] : name[1]
-            },
-            "gender": ndhmDetails.gender,
-            "age": calculateAge("01/01/" + ndhmDetails.yearOfBirth),
-            "phoneNumber": ndhmDetails.identifiers[0].value
-        };
+
+        var healthNumber = new Identifier(new Type("ABHA"),getHealthNumber())
+        var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
+
+        const name = ndhmDetails?.name?.split(" ", 3);
+        var familyName = name?.length === 3 ? name[2] : (name?.length > 1 ? name[1] : '')
+        var middleName = name?.length === 3 ? name[1] : ''
+        var firstName= name?.length > 0 ? name[0]: '';
+        var names = new Name(familyName,[firstName,middleName])
+
+        var gender = ndhmDetails?.gender
+        var dob = ndhmDetails?.yearOfBirth
+
+        var telecom = new Telecom("phone",ndhmDetails?.identifiers[0].value)
+
+        var address = new Address([ndhmDetails.addressObj?.line],"",ndhmDetails.addressObj?.district,ndhmDetails.addressObj?.state,ndhmDetails.addressObj?.pincode,"IN")
+        var id;
         if(isConfirmSelected && selectedPatient.uuid !== undefined){
-            patient["uuid"] = selectedPatient.uuid;
+           id = selectedPatient.uuid;
         }
+
+        let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,address,telecom,"")
+
         window.parent.postMessage({ "patient": patient }, "*");
         saveDemographics(id,ndhmDetails)
     }
@@ -106,22 +106,22 @@ const PatientDetails = (props) => {
     function getPatientGender(gender) {
         switch(gender) {
             case "M":
-                return "Male";
+                return GENDER.MALE;
             case "F":
-                return "Female";
+                return GENDER.FEMALE;
             case "U":
-                return "Undisclosed";
+                return GENDER.UNKNOWN;
             default:
-                return "Other";
+                return GENDER.OTHER;
         }
     }
     function getPatientDetailsAsString(patient) {
         let patientString = "";
-        patientString = patientString + patient.name.replace(null,"") + ", ";
+        patientString = patientString + patient?.name?.replace(null,"") + ", ";
         patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
-        patientString = patientString + getPatientGender(patient.gender) + ", ";
-        patientString = patientString + (patient.phoneNumber || patient.identifiers[0].value) + ", ";
-        patientString = patientString + (patient.addressObj !== undefined ? getCustomAddress(patient.addressObj) : patient.address)
+        patientString = patientString + getPatientGender(patient?.gender) + ", ";
+        patientString = patientString + (patient?.phoneNumber || patient?.identifiers[0].value) + ", ";
+        patientString = patientString + getCustomAddress(patient?.addressObj) || patient?.address
         return patientString;
     }
 
@@ -141,7 +141,7 @@ const PatientDetails = (props) => {
     }
     function getHealthNumber() {
         let healthNumber;
-        ndhmDetails.identifiers.forEach(id => {
+        ndhmDetails?.identifiers.forEach(id => {
             if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
                 healthNumber = id.value;
             }
