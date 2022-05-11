@@ -5,6 +5,10 @@ on:
      - main
  workflow_dispatch:
 
+env:
+   ORG_NAME: BahmniIndiaDistro
+   EVENT_TYPE: ndhm-react-trigger
+
 jobs:
   build:
     runs-on: ubuntu-latest
