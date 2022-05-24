@@ -118,7 +118,7 @@ const PatientDetails = (props) => {
     function getPatientDetailsAsString(patient) {
         let patientString = "";
         patientString = patientString + patient?.name?.replace(null,"") + ", ";
-        patientString = patientString + calculateAge(patient.yearOfBirth).years + ", ";
+        patientString = patientString + calculateAge(patient.dateOfBirth).years + ", ";
         patientString = patientString + getPatientGender(patient?.gender) + ", ";
         patientString = patientString + (patient?.phoneNumber || patient?.identifiers[0].value) + ", ";
         patientString = patientString + getCustomAddress(patient?.addressObj) || patient?.address
