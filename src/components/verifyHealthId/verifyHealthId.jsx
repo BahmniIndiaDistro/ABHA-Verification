@@ -59,10 +59,10 @@ const VerifyHealthId = () => {
         var patient = JSON.parse(scannedData.text)
         var patientAddress = patient.address == '-' ? '' : patient.address
         return {
-            id: patient['hid'],
+            id: patient['phr'],
             gender: patient['gender'],
             name: patient['name'],
-            yearOfBirth: getYear(patient['dob']),
+            dateOfBirth: patient['dob'],
             address: patientAddress,
             addressObj: {
                 line: patientAddress,

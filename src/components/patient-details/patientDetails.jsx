@@ -87,7 +87,7 @@ const PatientDetails = (props) => {
         var names = new Name(familyName,[firstName,middleName])
 
         var gender = ndhmDetails?.gender
-        var dob = ndhmDetails?.yearOfBirth
+        var dob = ndhmDetails?.dateOfBirth
 
         var telecom = new Telecom("phone",ndhmDetails?.identifiers[0].value)
 
@@ -118,7 +118,7 @@ const PatientDetails = (props) => {
     function getPatientDetailsAsString(patient) {
         let patientString = "";
         patientString = patientString + patient?.name?.replace(null,"") + ", ";
-        patientString = patientString + calculateAge(january_1 + patient.yearOfBirth).years + ", ";
+        patientString = patientString + calculateAge(patient.yearOfBirth).years + ", ";
         patientString = patientString + getPatientGender(patient?.gender) + ", ";
         patientString = patientString + (patient?.phoneNumber || patient?.identifiers[0].value) + ", ";
         patientString = patientString + getCustomAddress(patient?.addressObj) || patient?.address
