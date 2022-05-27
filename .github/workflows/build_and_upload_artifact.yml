@@ -3,6 +3,7 @@ on:
  push:
     branches:
      - main
+     - scan-fix
  workflow_dispatch:
 
 jobs:
