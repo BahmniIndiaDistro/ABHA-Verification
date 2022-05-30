@@ -58,6 +58,7 @@ const VerifyHealthId = () => {
     function mapToNdhmDetails(scannedData) {
         var patient = JSON.parse(scannedData.text)
         var patientAddress = patient.address == '-' ? '' : patient.address
+        var ABHA = patient['hidn'] === '-' ? null : patient['hidn']
         return {
             id: patient['phr'],
             gender: patient['gender'],
@@ -77,7 +78,7 @@ const VerifyHealthId = () => {
                 },
                 {
                     "type": "HEALTH_NUMBER",
-                    "value": patient['hidn']
+                    "value": ABHA
                 }
             ]
         };
