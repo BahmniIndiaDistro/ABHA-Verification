@@ -100,7 +100,7 @@ const PatientDetails = (props) => {
         let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,address,telecom,"")
 
         window.parent.postMessage({ "patient": patient }, "*");
-        saveDemographics(id,ndhmDetails)
+        saveDemographics(ndhmDetails?.id,ndhmDetails)
     }
 
     function getPatientGender(gender) {

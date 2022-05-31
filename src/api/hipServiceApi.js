@@ -27,7 +27,7 @@ export const saveDemographics = async (healthId,ndhmDetails) => {
             "healthId": healthId,
             "name": ndhmDetails.name,
             "gender": ndhmDetails.gender,
-            "dateOfBirth": ndhmDetails.yearOfBirth,
+            "dateOfBirth": ndhmDetails.dateOfBirth,
             "phoneNumber": ndhmDetails.identifiers[0].value
     };
 
