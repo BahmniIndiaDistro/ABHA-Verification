@@ -27,7 +27,7 @@ export const saveDemographics = async (healthId,ndhmDetails) => {
             "healthId": healthId,
             "name": ndhmDetails.name,
             "gender": ndhmDetails.gender,
-            "dateOfBirth": ndhmDetails.yearOfBirth,
+            "dateOfBirth": ndhmDetails.dateOfBirth,
             "phoneNumber": ndhmDetails.identifiers[0].value
     };
 
@@ -88,7 +88,7 @@ export const authConfirm = async (healthId, otp) => {
 export const fetchPatientDetailsFromBahmni = async (patient) => {
     const params = {
         "patientName": patient.name,
-        "patientYearOfBirth": patient.yearOfBirth,
+        "patientYearOfBirth": new Date(patient.dateOfBirth).getFullYear(),
         "patientGender": patient.gender,
         "phoneNumber": encodeURI(patient.identifiers[0].value)
     }
