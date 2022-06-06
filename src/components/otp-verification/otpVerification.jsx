@@ -38,7 +38,7 @@ const OtpVerification = (props) => {
             id: patient.id,
             gender: patient.gender,
             name: patient.name,
-            dateOfBirth: patient.dateOfBirth,
+            dateOfBirth: new Date(patient.yearOfBirth,patient.monthOfBirth-1,patient.dayOfBirth),
             address: addressAsString(patient.address),
             addressObj: patient.address,
             identifiers: patient.identifiers
