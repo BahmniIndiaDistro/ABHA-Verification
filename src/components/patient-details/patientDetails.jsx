@@ -116,12 +116,10 @@ const PatientDetails = (props) => {
         }
     }
     function getPatientDetailsAsString(patient) {
-        let patientString = "";
-        patientString = patientString + patient?.name?.replace(null,"") + ", ";
-        patientString = patientString + calculateAge(patient.dateOfBirth).years + ", ";
-        patientString = patientString + getPatientGender(patient?.gender) + ", ";
-        patientString = patientString + (patient?.phoneNumber || patient?.identifiers[0].value) + ", ";
-        patientString = patientString + getCustomAddress(patient?.addressObj) + patient?.address
+        let patientString = [patient?.name?.replace(null,""), calculateAge(patient.dateOfBirth).years, 
+        getPatientGender(patient?.gender), patient?.phoneNumber || patient?.identifiers[0]?.value, 
+        getCustomAddress(patient?.addressObj) || patient?.address].filter(Boolean).join(", ");
+
         return patientString;
     }
 
