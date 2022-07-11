@@ -75,6 +75,12 @@ const PatientDetails = (props) => {
         save(true);
     }
 
+    function getPhoneNumber() {
+        var phoneNumber = ndhmDetails?.identifiers[0].value;
+        var len = phoneNumber.length;
+        return "+91".concat(phoneNumber.substring(len-10,len));
+    }
+
     function save(isConfirmSelected) {
 
         var healthNumber = new Identifier(new Type("ABHA"),getHealthNumber())
@@ -89,7 +95,7 @@ const PatientDetails = (props) => {
         var gender = ndhmDetails?.gender
         var dob = ndhmDetails?.dateOfBirth
 
-        var telecom = new Telecom("phone",ndhmDetails?.identifiers[0].value)
+        var telecom = new Telecom("phone",getPhoneNumber())
 
         var address = new Address([ndhmDetails.addressObj?.line],"",ndhmDetails.addressObj?.district,ndhmDetails.addressObj?.state,ndhmDetails.addressObj?.pincode,"IN")
         var id;
