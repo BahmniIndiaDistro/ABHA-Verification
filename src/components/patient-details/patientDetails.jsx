@@ -103,7 +103,7 @@ const PatientDetails = (props) => {
            id = selectedPatient.uuid;
         }
 
-        let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,address,telecom,"")
+        let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,ndhmDetails?.isBirthDateEstimated, address,telecom,"")
 
         window.parent.postMessage({ "patient": patient }, "*");
         saveDemographics(ndhmDetails?.id,ndhmDetails)

@@ -100,16 +100,18 @@ export class FhirPatient {
     gender : GENDER
     names : Array<Name>
     birthDate : string
+    isBirthDateEstimated : Boolean
     address: Array<Address>
     contactPoint : Array<Telecom>
     contact : Array<Contact>
 
-    constructor(id,identifier,name,gender,dob,address,telecom,contact) {
+    constructor(id,identifier,name,gender,dob,isBirthDateEstimated,address,telecom,contact) {
         this.id = id
         this.gender = gender
         this.identifiers= identifier
         this.names = [name]
         this.birthDate = dob
+        this.isBirthDateEstimated = isBirthDateEstimated
         this.address = [address]
         this.contactPoint = [telecom]
         this.contact = [contact]

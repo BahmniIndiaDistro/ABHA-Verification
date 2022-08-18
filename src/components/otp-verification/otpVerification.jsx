@@ -33,12 +33,18 @@ const OtpVerification = (props) => {
         setOtp(e.target.value);
     }
 
+    function getBirthDate(patient) {
+        return  new Date(patient.yearOfBirth,(patient?.monthOfBirth ?? 1) - 1,patient?.dayOfBirth ?? 1)
+    }
+
+
     function parseNdhmDetails(patient) {
         const ndhm = {
             id: patient.id,
             gender: patient.gender,
             name: patient.name,
-            dateOfBirth: new Date(patient.yearOfBirth,patient.monthOfBirth-1,patient.dayOfBirth),
+            isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
+            dateOfBirth: getBirthDate(patient),
             address: addressAsString(patient.address),
             addressObj: patient.address,
             identifiers: patient.identifiers
