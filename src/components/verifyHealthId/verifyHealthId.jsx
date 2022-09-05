@@ -131,7 +131,7 @@ const VerifyHealthId = () => {
                         <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
                     </div>
                     <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || showDetailsComparision}>Verify</button>
-                    {showError && <span className="error">{errorHealthId}</span>}
+                    {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>
             <div className="alternative-text">
