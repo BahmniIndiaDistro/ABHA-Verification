@@ -9,6 +9,7 @@ const AuthModes = (props) => {
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
+    const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
 
     const id = props.id;
     const authModes = props.authModes;
@@ -41,9 +42,13 @@ const AuthModes = (props) => {
         setLoader(false);
     }
 
+    function isPatientDetailsFound() {
+        return JSON.stringify(ndhmDetails) !== JSON.stringify({})
+    }
+
     return (
         <div>
-            <div className="auth-modes">
+            {!isPatientDetailsFound() && <div className="auth-modes">
                 <label htmlFor="auth-modes">Preferred mode of Authentication</label>
                 <div className="auth-modes-select-btn">
                     <div className="auth-modes-select">
@@ -55,9 +60,9 @@ const AuthModes = (props) => {
                     <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
-            </div>
+            </div>}
             {loader && <Spinner />}
-            {showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} />}
+            {showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
         </div>
     );
 }

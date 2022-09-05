@@ -5,8 +5,7 @@ import Spinner from '../spinner/spinner';
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
-    const [showDetailsComparision, setShowDetailsComparision] = useState(false);
-    const [ndhmDetails, setNdhmDetails] = useState({});
+    const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
@@ -24,7 +23,6 @@ const OtpVerification = (props) => {
         }
         else {
             setNdhmDetails(parseNdhmDetails(response));
-            setShowDetailsComparision(true);
         }
         setLoader(false);
     }
@@ -60,20 +58,23 @@ const OtpVerification = (props) => {
         return addressString;
     }
 
+    function isPatientDetailsFound() {
+        return JSON.stringify(ndhmDetails) !== JSON.stringify({})
+    }
+
     return (
         <div>
-            <div className="otp-verify" >
+            {!isPatientDetailsFound() && <div className="otp-verify" >
                 <label htmlFor="otp">Enter OTP </label>
                 <div className="otp-verify-input-btn" >
                     <div className="otp-verify-input">
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
-                    <button type="button" disabled={showDetailsComparision} onClick={confirmAuth}>Fetch ABDM Data</button>
+                    <button type="button" disabled={isPatientDetailsFound()} onClick={confirmAuth}>Fetch ABDM Data</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
-            </div>
+            </div>}
             {loader && <Spinner />}
-            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
         </div>
     );
 }
