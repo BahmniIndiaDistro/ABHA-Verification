@@ -12,37 +12,63 @@
         word-wrap: break-word;
     }
 }
-.action-btns {
-    width: 80%;
-    margin: auto;
-    margin-top: 15px;
-    button {
-        margin-left: 45%;
-        padding: 3px 10px;
-    }
-}
+
 .matching-patients {
     margin-top: 20px;
-    .matching-patient {
-        display: flex;
-        width: 100%;
-        margin: 10px;
-        .details {
-            width: 80%;
-        }
-        .radio-btn {
-            width: 20%;
-        }
-    }
 }
 .create-confirm-btns {
     display: flex;
     width: 70%;
-    margin-left: 5%;
-    margin-top: 10px;
-    justify-content: space-between;
+    margin-left: 40%;
+    margin-top: 20px;
 }
 .note{
-    color: red;
-    font-size: 12px;
+    font-size: 14px;
 }
+
+.matching-patient {
+    width: 100%;
+    border-radius: 15px;
+    border: 2px dashed grey;
+    background: #f3f3f3;
+    font-size: 15px;
+}
+
+.matching-patient:active{
+    box-shadow: 0 0 30px grey inset;
+}
+
+.popup {
+    position: fixed;
+    top: 40%;
+    left: 15%;
+    border-radius: 4px;
+    .popup-content {
+        padding: 40px;
+        word-wrap: break-word;
+    }
+    width: 75%;
+    background: white;
+    box-shadow: 0 0 10px grey inset;
+}
+
+
+.close {
+   float: right;
+   font-size: x-large;
+   border: none;
+}
+
+.warning {
+    color: red;
+    padding-left: 10px;
+    position: relative;
+}
+
+.greyed-out {
+    opacity: 0.5;
+}
+
+
+
+
