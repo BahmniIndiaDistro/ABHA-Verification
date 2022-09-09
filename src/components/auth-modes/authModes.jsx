@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { authInit } from '../../api/hipServiceApi';
 import OtpVerification from '../otp-verification/otpVerification';
 import Spinner from '../spinner/spinner';
+import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
@@ -42,13 +43,10 @@ const AuthModes = (props) => {
         setLoader(false);
     }
 
-    function isPatientDetailsFound() {
-        return JSON.stringify(ndhmDetails) !== JSON.stringify({})
-    }
 
     return (
         <div>
-            {!isPatientDetailsFound() && <div className="auth-modes">
+            {!checkIfNotNull(ndhmDetails) && <div className="auth-modes">
                 <label htmlFor="auth-modes">Preferred mode of Authentication</label>
                 <div className="auth-modes-select-btn">
                     <div className="auth-modes-select">

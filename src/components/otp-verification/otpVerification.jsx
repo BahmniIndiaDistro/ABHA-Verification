@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { authConfirm } from '../../api/hipServiceApi';
 import PatientDetails from '../patient-details/patientDetails';
 import Spinner from '../spinner/spinner';
+import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
@@ -58,19 +59,16 @@ const OtpVerification = (props) => {
         return addressString;
     }
 
-    function isPatientDetailsFound() {
-        return JSON.stringify(ndhmDetails) !== JSON.stringify({})
-    }
 
     return (
         <div>
-            {!isPatientDetailsFound() && <div className="otp-verify" >
+            {!checkIfNotNull(ndhmDetails) && <div className="otp-verify" >
                 <label htmlFor="otp">Enter OTP </label>
                 <div className="otp-verify-input-btn" >
                     <div className="otp-verify-input">
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
-                    <button type="button" disabled={isPatientDetailsFound()} onClick={confirmAuth}>Fetch ABDM Data</button>
+                    <button type="button" disabled={checkIfNotNull(ndhmDetails)} onClick={confirmAuth}>Fetch ABDM Data</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>}

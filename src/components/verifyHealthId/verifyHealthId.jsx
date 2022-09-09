@@ -115,9 +115,6 @@ const VerifyHealthId = () => {
         return new Date(newdate).getFullYear();
     }
 
-    function isPatientDetailsFound() {
-        return !matchingPatientFound && !healthIdIsVoided && JSON.stringify(ndhmDetails) !== JSON.stringify({})
-    }
 
     function redirectToPatientDashboard() {
         window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
@@ -125,7 +122,7 @@ const VerifyHealthId = () => {
 
     return (
         <div>
-        {!isPatientDetailsFound() &&
+        {!checkIfNotNull(ndhmDetails) &&
             <div>
                 <div className="verify-health-id">
                     <label htmlFor="healthId" className="label">Enter ABHA/ABHA Address: </label>
@@ -133,7 +130,7 @@ const VerifyHealthId = () => {
                         <div className="verify-health-id-input">
                             <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
                         </div>
-                        <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || isPatientDetailsFound()}>Verify</button>
+                        <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Verify</button>
                         {showError && <h6 className="error">{errorHealthId}</h6>}
                     </div>
                 </div>
@@ -141,7 +138,7 @@ const VerifyHealthId = () => {
                     OR
                 </div>
                 <div className="qr-code-scanner">
-                    <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || isPatientDetailsFound()}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
+                    <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
                     {scanningStatus && <QrReader
                         delay={10}
                         onScan={handleScan}
@@ -157,9 +154,13 @@ const VerifyHealthId = () => {
                 {loader && <Spinner />}
                 {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
             </div>}
-            {isPatientDetailsFound() && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
+            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
         </div>
     );
+}
+
+export const checkIfNotNull = (patient) => {
+    return JSON.stringify(patient) !== JSON.stringify({})
 }
 
 export default VerifyHealthId;

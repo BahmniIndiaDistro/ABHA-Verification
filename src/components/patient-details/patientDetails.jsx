@@ -3,6 +3,7 @@ import {fetchPatientDetailsFromBahmni, saveDemographics} from '../../api/hipServ
 import './patientDetails.scss';
 import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 import ConfirmPopup from "./confirmPopup";
+import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -158,30 +159,27 @@ const PatientDetails = (props) => {
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
-                <button onClick={() => setSelectedPatient(patients[i])} disabled={!isSelectedPatientEmpty()} className='matching-patient'>{getPatientDetailsAsString(patient)}</button>
+                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'>{getPatientDetailsAsString(patient)}</button>
             );
         });
-    }
-    function isSelectedPatientEmpty() {
-        return JSON.stringify(selectedPatient) === JSON.stringify({})
     }
 
     return (
             <div className="matching-patients">
-                <div className={!isSelectedPatientEmpty() ? 'greyed-out' : ''}>
+                <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     {getPatientDetailsAsString(ndhmDetails)}<br/>
                     {noRecords && <b>No Bahmni Record Found</b>}
-                    {!noRecords && <b>Following Matched Bahmni Record Found</b>}
+                    {!noRecords && <b>Following Matched Bahmni Record Found:</b>}
                     {!noRecords && <div className="note">
-                        <p>click on the appropriate Bahmni record to update the Name, Age, Gender as per ABDM records</p>
+                        <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
                     </div>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
                         <button onClick={updateRecord}> Create New Record </button>
                     </div>
                 </div>
-                {!isSelectedPatientEmpty() && <ConfirmPopup getPatientDetailsAsString={getPatientDetailsAsString} selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+                {checkIfNotNull(selectedPatient) && <ConfirmPopup getPatientDetailsAsString={getPatientDetailsAsString} selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
             </div>
     );
 };
