@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {fetchPatientDetailsFromBahmni, saveDemographics} from '../../api/hipServiceApi';
 import './patientDetails.scss';
 import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
+import ConfirmPopup from "./confirmPopup";
+import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -121,12 +123,18 @@ const PatientDetails = (props) => {
                 return GENDER.OTHER;
         }
     }
-    function getPatientDetailsAsString(patient) {
-        let patientString = [patient?.name?.replace(null,""), calculateAge(patient.dateOfBirth).years, 
-        getPatientGender(patient?.gender), patient?.phoneNumber || patient?.identifiers[0]?.value, 
-        getCustomAddress(patient?.addressObj) || patient?.address].filter(Boolean).join(", ");
 
-        return patientString;
+    function getPatientDetailsAsString(patient) {
+        const address = getCustomAddress(patient?.addressObj);
+        return (
+                <p>
+                <strong>{patient?.name?.replace(null,"")} </strong>
+                (Age:<strong> {calculateAge(patient.dateOfBirth).years || '-'} </strong>,
+                Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
+                {(address || patient?.address) && <span>{address || patient?.address} <br/></span>}
+                Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
+                </p>
+        )
     }
 
     function getCustomAddress(addressObj) {
@@ -139,10 +147,6 @@ const PatientDetails = (props) => {
         return customAddress.toString().split(',').join(', ');
     }
 
-    function onSelectMatchingPatient(e) {
-        const index = e.target.value;
-        setSelectedPatient(patients[index]);
-    }
     function getHealthNumber() {
         let healthNumber;
         ndhmDetails?.identifiers.forEach(id => {
@@ -155,32 +159,28 @@ const PatientDetails = (props) => {
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
-                <div className="matching-patient">
-                    <span className="details"><b>Bahmni Record: </b>{getPatientDetailsAsString(patient)}</span>
-                    <span className="radio-btn"><input type="radio" value={i} name="patient" onChange={onSelectMatchingPatient}/></span>
-                </div>
+                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'>{getPatientDetailsAsString(patient)}</button>
             );
         });
     }
-    function isSelectedPatientEmpty() {
-        return JSON.stringify(selectedPatient) === JSON.stringify({})
-    }
 
     return (
-                <div className="matching-patients">
-                    <b>ABDM Record: </b> {getPatientDetailsAsString(ndhmDetails)}<br/>
-                    {!noRecords && <div className="note">
-                        <p>* Select the appropriate Bahmni record to update the Name, Age, Gender as per ABDM records and click on Confirm.</p>
-                        <p>* Following Name, Gender, Age will be updated in Bahmni. This action cannot be undone</p>
-                    </div>}
+            <div className="matching-patients">
+                <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
+                    <b>ABDM Record: </b>
+                    {getPatientDetailsAsString(ndhmDetails)}<br/>
                     {noRecords && <b>No Bahmni Record Found</b>}
-                    {!noRecords && <b>Following Found</b>}
+                    {!noRecords && <b>Following Matched Bahmni Record Found:</b>}
+                    {!noRecords && <div className="note">
+                        <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
+                    </div>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
                         <button onClick={updateRecord}> Create New Record </button>
-                        <button disabled={isSelectedPatientEmpty()}  onClick={confirmSelection}> Confirm Selection </button>
                     </div>
                 </div>
+                {checkIfNotNull(selectedPatient) && <ConfirmPopup getPatientDetailsAsString={getPatientDetailsAsString} selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+            </div>
     );
 };
 export default PatientDetails;

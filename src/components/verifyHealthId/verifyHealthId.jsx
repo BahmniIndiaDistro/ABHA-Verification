@@ -18,7 +18,6 @@ const VerifyHealthId = () => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
     const [scanningStatus, setScanningStatus] = useState(false);
-    const [showDetailsComparision, setShowDetailsComparision] = useState(false);
     const [ndhmDetails, setNdhmDetails] = useState({});
 
     function idOnChangeHandler(e) {
@@ -99,10 +98,8 @@ const VerifyHealthId = () => {
                 else if (matchingPatientId.error === undefined) {
                     setMatchingPatientFound(true);
                     setMatchingPatientUuid(matchingPatientId);
-                    setShowDetailsComparision(false);
 
                 } else {
-                    setShowDetailsComparision(true);
                     setMatchingPatientFound(false);
                 }
             } else {
@@ -118,44 +115,52 @@ const VerifyHealthId = () => {
         return new Date(newdate).getFullYear();
     }
 
+
     function redirectToPatientDashboard() {
         window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
     }
 
     return (
         <div>
-            <div className="verify-health-id">
-                <label htmlFor="healthId" className="label">Enter ABHA/ABHA Address: </label>
-                <div className="verify-health-id-input-btn">
-                    <div className="verify-health-id-input">
-                        <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
+        {!checkIfNotNull(ndhmDetails) &&
+            <div>
+                <div className="verify-health-id">
+                    <label htmlFor="healthId" className="label">Enter ABHA/ABHA Address: </label>
+                    <div className="verify-health-id-input-btn">
+                        <div className="verify-health-id-input">
+                            <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
+                        </div>
+                        <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Verify</button>
+                        {showError && <h6 className="error">{errorHealthId}</h6>}
                     </div>
-                    <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || showDetailsComparision}>Verify</button>
-                    {showError && <span className="error">{errorHealthId}</span>}
                 </div>
-            </div>
-            <div className="alternative-text">
-                OR
-            </div>
-            <div className="qr-code-scanner">
-                <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || showDetailsComparision}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
-                {scanningStatus && <QrReader
-                    delay={10}
-                    onScan={handleScan}
-                    style={{ width: '60%', margin: '50px' }}
-                />}
-            </div>
-            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
-                Matching record with Health ID/PHR Address found
+                <div className="alternative-text">
+                    OR
+                </div>
+                <div className="qr-code-scanner">
+                    <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
+                    {scanningStatus && <QrReader
+                        delay={10}
+                        onScan={handleScan}
+                        style={{ width: '60%', margin: '50px' }}
+                    />}
+                </div>
+                {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
+                    Matching record with Health ID/PHR Address found
+                </div>}
+                {healthIdIsVoided && <div className="id-deactivated">
+                    Health ID is deactivated
+                </div>}
+                {loader && <Spinner />}
+                {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
             </div>}
-            {healthIdIsVoided && <div className="id-deactivated">
-                Health ID is deactivated
-            </div>}
-            {loader && <Spinner />}
-            {showAuthModes && <AuthModes id={id} authModes={authModes} />}
-            {showDetailsComparision && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
+            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
         </div>
     );
+}
+
+export const checkIfNotNull = (patient) => {
+    return JSON.stringify(patient) !== JSON.stringify({})
 }
 
 export default VerifyHealthId;
