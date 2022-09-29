@@ -1,4 +1,4 @@
-# NDHM Health ID Verification 
+# ABHA Health ID Verification 
 This repo contains code for ABDM health Id verification feature.
 
 ## Getting Started with Create React App

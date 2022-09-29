@@ -40,7 +40,7 @@ jobs:
           context: .
           file: package/docker/Dockerfile
           push: true
-          tags: bahmniindiadistro/ndhm-react:${{env.ARTIFACT_VERSION}},bahmniindiadistro/ndhm-react:latest
+          tags: bahmniindiadistro/abha-verification:${{env.ARTIFACT_VERSION}},bahmniindiadistro/abha-verification:latest
       - name: Helm - Update Version and Image Tag
         run: |
           yq --inplace '.image.tag = "${{ env.ARTIFACT_VERSION }}"' $HELM_CHART_PATH/values.yaml
@@ -60,7 +60,7 @@ jobs:
           persist-credentials: false
 
       - name: Helm - Copy chart
-        run: mkdir -p helm-charts/ndhm-react/ && cp ndhm-react-${{ env.ARTIFACT_VERSION }}.tgz helm-charts/ndhm-react/
+        run: mkdir -p helm-charts/abha-verification/ && cp abha-verification-${{ env.ARTIFACT_VERSION }}.tgz helm-charts/abha-verification/
 
       - name: Helm - reIndex
         working-directory: helm-charts/
@@ -72,5 +72,5 @@ jobs:
           git config user.name ${{ secrets.BAHMNI_USERNAME}}
           git config user.email ${{ secrets.BAHMNI_EMAIL}}
           git add .
-          git commit -m "Release of ndhm-react-${{ env.ARTIFACT_VERSION }}"
+          git commit -m "Release of abha-verification-${{ env.ARTIFACT_VERSION }}"
           git push 'https://${{ secrets.BAHMNI_USERNAME}}:${{ secrets.BAHMNI_PAT}}@github.com/bahmniindiadistro/helm-charts.git' gh-pages

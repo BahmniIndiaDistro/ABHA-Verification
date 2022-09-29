@@ -11,7 +11,7 @@ metadata:
 
 image:
   repository: bahmniindiadistro
-  name: ndhm-react
+  name: abha-verification
   tag: latest
 
 service:
