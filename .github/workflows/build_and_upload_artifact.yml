@@ -1,10 +1,9 @@
-name: Build NHDM React App
+name: Build & Publish
 on:
  push:
     branches:
      - main
      - 'release-*'
-     - BAH-2376
     tags:
      - '[0-9]+.[0-9]+.[0-9]+'
  workflow_dispatch:
@@ -12,7 +11,7 @@ on:
 
 jobs:
   build-publish-docker-helm:
-    name: Build & Publish Docker Image and Helm Chart
+    name: Build & Publish Docker Image & Helm Chart
     runs-on: ubuntu-latest
     env:
       CI: false
