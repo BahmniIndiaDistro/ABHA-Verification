@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import './patientDetails.scss';
 import {AiFillWarning} from "react-icons/all";
+import PatientInfo from "./patientInfo";
 
 const ConfirmPopup = (props) => {
 
@@ -27,7 +28,7 @@ const ConfirmPopup = (props) => {
                     <AiFillWarning size={20} color="red" />
                     <span className='warning'>
                             Name, Gender, Age will be updated in Bahmni. This action cannot be undone</span>
-                    <p>{props.getPatientDetailsAsString(props.selectedPatient)}</p>
+                    <p><PatientInfo patient={props.selectedPatient}/></p>
                     <button type='submit' onClick={props.onConfirm}> Confirm Selection</button>
                 </div>
             </div>

@@ -4,6 +4,7 @@ import './patientDetails.scss';
 import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
+import PatientInfo from "./patientInfo";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -33,40 +34,6 @@ const PatientDetails = (props) => {
         patient.address = patient.address.replace(/null,|null/gm, "").trim();
         patient.address = patient.address.replace(",", ", ");
         patient.name = patient.name.replace(null,"");
-    }
-
-    function calculateAge(birthDate) {
-        const dob = new Date(birthDate);
-        var dobYear = dob.getYear();
-        var dobMonth = dob.getMonth();
-        var dobDate = dob.getDate();
-        var now = new Date();
-        var currentYear = now.getYear();
-        var currentMonth = now.getMonth();
-        var currentDate = now.getDate();
-        var monthAge;
-        var yearAge = currentYear - dobYear;
-        if (currentMonth >= dobMonth) monthAge = currentMonth - dobMonth;
-        else {
-            yearAge--;
-            monthAge = 12 + currentMonth - dobMonth;
-        }
-        var dateAge;
-        if (currentDate >= dobDate) dateAge = currentDate - dobDate;
-        else {
-            monthAge--;
-            dateAge = 31 + currentDate - dobDate;
-            if (monthAge < 0) {
-                monthAge = 11;
-                yearAge--;
-            }
-        }
-
-        return {
-            'years': yearAge,
-            'months': monthAge,
-            'days': dateAge
-        };
     }
 
     function updateRecord(){
@@ -111,42 +78,6 @@ const PatientDetails = (props) => {
         saveDemographics(ndhmDetails?.id,ndhmDetails)
     }
 
-    function getPatientGender(gender) {
-        switch(gender) {
-            case "M":
-                return GENDER.MALE;
-            case "F":
-                return GENDER.FEMALE;
-            case "U":
-                return GENDER.UNKNOWN;
-            default:
-                return GENDER.OTHER;
-        }
-    }
-
-    function getPatientDetailsAsString(patient) {
-        const address = getCustomAddress(patient?.addressObj);
-        return (
-                <p>
-                <strong>{patient?.name?.replace(null,"")} </strong>
-                (Age:<strong> {calculateAge(patient.dateOfBirth).years || '-'} </strong>,
-                Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
-                {(address || patient?.address) && <span>{address || patient?.address} <br/></span>}
-                Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
-                </p>
-        )
-    }
-
-    function getCustomAddress(addressObj) {
-        var customAddress = [];
-        for (var key in addressObj) {
-            if (addressObj[key] !== '-' && addressObj[key] !== '') {
-                customAddress.push(addressObj[key]);
-            }
-        }
-        return customAddress.toString().split(',').join(', ');
-    }
-
     function getHealthNumber() {
         let healthNumber;
         ndhmDetails?.identifiers.forEach(id => {
@@ -159,7 +90,7 @@ const PatientDetails = (props) => {
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
-                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'>{getPatientDetailsAsString(patient)}</button>
+                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'><PatientInfo patient={patient}/></button>
             );
         });
     }
@@ -168,7 +99,7 @@ const PatientDetails = (props) => {
             <div className="matching-patients">
                 <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
-                    {getPatientDetailsAsString(ndhmDetails)}<br/>
+                    <PatientInfo patient={ndhmDetails}/><br/>
                     {noRecords && <b>No Bahmni Record Found</b>}
                     {!noRecords && <b>Following Matched Bahmni Record Found:</b>}
                     {!noRecords && <div className="note">
@@ -179,7 +110,7 @@ const PatientDetails = (props) => {
                         <button onClick={updateRecord}> Create New Record </button>
                     </div>
                 </div>
-                {checkIfNotNull(selectedPatient) && <ConfirmPopup getPatientDetailsAsString={getPatientDetailsAsString} selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+                {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
             </div>
     );
 };
