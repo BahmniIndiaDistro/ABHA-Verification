@@ -96,8 +96,8 @@ const PatientDetails = (props) => {
     }
 
     return (
-            <div className="matching-patients">
-                <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
+     <div className="matching-patients">
+         {!back && <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
                     {noRecords && <b>No Bahmni Record Found</b>}
@@ -107,10 +107,12 @@ const PatientDetails = (props) => {
                     </div>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
+                        <button onClick={() => GoBack(true)}>Go back</button>
                         <button onClick={updateRecord}> Create New Record </button>
                     </div>
-                </div>
-                {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+                </div>}
+                {!back && checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+            {back && <PatientQueue />}
             </div>
     );
 };
