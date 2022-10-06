@@ -1,4 +1,4 @@
-import {getPatientQueue} from "../../api/hipServiceApi";
+import {fetchPatientFromBahmniWithHealthId, getPatientQueue} from "../../api/hipServiceApi";
 import {useEffect, useState} from "react";
 import './patientQueue.scss';
 import PatientDetails from "../patient-details/patientDetails";
@@ -11,6 +11,7 @@ const PatientQueue = (props) => {
 
     const [patient,setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState({});
+    const [matchFound, setMatchFound] = useState(null);
 
     useEffect(() => {
         getPatient()
@@ -26,7 +27,11 @@ const PatientQueue = (props) => {
         return  new Date(patient.yearOfBirth,(patient?.monthOfBirth ?? 1) - 1,patient?.dayOfBirth ?? 1)
     }
 
-    function getMatchingPatient(patient) {
+    async function getMatchingPatient(patient) {
+        const matchingPatientId = await fetchPatientFromBahmniWithHealthId(patient.healthId);
+        if (matchingPatientId.error === undefined){
+           setMatchFound(matchingPatientId);
+        }
         const ndhm = {
             id:  patient.healthId,
             gender: patient.gender,
@@ -37,6 +42,10 @@ const PatientQueue = (props) => {
             identifiers: patient.identifiers
         };
        setSelectedPatient(ndhm);
+    }
+
+    function redirectToPatientDashboard() {
+        window.parent.postMessage({"patientUuid" : matchFound }, "*");
     }
 
     return(
@@ -57,7 +66,14 @@ const PatientQueue = (props) => {
 
                 </tbody>
             </table>}
-            {checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient}></PatientDetails>}
+            {!matchFound && checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient}></PatientDetails>}
+            {matchFound && <div>
+                <b>ABDM Record: </b>
+                <PatientInfo patient={selectedPatient}/><br/>
+                <div className="patient-existed" onClick={redirectToPatientDashboard}>
+                    Matching record with Health ID/PHR Address found
+                </div>
+            </div>}
         </div>
     )
 }
