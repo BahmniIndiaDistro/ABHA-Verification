@@ -5,11 +5,13 @@ import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../
 import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import PatientInfo from "./patientInfo";
+import PatientQueue from "../patient-queue/patientQueue";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
     const [noRecords, setNoRecords] = useState(false);
+    const [back, GoBack] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
     const id = props.id;
