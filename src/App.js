@@ -8,8 +8,8 @@ function App() {
 
   return (
     <div className="app">
-      { window.frameElement.id === "identifier-popup" && <VerifyHealthId /> }
-      { window.frameElement.id === "patient-queue-popup" && <PatientQueue /> }
+      { window.frameElement.name === "ABHA Address" && <VerifyHealthId /> }
+      { window.frameElement.name === "patientQueue" && <PatientQueue /> }
     </div>
   );
 }
