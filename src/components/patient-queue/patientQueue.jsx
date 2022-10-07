@@ -50,7 +50,10 @@ const PatientQueue = (props) => {
 
     return(
         <div>
-            {!checkIfNotNull(selectedPatient) && <table>
+            {patient.length == 0 && 
+                <center><h3>No patient found</h3></center>
+            }
+            {patient.length > 0 && !checkIfNotNull(selectedPatient) && <table>
                 <tbody>
                 <th>Patient</th>
                 <th>check-in time</th>
