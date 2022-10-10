@@ -33,7 +33,7 @@ const OtpVerification = (props) => {
     }
 
     function getBirthDate(patient) {
-        return  new Date(patient.yearOfBirth,(patient?.monthOfBirth ?? 1) - 1,patient?.dayOfBirth ?? 1)
+        return  [patient.yearOfBirth, patient?.monthOfBirth ?? 1, patient?.dayOfBirth ?? 1].join('-');
     }
 
 
