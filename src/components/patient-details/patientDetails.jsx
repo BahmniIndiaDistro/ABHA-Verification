@@ -68,7 +68,7 @@ const PatientDetails = (props) => {
 
         var telecom = new Telecom("phone",getPhoneNumber())
 
-        var address = new Address([ndhmDetails.addressObj?.line],"",ndhmDetails.addressObj?.district,ndhmDetails.addressObj?.state,ndhmDetails.addressObj?.pincode,"IN")
+        var address = new Address([ndhmDetails.address?.line],"",ndhmDetails.address?.district,ndhmDetails.address?.state,ndhmDetails.address?.pincode,"IN")
         var id;
         if(isConfirmSelected && selectedPatient.uuid !== undefined){
            id = selectedPatient.uuid;
