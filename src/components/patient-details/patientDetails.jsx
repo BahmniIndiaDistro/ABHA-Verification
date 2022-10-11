@@ -14,8 +14,6 @@ const PatientDetails = (props) => {
     const [back, GoBack] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
-    const id = props.id;
-    const january_1 = "01/01/";
 
     useEffect(() => {
         fetchBahmniDetails();
@@ -53,7 +51,6 @@ const PatientDetails = (props) => {
     }
 
     function save(isConfirmSelected) {
-
         var healthNumber = new Identifier(new Type("ABHA"),null)
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
@@ -80,15 +77,6 @@ const PatientDetails = (props) => {
         saveDemographics(ndhmDetails?.id,ndhmDetails)
     }
 
-    // function getHealthNumber() {
-    //     let healthNumber;
-    //     ndhmDetails?.identifiers.forEach(id => {
-    //         if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
-    //             healthNumber = id.value;
-    //         }
-    //     })
-    //     return healthNumber;
-    // }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
