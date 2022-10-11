@@ -145,3 +145,16 @@ const IsValidHealthId = (healthId) => {
     let pattern = "^([0-9]{14})$|^[0-9]{2}[-][0-9]{4}[-][0-9]{4}[-][0-9]{4}$";
     return healthId.match(pattern);
 }
+
+export const getPatientQueue = async () => {
+    try {
+        const response = await axios.get(Constants.hipServiceUrl + Constants.patientProfileFetch);
+        return response.data;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};

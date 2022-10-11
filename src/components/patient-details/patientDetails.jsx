@@ -4,15 +4,16 @@ import './patientDetails.scss';
 import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
+import PatientInfo from "./patientInfo";
+import PatientQueue from "../patient-queue/patientQueue";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
     const [noRecords, setNoRecords] = useState(false);
+    const [back, GoBack] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
-    const id = props.id;
-    const january_1 = "01/01/";
 
     useEffect(() => {
         fetchBahmniDetails();
@@ -35,40 +36,6 @@ const PatientDetails = (props) => {
         patient.name = patient.name.replace(null,"");
     }
 
-    function calculateAge(birthDate) {
-        const dob = new Date(birthDate);
-        var dobYear = dob.getYear();
-        var dobMonth = dob.getMonth();
-        var dobDate = dob.getDate();
-        var now = new Date();
-        var currentYear = now.getYear();
-        var currentMonth = now.getMonth();
-        var currentDate = now.getDate();
-        var monthAge;
-        var yearAge = currentYear - dobYear;
-        if (currentMonth >= dobMonth) monthAge = currentMonth - dobMonth;
-        else {
-            yearAge--;
-            monthAge = 12 + currentMonth - dobMonth;
-        }
-        var dateAge;
-        if (currentDate >= dobDate) dateAge = currentDate - dobDate;
-        else {
-            monthAge--;
-            dateAge = 31 + currentDate - dobDate;
-            if (monthAge < 0) {
-                monthAge = 11;
-                yearAge--;
-            }
-        }
-
-        return {
-            'years': yearAge,
-            'months': monthAge,
-            'days': dateAge
-        };
-    }
-
     function updateRecord(){
         save(false);
     }
@@ -84,8 +51,7 @@ const PatientDetails = (props) => {
     }
 
     function save(isConfirmSelected) {
-
-        var healthNumber = new Identifier(new Type("ABHA"),getHealthNumber())
+        var healthNumber = new Identifier(new Type("ABHA"),null)
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
         const name = ndhmDetails?.name?.split(" ", 3);
@@ -99,7 +65,7 @@ const PatientDetails = (props) => {
 
         var telecom = new Telecom("phone",getPhoneNumber())
 
-        var address = new Address([ndhmDetails.addressObj?.line],"",ndhmDetails.addressObj?.district,ndhmDetails.addressObj?.state,ndhmDetails.addressObj?.pincode,"IN")
+        var address = new Address([ndhmDetails.address?.line],"",ndhmDetails.address?.district,ndhmDetails.address?.state,ndhmDetails.address?.pincode,"IN")
         var id;
         if(isConfirmSelected && selectedPatient.uuid !== undefined){
            id = selectedPatient.uuid;
@@ -111,64 +77,19 @@ const PatientDetails = (props) => {
         saveDemographics(ndhmDetails?.id,ndhmDetails)
     }
 
-    function getPatientGender(gender) {
-        switch(gender) {
-            case "M":
-                return GENDER.MALE;
-            case "F":
-                return GENDER.FEMALE;
-            case "U":
-                return GENDER.UNKNOWN;
-            default:
-                return GENDER.OTHER;
-        }
-    }
-
-    function getPatientDetailsAsString(patient) {
-        const address = getCustomAddress(patient?.addressObj);
-        return (
-                <p>
-                <strong>{patient?.name?.replace(null,"")} </strong>
-                (Age:<strong> {calculateAge(patient.dateOfBirth).years || '-'} </strong>,
-                Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
-                {(address || patient?.address) && <span>{address || patient?.address} <br/></span>}
-                Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
-                </p>
-        )
-    }
-
-    function getCustomAddress(addressObj) {
-        var customAddress = [];
-        for (var key in addressObj) {
-            if (addressObj[key] !== '-' && addressObj[key] !== '') {
-                customAddress.push(addressObj[key]);
-            }
-        }
-        return customAddress.toString().split(',').join(', ');
-    }
-
-    function getHealthNumber() {
-        let healthNumber;
-        ndhmDetails?.identifiers.forEach(id => {
-            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
-                healthNumber = id.value;
-            }
-        })
-        return healthNumber;
-    }
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
-                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'>{getPatientDetailsAsString(patient)}</button>
+                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'><PatientInfo patient={patient}/></button>
             );
         });
     }
 
     return (
-            <div className="matching-patients">
-                <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
+     <div className="matching-patients">
+         {!back && <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
-                    {getPatientDetailsAsString(ndhmDetails)}<br/>
+                    <PatientInfo patient={ndhmDetails}/><br/>
                     {noRecords && <b>No Bahmni Record Found</b>}
                     {!noRecords && <b>Following Matched Bahmni Record Found:</b>}
                     {!noRecords && <div className="note">
@@ -176,10 +97,12 @@ const PatientDetails = (props) => {
                     </div>}
                     {prepareMatchingPatientsList()}
                     <div className="create-confirm-btns">
+                        <button onClick={() => GoBack(true)}>Go back</button>
                         <button onClick={updateRecord}> Create New Record </button>
                     </div>
-                </div>
-                {checkIfNotNull(selectedPatient) && <ConfirmPopup getPatientDetailsAsString={getPatientDetailsAsString} selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+                </div>}
+                {!back && checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+            {back && <PatientQueue />}
             </div>
     );
 };

@@ -64,8 +64,7 @@ const VerifyHealthId = () => {
             name: patient['name'],
             dateOfBirth: patient['dob'],
             isBirthDateEstimated: true,
-            address: patientAddress,
-            addressObj: {
+            address: {
                 line: patientAddress,
                 district: patient['district_name'],
                 state: patient['state name'],

@@ -44,8 +44,7 @@ const OtpVerification = (props) => {
             name: patient.name,
             isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
             dateOfBirth: getBirthDate(patient),
-            address: addressAsString(patient.address),
-            addressObj: patient.address,
+            address: patient.address,
             identifiers: patient.identifiers
         };
         return ndhm;
