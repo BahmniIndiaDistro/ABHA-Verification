@@ -55,10 +55,12 @@ const PatientQueue = (props) => {
             }
             {patient.length > 0 && !checkIfNotNull(selectedPatient) && <table>
                 <tbody>
+                <th>Token Number</th>
                 <th>Patient</th>
                 <th>check-in time</th>
                 {patient.map((p,i) => {
                     return <tr>
+                        <td> {p.tokenNumber}</td>
                         <td><PatientInfo patient={p.profile} /></td>
                         <td> <Time time={p.dateTimeStamp}/></td>
                         <td>
