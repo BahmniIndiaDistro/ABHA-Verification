@@ -158,3 +158,15 @@ export const getPatientQueue = async () => {
             return Constants.serviceUnavailableError;
     }
 };
+
+export const saveTokenOnQRScan = async (healthId) => {
+    try {
+        const response = await axios.get(Constants.hipServiceUrl + Constants.authToken + "?healthId=" + healthId);
+        return response;
+    }
+    catch (error) {
+        return Constants.serviceUnavailableError;
+    }
+};
+
+

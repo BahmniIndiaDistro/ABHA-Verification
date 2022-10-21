@@ -1,5 +1,10 @@
 import React, {useState} from "react";
-import {getAuthModes, fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
+import {
+    getAuthModes,
+    fetchPatientFromBahmniWithHealthId,
+    getHealthIdStatus,
+    saveTokenOnQRScan
+} from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 import Spinner from '../spinner/spinner';
 import QrReader from 'react-qr-scanner';
@@ -97,9 +102,9 @@ const VerifyHealthId = () => {
                 else if (matchingPatientId.error === undefined) {
                     setMatchingPatientFound(true);
                     setMatchingPatientUuid(matchingPatientId);
-
                 } else {
                     setMatchingPatientFound(false);
+                    await saveTokenOnQRScan(ndhmDetails.id);
                 }
             } else {
                 setShowError(true)
