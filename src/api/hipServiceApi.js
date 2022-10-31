@@ -158,3 +158,22 @@ export const getPatientQueue = async () => {
             return Constants.serviceUnavailableError;
     }
 };
+
+export const saveTokenOnQRScan = async (ndhmDetails) => {
+    const data = {
+        "healthId": ndhmDetails.id,
+        "name": ndhmDetails.name,
+        "gender": ndhmDetails.gender,
+        "dateOfBirth": ndhmDetails.dateOfBirth,
+        "phoneNumber": ndhmDetails.identifiers[0].value
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authToken,data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        return Constants.serviceUnavailableError;
+    }
+};
+
+
