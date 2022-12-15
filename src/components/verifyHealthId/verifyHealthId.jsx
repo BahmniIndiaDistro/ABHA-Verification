@@ -67,7 +67,7 @@ const VerifyHealthId = () => {
             id: patient['phr'],
             gender: patient['gender'],
             name: patient['name'],
-            dateOfBirth: patient['dob'],
+            dateOfBirth: patient['dob'].replace(/([0-9]+)\-([0-9]+)/,'$2-$1'),
             isBirthDateEstimated: true,
             address: {
                 line: patientAddress,
