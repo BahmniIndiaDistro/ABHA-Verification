@@ -67,7 +67,7 @@ const VerifyHealthId = () => {
             id: patient['phr'],
             gender: patient['gender'],
             name: patient['name'],
-            dateOfBirth: patient['dob'],
+            dateOfBirth: patient['dob'].replace(/([0-9]+)\-([0-9]+)/,'$2-$1'),
             isBirthDateEstimated: true,
             address: {
                 line: patientAddress,
@@ -91,8 +91,6 @@ const VerifyHealthId = () => {
     async function handleScan(scannedData) {
         if (scannedData != null) {
             var ndhmDetails = mapToNdhmDetails(scannedData)
-            setNdhmDetails(ndhmDetails);
-            setId(ndhmDetails.id);
             setScanningStatus(false);
             const matchingPatientId = await fetchPatientFromBahmniWithHealthId(ndhmDetails.id);
             const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
@@ -104,6 +102,8 @@ const VerifyHealthId = () => {
                     setMatchingPatientUuid(matchingPatientId);
                 } else {
                     setMatchingPatientFound(false);
+                    setId(ndhmDetails.id);
+                    setNdhmDetails(ndhmDetails);
                     await saveTokenOnQRScan(ndhmDetails);
                 }
             } else {
