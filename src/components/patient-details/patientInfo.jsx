@@ -9,7 +9,7 @@ const PatientInfo = (props) => {
         if(typeof(patient.address) == "string")
            return patient.address;
         for (var key in patient.address) {
-            if (patient.address[key] !== '-' && patient.address[key] !== '') {
+            if (patient.address[key] !== '-' && patient.address[key] !== '' && patient.address[key] !== undefined) {
                 customAddress.push(patient.address[key]);
             }
         }
