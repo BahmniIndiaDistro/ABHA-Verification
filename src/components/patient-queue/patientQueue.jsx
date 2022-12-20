@@ -5,6 +5,7 @@ import PatientDetails from "../patient-details/patientDetails";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import Time from "./Time";
 import PatientInfo from "../patient-details/patientInfo";
+import {getDate} from "../Common/DateUtil";
 
 
 const PatientQueue = (props) => {
@@ -23,9 +24,6 @@ const PatientQueue = (props) => {
             setPatients(res);
         }
     }
-    function getBirthDate(patient) {
-        return  new Date(patient.yearOfBirth,(patient?.monthOfBirth ?? 1) - 1,patient?.dayOfBirth ?? 1)
-    }
 
     async function getMatchingPatient(patient) {
         const matchingPatientId = await fetchPatientFromBahmniWithHealthId(patient.healthId);
@@ -37,7 +35,7 @@ const PatientQueue = (props) => {
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
-            dateOfBirth: getBirthDate(patient),
+            dateOfBirth: getDate(patient),
             address: patient.address,
             identifiers: patient.identifiers
         };

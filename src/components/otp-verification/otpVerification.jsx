@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { authConfirm } from '../../api/hipServiceApi';
-import PatientDetails from '../patient-details/patientDetails';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
+import {getDate} from "../Common/DateUtil";
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
@@ -12,7 +12,6 @@ const OtpVerification = (props) => {
     const [loader, setLoader] = useState(false);
 
     const id = props.id;
-    const selectedAuthMode = props.selectedAuthMode;
 
     async function confirmAuth() {
         setLoader(true);
@@ -32,18 +31,13 @@ const OtpVerification = (props) => {
         setOtp(e.target.value);
     }
 
-    function getBirthDate(patient) {
-        return  [patient.yearOfBirth, patient?.monthOfBirth ?? 1, patient?.dayOfBirth ?? 1].join('-');
-    }
-
-
     function parseNdhmDetails(patient) {
         const ndhm = {
             id: patient.id,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
-            dateOfBirth: getBirthDate(patient),
+            dateOfBirth: getDate(patient),
             address: patient.address,
             identifiers: patient.identifiers
         };
