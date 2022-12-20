@@ -71,7 +71,7 @@ const VerifyHealthId = () => {
             isBirthDateEstimated: true,
             address: {
                 line: patientAddress,
-                district: patient['district_name'],
+                district: patient['dist name'],
                 state: patient['state name'],
                 pincode: patient['pincode']
             },
