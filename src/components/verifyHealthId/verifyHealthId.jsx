@@ -59,10 +59,12 @@ const VerifyHealthId = () => {
         setLoader(false);
     }
 
+    function getIfVaild(str){
+        return (str && str !== '-') ? str : null;
+    }
+
     function mapToNdhmDetails(scannedData) {
         var patient = JSON.parse(scannedData.text)
-        var patientAddress = patient.address == '-' ? '' : patient.address
-        var ABHA = patient['hidn'] === '-' ? null : patient['hidn']
         return {
             id: patient['phr'],
             gender: patient['gender'],
@@ -70,10 +72,10 @@ const VerifyHealthId = () => {
             dateOfBirth: patient['dob'].split('-').reverse().map(e => e !== "" ? e : "1").join('-'),
             isBirthDateEstimated: true,
             address: {
-                line: patientAddress,
-                district: patient['dist name'],
-                state: patient['state name'],
-                pincode: patient['pincode']
+                line: getIfVaild(patient['address']),
+                district: getIfVaild(patient['dist name']),
+                state: getIfVaild(patient['state name']),
+                pincode: getIfVaild(patient['pincode'])
             },
             identifiers: [
                 {
@@ -82,7 +84,7 @@ const VerifyHealthId = () => {
                 },
                 {
                     "type": "HEALTH_NUMBER",
-                    "value": ABHA
+                    "value": getIfVaild(patient['hidn'])
                 }
             ]
         };
