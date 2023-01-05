@@ -1,0 +1,32 @@
+.aadhaar-otp {
+  display: flex;
+  margin-top: 50px;
+
+  label{
+    width: 40%;
+  }
+
+  .verify-aadhaar-input-btn {
+    display: flex;
+    width: 60%;
+  }
+
+  .verify-aadhaar-input {
+    width: 60%;
+    padding-right: 20px;
+  }
+
+  input {
+    width: 100%;
+    height: 35%;
+    box-sizing: border-box;
+  }
+}
+
+button {
+  background-color: #88af28;
+  color: white;
+  border: 1px solid #88af28;
+  margin-bottom: 50px;
+  padding: 5px 20px;
+}
