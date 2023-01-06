@@ -2,14 +2,12 @@ import React, {useState} from "react";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import VerifyMobile from "./VerifyMobile";
 
-const Creation = () => {
+const VerifyMobile = () => {
     const [id, setId] = useState('');
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [error, setError] = useState('');
-    const [otpVerified, setVerified] = useState(false);
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -19,7 +17,7 @@ const Creation = () => {
 
     function onVerify(){
         if(id === ''){
-            setError("Aadhaar number cannot be empty")
+            setError("Mobile number cannot be empty")
         }
         else{
             setLoader(true);
@@ -30,26 +28,25 @@ const Creation = () => {
     }
 
     return (
-       <div className="abha-creation">
-           {!otpVerified && <div>
-           <div className="aadhaar">
-                <label htmlFor="aadhaar" className="label">Enter AADHAAR Number</label>
-                <div className="verify-aadhaar-input-btn">
-                    <div className="verify-aadhaar-input">
-                        <input type="text" id="aadhaar" name="aadhaar" value={id} onChange={idOnChangeHandler} />
+        <div>
+            <div className="mobile">
+                <label htmlFor="mobile" className="label">Enter Mobile Number</label>
+                <div className="verify-mobile-input-btn">
+                    <div className="verify-mobile-input">
+                        <input type="text" id="mobile" name="mobile" value={id} onChange={idOnChangeHandler} />
                     </div>
                     <button name="verify-btn" type="submit" onClick={onVerify}>Verify</button>
                 </div>
             </div>
             {error !== '' && <h6 className="error">{error}</h6>}
+            <div className="message">This number will be used to authenticate your ABHA Number.
+                It is recommended to use your AADHAAR linked mobile number
+            </div>
             {loader && <Spinner />}
             {showOtpInput && <VerifyOTP />}
-           </div>}
-           {otpVerified && <VerifyMobile />}
         </div>
-
     );
 }
 
 
-export default Creation;
+export default VerifyMobile;

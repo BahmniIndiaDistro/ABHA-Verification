@@ -1,7 +1,7 @@
-.aadhaar-verify {
+.abha-creation {
   margin-top: 50px;
 
-  .aadhaar-otp
+  .aadhaar, .mobile
   {
     display: flex;
   }
@@ -10,12 +10,12 @@
     width: 40%;
   }
 
-  .verify-aadhaar-input-btn, .otp-verify-input-btn {
+  .verify-aadhaar-input-btn, .otp-verify-input-btn, .verify-mobile-input-btn {
     display: flex;
     width: 60%;
   }
 
-  .verify-aadhaar-input, .otp-verify-input {
+  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input {
     width: 60%;
     padding-right: 20px;
   }
@@ -32,12 +32,11 @@
   color: red;
   margin-top: 0px;
 }
-
 button {
   background-color: #88af28;
   color: white;
   border: 1px solid #88af28;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   border-radius: 4px;
   padding: 3px 10px;
   font-size: medium;
@@ -49,4 +48,10 @@ button:hover{
 
 button:active{
   border: 3px solid #4169e9;
+}
+
+.message {
+   margin-left: 40%;
+  font-size: medium;
+  font-style: italic;
 }
