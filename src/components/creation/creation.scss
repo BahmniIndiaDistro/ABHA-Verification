@@ -1,26 +1,36 @@
-.aadhaar-otp {
-  display: flex;
+.aadhaar-verify {
   margin-top: 50px;
+
+  .aadhaar-otp
+  {
+    display: flex;
+  }
 
   label{
     width: 40%;
   }
 
-  .verify-aadhaar-input-btn {
+  .verify-aadhaar-input-btn, .otp-verify-input-btn {
     display: flex;
     width: 60%;
   }
 
-  .verify-aadhaar-input {
+  .verify-aadhaar-input, .otp-verify-input {
     width: 60%;
     padding-right: 20px;
   }
 
   input {
     width: 100%;
-    height: 35%;
+    height: 30px;
     box-sizing: border-box;
   }
+}
+
+.error {
+  margin-left: 40%;
+  color: red;
+  margin-top: 0px;
 }
 
 button {
@@ -28,5 +38,15 @@ button {
   color: white;
   border: 1px solid #88af28;
   margin-bottom: 50px;
-  padding: 5px 20px;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: medium;
+}
+
+button:hover{
+  opacity: 0.80;
+}
+
+button:active{
+  border: 3px solid #4169e9;
 }
