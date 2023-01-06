@@ -1,7 +1,7 @@
 .abha-creation {
   margin-top: 50px;
 
-  .aadhaar, .mobile
+  .aadhaar, .mobile, .abha-address
   {
     display: flex;
   }
@@ -15,7 +15,7 @@
     width: 60%;
   }
 
-  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input {
+  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input, .abha-adddress-input {
     width: 60%;
     padding-right: 20px;
   }
@@ -55,3 +55,23 @@ button:active{
   font-size: medium;
   font-style: italic;
 }
+
+.footer{
+   margin-top: 20%;
+}
+
+.back {
+  background: linear-gradient(to bottom, #FFF, #DDD);
+  color: black;
+  border: 2px solid #DDD;
+}
+
+.left-button {
+  float: left
+}
+.right-button {
+  float: right;
+}
+
+
+
