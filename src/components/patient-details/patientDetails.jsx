@@ -45,13 +45,16 @@ const PatientDetails = (props) => {
     }
 
     function getPhoneNumber() {
-        var phoneNumber = ndhmDetails?.identifiers[0].value;
-        var len = phoneNumber.length;
-        return "+91".concat(phoneNumber.substring(len-10,len));
+        if(ndhmDetails?.identifiers !== undefined && ndhmDetails?.identifiers.length > 0){
+            var phoneNumber = ndhmDetails?.identifiers[0].value;
+            var len = phoneNumber.length;
+            return "+91".concat(phoneNumber.substring(len-10,len));
+        }
+        return null;
     }
 
     function save(isConfirmSelected) {
-        var healthNumber = new Identifier(new Type("ABHA"),null)
+        var healthNumber = new Identifier(new Type("ABHA"),ndhmDetails?.healthNumber)
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
         const name = ndhmDetails?.name?.split(" ", 3);
