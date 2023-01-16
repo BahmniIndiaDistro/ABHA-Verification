@@ -4,7 +4,7 @@ export const headers = {
 };
 export const purpose = "KYC_AND_LINK";
 export const bahmniUrl = "/openmrs/ws/rest/v1/hip";
-export const hipServiceUrl ="/hiprovider";
+export const hipServiceUrl ="http://localhost:9052";
 
 export const authModesUrl = "/v0.5/hip/fetch-modes";
 export const authInitUrl = "/v0.5/hip/auth/init";
@@ -13,6 +13,11 @@ export const existingPatientUrl = "/existingPatients";
 export const ndhmDemographics = "/v0.5/hip/ndhm-demographics";
 export const authToken = "/v0.5/hip/auth/demographics";
 export const patientProfileFetch ="/v0.5/patients/profile/fetch";
+export const generateAadhaarOtp = "/v2/registration/aadhaar/generateOtp"
+export const verifyAadhaarOtp = "/v2/registration/aadhaar/verifyOTP"
+export const checkAndGenerateMobileOtp = "/v2/registration/aadhaar/checkAndGenerateMobileOTP"
+export const verifyMobileOTP = "/v2/registration/aadhaar/verifyMobileOTP"
+export const createHealthIdByAdhaar = "/v1/registration/aadhaar/createHealthIdWithPreVerified"
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"
