@@ -51,10 +51,21 @@ button:active{
 }
 
 .message {
-   margin-left: 40%;
+  margin-left: 40%;
   font-size: medium;
   font-style: italic;
 }
+
+.note {
+  text-align: center;
+  font-size: medium;
+  font-style: italic;
+}
+.success {
+  color: #88af28;
+}
+
+
 
 .footer{
    margin-top: 20%;
@@ -71,6 +82,24 @@ button:active{
 }
 .right-button {
   float: right;
+}
+
+.patient-profile{
+  text-align: center;
+}
+
+.patient, img {
+  padding-top: 20px;
+}
+
+.confirmation {
+  text-align: center;
+}
+
+.buttons{
+  margin-left: 10%;
+  display: flex;
+  padding-top: 25px;
 }
 
 
