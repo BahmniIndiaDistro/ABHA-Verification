@@ -1,27 +1,30 @@
 import React, {useState} from "react";
 import './creation.scss';
-import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
-import Spinner from "../spinner/spinner";
 
-const VerifyOTP = () => {
-    const [otp, setOtp] = useState('');
+
+const VerifyOTP = (props) => {
+    const [sendOtp] = [props.setOtp];
+    const [otp,setOtp] = useState('');
 
     function otpOnChangeHandler(e) {
         setOtp(e.target.value);
     }
 
+    function send(){
+        sendOtp(otp);
+    }
+
     return (
         <div>
            <div className="otp-verify" >
-                <label htmlFor="otp">Enter OTP </label>
+                <label htmlFor="otp">Enter OTP sent to the mobileNumber {props.mobile}</label>
                 <div className="otp-verify-input-btn" >
                     <div className="otp-verify-input">
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />
                     </div>
-                    <button type="button" type="submit">Confirm</button>
+                    <button type="button" type="submit" onClick={send}>Confirm</button>
                 </div>
             </div>
-            {/*{loader && <Spinner />}*/}
         </div>
     );
 }
