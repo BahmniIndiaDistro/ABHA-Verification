@@ -17,7 +17,7 @@ const VerifyOTP = (props) => {
     return (
         <div>
            <div className="otp-verify" >
-                <label htmlFor="otp">Enter OTP sent to the mobileNumber {props.mobile}</label>
+                <label htmlFor="otp">Enter OTP sent to the Mobile Number {props.mobile}</label>
                 <div className="otp-verify-input-btn" >
                     <div className="otp-verify-input">
                         <input type="text" id="otp" name="otp" value={otp} onChange={otpOnChangeHandler} />

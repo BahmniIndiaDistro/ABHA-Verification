@@ -26,12 +26,16 @@ const PatientAadhaarProfile = (props) => {
         setProceed(true);
     }
 
+    function getAddressLine(){
+        return [patient?.house,patient?.street, patient?.landmark, patient?.locality, patient?.villageTownCity, patient?.subDist].filter(e => e !== undefined);
+    }
+
     function mapPatient(){
         var identifier = patient?.phone !== undefined ? [{
             value: patient.phone
         }] : undefined;
         var address =  {
-            line: [patient?.house,patient?.street, patient?.landmark, patient?.locality, patient?.villageTownCity, patient?.subDist].join(','),
+            line: getAddressLine().join(', '),
             district: patient?.district,
             state: patient?.state,
             pincode: patient?.pincode
@@ -64,25 +68,30 @@ const PatientAadhaarProfile = (props) => {
         }
     },[proceed,back])
 
+    function getAddress() {
+        var address = getAddressLine();
+        address.push(patient?.district,patient?.state,patient?.pincode);
+        return address.join(', ');
+    }
+
     return (
         <div>
             {!isPatientMapped && !proceed && !createABHAAddress &&
             <div>
                 <div className="patient-profile">
-                    <h3>Patient Profile</h3>
+                    <h3>Profile Details As Per Aadhaar</h3>
                     <img src={imgSrc} width="150" height="150" />
-                    <div className="patient">
-                        <p><strong>Full Name:</strong> {patient.name}</p>
-                        <p><strong>Gender:</strong>    {patient.gender}</p>
-                        <p><strong>DOB:</strong>       {patient.birthdate}</p>
-                        {patient.healthIdNumber !== undefined && <p>
-                            <strong>ABHA Number:</strong>    {patient.healthIdNumber}
-                        </p>}
-                        {patient.healthId !== undefined && <p>
-                            <strong>ABHA Address:</strong> {patient.healthId}
-                        </p>}
-                        {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
-                    </div>
+                    <p><strong>Full Name:</strong> {patient.name}</p>
+                    <p><strong>Gender:</strong>    {patient.gender}</p>
+                    <p><strong>DOB:</strong>       {patient.birthdate}</p>
+                    <p><strong>Address:</strong>       {getAddress()}</p>
+                    {patient.healthIdNumber !== undefined && <p>
+                        <strong>ABHA Number:</strong>    {patient.healthIdNumber}
+                    </p>}
+                    {patient.healthId !== undefined && <p>
+                        <strong>ABHA Address:</strong> {patient.healthId}
+                    </p>}
+                    {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
                     {patient.healthIdNumber === undefined && patient.healthId === undefined && <Footer setProceed={setProceed} />}
                 </div>
                 {patient.healthIdNumber !== undefined && patient.healthId === undefined &&

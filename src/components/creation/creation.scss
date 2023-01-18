@@ -1,5 +1,6 @@
 .abha-creation {
   margin-top: 50px;
+  margin-left: 30px;
 
   .aadhaar, .mobile, .abha-address
   {
@@ -88,8 +89,8 @@ button:active{
   text-align: center;
 }
 
-.patient, img {
-  padding-top: 20px;
+img {
+  padding-top: 10px;
 }
 
 .confirmation {
@@ -99,10 +100,9 @@ button:active{
 .buttons{
   margin-left: 5%;
   display: flex;
-  padding-top: 25px;
 }
 
-button {
+.button {
   margin-left: 5%;
 }
 
@@ -111,4 +111,12 @@ button {
   width: 100%;
 }
 
+.abha-creation .abha-address input {
+  width: 85%;
+}
+
+.abha-address-suffix{
+  border: 1px solid #888888;
+  padding: 3px 6px 6px 6px;
+}
 

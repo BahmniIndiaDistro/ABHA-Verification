@@ -4,6 +4,7 @@ import Spinner from "../spinner/spinner";
 import Footer from "./Footer";
 import {createABHA, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import ABHACreationSuccess from "./ABHACreationSuccess";
+import {cmSuffix} from "../../api/constants";
 
 const CreateABHA = () => {
     const [abhaAddress, setAbhaAddress] = useState('');
@@ -14,6 +15,7 @@ const CreateABHA = () => {
 
     function OnChangeHandler(e) {
         setAbhaAddress(e.target.value);
+        setError('');
     }
 
     async function onVerify() {
@@ -46,9 +48,10 @@ const CreateABHA = () => {
             {JSON.stringify(patient) === JSON.stringify({}) &&
             <div>
                 <div className="abha-address" >
-                    <label htmlFor="abhaAdddress">Enter ABHA ADDRESS </label>
+                    <label htmlFor="abhaAdddress">Enter new ABHA ADDRESS </label>
                     <div className="abha-adddress-input" >
-                            <input type="text" id="abhaAdddress" name="abhaAdddress" value={abhaAddress} onChange={OnChangeHandler} />
+                        <input type="text" id="abhaAdddress" name="abhaAdddress" value={abhaAddress} onChange={OnChangeHandler} />
+                        <span className="abha-address-suffix">@{cmSuffix}</span>
                     </div>
                 </div>
                 <p className="note">You can still click on proceed without entering ABHA Address</p>

@@ -19,6 +19,7 @@ export const checkAndGenerateMobileOtp = "/v2/registration/aadhaar/checkAndGener
 export const verifyMobileOTP = "/v2/registration/aadhaar/verifyMobileOTP"
 export const createHealthIdByAdhaar = "/v1/registration/aadhaar/createHealthIdWithPreVerified"
 export const getPngCard = "/v2/account/getPngCard";
+export const cmSuffix = "sbx";
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"

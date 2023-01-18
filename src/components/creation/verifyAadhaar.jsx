@@ -2,10 +2,8 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import VerifyMobile from "./VerifyMobile";
-import {generateAadhaarOtp, saveTokenOnQRScan, verifyAadhaarOtp, verifyMobileOtp} from "../../api/hipServiceApi";
+import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
-
 const VerifyAadhaar = () => {
     const [aadhaar, setAadhaar] = useState('');
     const [loader, setLoader] = useState(false);
@@ -26,6 +24,7 @@ const VerifyAadhaar = () => {
 
     async function onVerify() {
         setError('');
+        setShowOtpInput(false);
         if (aadhaar === '') {
             setError("Aadhaar number cannot be empty")
         } else {
