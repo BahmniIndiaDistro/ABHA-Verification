@@ -28,7 +28,6 @@ const CreateABHA = () => {
                     setError("An error occurred while processing your request")
             }
             else {
-                console.log(response, response.data);
                 setPatient(response.data);
             }
         }
@@ -37,13 +36,14 @@ const CreateABHA = () => {
     useEffect(async () => {
         if (proceed) {
             await onVerify();
+            setProceed(false);
         }
     },[proceed])
 
 
     return (
         <div>
-            {!proceed &&
+            {JSON.stringify(patient) === JSON.stringify({}) &&
             <div>
                 <div className="abha-address" >
                     <label htmlFor="abhaAdddress">Enter ABHA ADDRESS </label>
@@ -52,10 +52,10 @@ const CreateABHA = () => {
                     </div>
                 </div>
                 <p className="note">You can still click on proceed without entering ABHA Address</p>
+                {error !== '' && <h6 className="error">{error}</h6>}
+                {loader && <Spinner />}
                 <Footer setProceed={setProceed}/>
             </div>}
-            {error !== '' && <h6 className="error">{error}</h6>}
-            {loader && <Spinner />}
             {JSON.stringify(patient) !== JSON.stringify({}) && <ABHACreationSuccess patient={patient}/>}
         </div>
     );

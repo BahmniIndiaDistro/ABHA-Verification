@@ -36,7 +36,6 @@ const VerifyMobile = (props) => {
         } else {
             setLoader(true);
             var response = await generateMobileOtp(mobile);
-            console.log(response);
             if (response) {
                 setLoader(false);
                 if (response.data === undefined) {
@@ -93,7 +92,6 @@ const VerifyMobile = (props) => {
 
     return (
         <div>
-            {console.log(props.goBack)}
                 { !proceed &&
                 <div>
                     <div>

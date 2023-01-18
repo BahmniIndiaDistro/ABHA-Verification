@@ -46,7 +46,6 @@ const PatientAadhaarProfile = (props) => {
             address: address,
             identifiers: identifier
         };
-        console.log(ndhm);
         setMappedPatient(ndhm);
         setIsPatientMapped(true);
         return ndhm;
@@ -57,7 +56,6 @@ const PatientAadhaarProfile = (props) => {
             setCreateAbhaAdress(true);
             setProceed(false);
         }
-        console.log(back);
         if(back){
             setCreateAbhaAdress(false);
             setProceed(false);
@@ -68,21 +66,20 @@ const PatientAadhaarProfile = (props) => {
 
     return (
         <div>
-            { console.log(back)}
             {!isPatientMapped && !proceed && !createABHAAddress &&
             <div>
                 <div className="patient-profile">
                     <h3>Patient Profile</h3>
                     <img src={imgSrc} width="150" height="150" />
                     <div className="patient">
-                        <p>Full Name:       {patient.name}</p>
-                        <p>Gender:       {patient.gender}</p>
-                        <p>DOB:       {patient.birthdate}</p>
+                        <p><strong>Full Name:</strong> {patient.name}</p>
+                        <p><strong>Gender:</strong>    {patient.gender}</p>
+                        <p><strong>DOB:</strong>       {patient.birthdate}</p>
                         {patient.healthIdNumber !== undefined && <p>
-                            ABHA Number: {patient.healthIdNumber}
+                            <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                         </p>}
                         {patient.healthId !== undefined && <p>
-                            ABHA Address: {patient.healthId}
+                            <strong>ABHA Address:</strong> {patient.healthId}
                         </p>}
                         {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
                     </div>
@@ -91,9 +88,9 @@ const PatientAadhaarProfile = (props) => {
                 {patient.healthIdNumber !== undefined && patient.healthId === undefined &&
                     <div>
                         <div className="buttons">
-                            <button type="button" className="back" onClick={onBack}>Back</button>
-                            <button type="button" className="proceed" onClick={onClick}>Create ABHA Address</button>
-                            <button type="button" className="proceed" onClick={mapPatient}>Proceed without ABHA Address</button>
+                            <button type="button" className="back button" onClick={onBack}>Back</button>
+                            <button type="button" className="proceed button" onClick={mapPatient}>Proceed linking without ABHA Address</button>
+                            <button type="button" className="proceed button" onClick={onClick}>Proceed</button>
                         </div>
                     </div>
                 }

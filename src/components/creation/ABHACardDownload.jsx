@@ -23,7 +23,7 @@ const ABHACardDownload = (props) => {
                 else
                     setError("An error occurred while processing your request")
             } else {
-                fileDownload(response.data, "ABHA_card" + patient.healthIdNumber + ".png");
+                fileDownload(response.data, patient.healthIdNumber + ".png");
                 setIsCardDownloaded(true);
             }
         }

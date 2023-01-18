@@ -97,15 +97,18 @@ button:active{
 }
 
 .buttons{
-  margin-left: 10%;
+  margin-left: 5%;
   display: flex;
   padding-top: 25px;
+}
+
+button {
+  margin-left: 5%;
 }
 
 .downloadButton {
   text-align: center;
   width: 100%;
-  padding-top: 50px;
 }
 
 

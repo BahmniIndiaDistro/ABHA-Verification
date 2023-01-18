@@ -13,7 +13,6 @@ const ABHACreationSuccess = (props) => {
     const [mappedPatient,setMappedPatient] = useState({});
 
     function mapPatient() {
-        console.log(patient);
         var identifier = patient?.phone !== undefined ? [{
             value: patient.phone
         }] : undefined;
@@ -24,7 +23,7 @@ const ABHACreationSuccess = (props) => {
             pincode: patient?.pincode
         };
         const ndhm = {
-            healthIdNumber: patient.healthIdNumber,
+            healthNumber: patient.healthIdNumber,
             id: patient.healthId,
             gender: patient.gender,
             name: patient.name,
@@ -33,7 +32,6 @@ const ABHACreationSuccess = (props) => {
             address: address,
             identifiers: identifier
         };
-        console.log(ndhm);
         setMappedPatient(ndhm);
         setIsPatientMapped(true);
     }

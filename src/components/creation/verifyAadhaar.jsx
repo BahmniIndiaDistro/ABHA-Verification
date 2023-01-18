@@ -31,7 +31,6 @@ const VerifyAadhaar = () => {
         } else {
             setLoader(true);
             var response = await generateAadhaarOtp(aadhaar);
-            console.log(response);
             if(response){
                 setLoader(false);
                 if(response.data === undefined){
@@ -63,10 +62,8 @@ const VerifyAadhaar = () => {
                         setError("An error occurred while processing your request")
                 }
                 else {
-                    console.log(response);
                     setPatient(response.data);
                     setOtpVerified(true);
-                    console.log(patient);
                 }
             }
         }
