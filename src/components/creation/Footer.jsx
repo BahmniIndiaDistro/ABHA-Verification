@@ -10,10 +10,10 @@ const Footer = (props) => {
     return (
         <div className="footer">
             <div className="left-button">
-                <button type="button" type="button" className="back">Back</button>
+                <button type="button" className="back">Back</button>
             </div>
             <div className="right-button">
-                <button type="button" type="button" className="proceed" onClick={onClick}>Proceed</button>
+                <button type="button" className="proceed" onClick={onClick}>Proceed</button>
             </div>
         </div>
     );

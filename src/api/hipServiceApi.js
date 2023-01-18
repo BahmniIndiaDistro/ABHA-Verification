@@ -256,3 +256,20 @@ export const createABHA = async (abhaAddress) => {
     }
 }
 
+export const getCard = async (token) => {
+    const data = {
+        "token": token
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getPngCard, data,{
+            responseType: 'arraybuffer'
+        });
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}

@@ -3,6 +3,7 @@ import './creation.scss';
 import VerifyMobile from "./VerifyMobile";
 import PatientDetails from "../patient-details/patientDetails";
 import Footer from "./Footer";
+import ABHACardDownload from "./ABHACardDownload";
 const PatientAadhaarProfile = (props) => {
     const [proceed, setProceed] = useState(false);
     const [createABHAAddress, setCreateAbhaAdress] = useState(false);
@@ -83,6 +84,7 @@ const PatientAadhaarProfile = (props) => {
                         {patient.healthId !== undefined && <p>
                             ABHA Address: {patient.healthId}
                         </p>}
+                        {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
                     </div>
                     {patient.healthIdNumber === undefined && patient.healthId === undefined && <Footer setProceed={setProceed} />}
                 </div>
@@ -101,5 +103,4 @@ const PatientAadhaarProfile = (props) => {
         </div>
     );
 }
-
 export default PatientAadhaarProfile;
