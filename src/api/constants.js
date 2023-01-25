@@ -13,6 +13,13 @@ export const existingPatientUrl = "/existingPatients";
 export const ndhmDemographics = "/v0.5/hip/ndhm-demographics";
 export const authToken = "/v0.5/hip/auth/demographics";
 export const patientProfileFetch ="/v0.5/patients/profile/fetch";
+export const generateAadhaarOtp = "/v2/registration/aadhaar/generateOtp"
+export const verifyAadhaarOtp = "/v2/registration/aadhaar/verifyOTP"
+export const checkAndGenerateMobileOtp = "/v2/registration/aadhaar/checkAndGenerateMobileOTP"
+export const verifyMobileOTP = "/v2/registration/aadhaar/verifyMobileOTP"
+export const createHealthIdByAdhaar = "/v1/registration/aadhaar/createHealthIdWithPreVerified"
+export const getPngCard = "/v2/account/getPngCard";
+export const cmSuffix = "sbx";
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"

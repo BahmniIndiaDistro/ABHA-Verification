@@ -90,7 +90,7 @@ export const fetchPatientDetailsFromBahmni = async (patient) => {
         "patientName": patient.name,
         "patientYearOfBirth": new Date(patient.dateOfBirth).getFullYear(),
         "patientGender": patient.gender,
-        "phoneNumber": encodeURI(patient.identifiers[0].value)
+        "phoneNumber": encodeURI((patient?.identifiers !== undefined && patient?.identifiers.length > 0) ? patient?.identifiers[0].value : "")
     }
     try {
         const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl, { params }, Constants.headers);
@@ -176,4 +176,100 @@ export const saveTokenOnQRScan = async (ndhmDetails) => {
     }
 };
 
+export const generateAadhaarOtp = async (aadhaar) => {
+    const data = {
+        "aadhaar": aadhaar
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.generateAadhaarOtp,data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
 
+export const verifyAadhaarOtp = async (otp) => {
+    const data = {
+        "otp": otp
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.verifyAadhaarOtp,data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const generateMobileOtp = async (mobile) => {
+    const data = {
+        "mobile": mobile
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.checkAndGenerateMobileOtp,data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const verifyMobileOtp = async (otp) => {
+    const data = {
+        "otp": otp
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.verifyMobileOTP,data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const createABHA = async (abhaAddress) => {
+    const data = {
+        "healthId": abhaAddress
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const getCard = async (token) => {
+    const data = {
+        "token": token
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getPngCard, data,{
+            responseType: 'arraybuffer'
+        });
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}

@@ -4,6 +4,7 @@ import VerifyHealthId from './components/verifyHealthId/verifyHealthId';
 import './ndhm.scss';
 import PatientQueue from './components/patient-queue/patientQueue';
 import { useSearchParams } from 'react-router-dom'
+import VerifyAadhaar from "./components/creation/verifyAadhaar";
 
 
 function App() {
@@ -13,6 +14,10 @@ function App() {
     case "patientQueue":
       return (
           <PatientQueue />
+      );
+    case "createABHA":
+      return (
+          <VerifyAadhaar />
       );
     default:
       return (

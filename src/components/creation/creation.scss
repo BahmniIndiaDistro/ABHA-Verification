@@ -1,0 +1,126 @@
+.abha-creation {
+  margin-top: 50px;
+  margin-left: 30px;
+
+  .aadhaar, .mobile, .abha-address
+  {
+    display: flex;
+  }
+
+  .otp-verify{
+    margin-left: 0px;
+  }
+
+  label{
+    width: 40%;
+  }
+
+  .verify-aadhaar-input-btn, .otp-verify-input-btn, .verify-mobile-input-btn {
+    display: flex;
+    width: 60%;
+  }
+
+  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input, .abha-adddress-input {
+    width: 60%;
+    padding-right: 20px;
+  }
+
+  input {
+    width: 100%;
+    height: 30px;
+    box-sizing: border-box;
+  }
+}
+
+.error {
+  margin-left: 40%;
+  color: red;
+  margin-top: 0px;
+}
+button {
+  background-color: #88af28;
+  color: white;
+  border: 1px solid #88af28;
+  margin-bottom: 30px;
+  border-radius: 4px;
+  padding: 3px 10px;
+  font-size: medium;
+}
+
+button:hover{
+  opacity: 0.80;
+}
+
+button:active{
+  border: 3px solid #4169e9;
+}
+
+.message {
+  margin-left: 40%;
+  font-size: medium;
+  font-style: italic;
+}
+
+.note {
+  text-align: center;
+  font-size: medium;
+  font-style: italic;
+}
+.success {
+  color: #88af28;
+}
+
+
+
+.footer{
+   margin-top: 20%;
+}
+
+.back {
+  background: linear-gradient(to bottom, #FFF, #DDD);
+  color: black;
+  border: 2px solid #DDD;
+}
+
+.left-button {
+  float: left
+}
+.right-button {
+  float: right;
+}
+
+.patient-profile{
+  text-align: center;
+}
+
+img {
+  padding-top: 10px;
+}
+
+.confirmation {
+  text-align: center;
+}
+
+.buttons{
+  margin-left: 5%;
+  display: flex;
+}
+
+.button {
+  margin-left: 5%;
+}
+
+.downloadButton {
+  text-align: center;
+  width: 100%;
+}
+
+.abha-creation .abha-address input {
+  width: 85%;
+}
+
+.abha-address-suffix{
+  border: 1px solid #888888;
+  padding: 3px 6px 6px 6px;
+}
+
