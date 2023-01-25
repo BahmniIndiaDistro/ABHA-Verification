@@ -2,9 +2,8 @@ name: Build & Publish
 on:
  push:
     branches:
-     - BAH-2505
-    #  - main
-    #  - 'release-*'
+     - main
+     - 'release-*'
     tags:
      - '[0-9]+.[0-9]+.[0-9]+'
  workflow_dispatch:
