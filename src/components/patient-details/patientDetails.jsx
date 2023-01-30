@@ -53,8 +53,20 @@ const PatientDetails = (props) => {
         return null;
     }
 
+    function getHealthNumber() {
+        if(ndhmDetails?.healthNumber)
+            return ndhmDetails?.healthNumber;
+        let healthNumber;
+        ndhmDetails?.identifiers.forEach(id => {
+            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
+                healthNumber = id.value;
+            }
+        })
+        return healthNumber;
+    }
+
     function save(isConfirmSelected) {
-        var healthNumber = new Identifier(new Type("ABHA Number"),ndhmDetails?.healthNumber)
+        var healthNumber = new Identifier(new Type("ABHA Number"),getHealthNumber())
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
         const name = ndhmDetails?.name?.split(" ", 3);
