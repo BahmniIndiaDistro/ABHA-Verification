@@ -13,8 +13,8 @@ const ABHACreationSuccess = (props) => {
     const [mappedPatient,setMappedPatient] = useState({});
 
     function mapPatient() {
-        var identifier = patient?.phone !== undefined ? [{
-            value: patient.phone
+        var identifier = patient?.mobile !== undefined ? [{
+            value: patient.mobile
         }] : undefined;
         var address =  {
             line: undefined,

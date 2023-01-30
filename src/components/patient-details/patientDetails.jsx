@@ -54,7 +54,7 @@ const PatientDetails = (props) => {
     }
 
     function save(isConfirmSelected) {
-        var healthNumber = new Identifier(new Type("ABHA"),ndhmDetails?.healthNumber)
+        var healthNumber = new Identifier(new Type("ABHA Number"),ndhmDetails?.healthNumber)
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
         const name = ndhmDetails?.name?.split(" ", 3);
