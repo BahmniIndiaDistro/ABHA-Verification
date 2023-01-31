@@ -107,7 +107,7 @@ const VerifyMobileEmail = (props) => {
 
 
     return (
-        <div className="abha-creation">
+        <div>
             {!proceed &&
             <div>
                 <div className="mobile">
