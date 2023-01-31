@@ -273,3 +273,97 @@ export const getCard = async (token) => {
             return Constants.serviceUnavailableError;
     }
 }
+
+export const mobileEmailInit = async (mobile) => {
+    const data = {
+        "input": mobile
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.mobileEmailInit, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const verifyOtpInput = async (otp, isHealthIdNumberOtp = false) => {
+    const data = {
+        "otp": otp,
+        "isHealthIdNumberOtp": isHealthIdNumberOtp
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.mobileEmailPreverification, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const getUserToken = async (phrAddress) => {
+    const data = {
+        "phrAddress": phrAddress
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getUserToken, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const linkORUnlinkABHAAddress = async (action) => {
+    const data = {
+        "action": action
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.linkABHAAddress, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const getAuthMethods = async (healthIdNumber) => {
+    const data = {
+        "healhtIdNumber": healthIdNumber
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authMethods, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const transaction = async (authMethod) => {
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.transaction + "?authMode=" + authMethod, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}

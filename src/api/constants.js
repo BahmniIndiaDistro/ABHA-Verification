@@ -19,6 +19,13 @@ export const checkAndGenerateMobileOtp = "/v2/registration/aadhaar/checkAndGener
 export const verifyMobileOTP = "/v2/registration/aadhaar/verifyMobileOTP"
 export const createHealthIdByAdhaar = "/v1/registration/aadhaar/createHealthIdWithPreVerified"
 export const getPngCard = "/v2/account/getPngCard";
+export const mobileEmailInit = "/v1/phr/login/mobileEmail/init";
+export const mobileEmailPreverification = "/v1/phr/login/mobileEmail/preVerification";
+export const getUserToken = "/v1/phr/login/mobileEmail/getUserToken";
+export const linkABHAAddress = "/v1/phr/profile/link/hid";
+export const authMethods = "/v1/phr/registration/hid/search/auth-methods";
+export const transaction = "/v1/phr/login/init/transaction";
+
 export const cmSuffix = "sbx";
 export const serviceUnavailableError = {
     "error": {
