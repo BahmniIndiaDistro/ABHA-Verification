@@ -5,7 +5,8 @@ import {getDate} from "../Common/DateUtil";
 import PatientDetails from "../patient-details/patientDetails";
 import {GoVerified} from "react-icons/all";
 import ABHACardDownload from "./ABHACardDownload";
-import VerifyMobileEmail from "./VerifyMobileEmail";
+import LinkABHAAddress from "./LinkABHAAddress";
+
 const ABHACreationSuccess = (props) => {
     const patient = props.patient
     const [proceed, setProceed] = useState(false);
@@ -39,6 +40,8 @@ const ABHACreationSuccess = (props) => {
 
     useEffect(async () => {
         if (proceed) {
+            if(patient.healthId === undefined)
+                gotoLink();
             mapPatient();
         }
     },[proceed])
@@ -53,16 +56,19 @@ const ABHACreationSuccess = (props) => {
             {!link && !isPatientMapped && <div>
                  <p className="note success"> <GoVerified /> <strong>ABHA Created Successfully</strong></p>
                  <p className="note"><strong>ABHA Number: </strong> {patient.healthIdNumber}</p>
-                 {patient.healthId !== undefined &&  <p className="note"><strong>ABHA Address: </strong> {patient.healthId}</p>}
+                 {patient.healthId !== undefined &&
+                 <div>
+                    <p className="note"><strong>ABHA Address: </strong> {patient.healthId}</p>
+                     <p className="note">This is a default ABHA Address</p>
+                    <div className="linkButton">
+                        <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>
+                        <p className="note">Click on the button to use different abha address for linking</p>
+                    </div>
+                 </div>}
                  <ABHACardDownload patient={patient} />
-                 <div className="linkButton">
-                    <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>
-                 </div>
                  <Footer setProceed={setProceed}/>
             </div>}
-            {link &&
-                <VerifyMobileEmail healthIdNumber={patient.healthIdNumber} />}
-            {isPatientMapped &&  <PatientDetails ndhmDetails={mappedPatient}/>}
+            {link && <LinkABHAAddress patient={patient} />}
         </div>
     );
 }

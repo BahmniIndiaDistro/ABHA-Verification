@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
-import {cmSuffix} from "../../api/constants";
 import CreateABHAAddress from "./CreateABHAAddress";
+import {getDate} from "../Common/DateUtil";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -11,12 +11,9 @@ const LinkABHAAddress = (props) => {
     const [proceed, setProceed] = useState(false);
     const [mappedPatient, setMappedPatient] = useState({});
     const [link, setLink] = useState(false);
+    const [createNewABHA, setcreateNewABHA] = useState(false);
     const [newAbhaAddress, setNewAbhaAddress] = useState('');
     const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
-
-    function onABHAAddressChange(e) {
-        setAbhaAddress(e.target.value);
-    }
 
     function onProceed() {
         mapPatient();
@@ -25,7 +22,7 @@ const LinkABHAAddress = (props) => {
 
     let phrAddressList = patient.phrAddress !== undefined && patient.phrAddress.length > 0 && patient.phrAddress.map((item, i) => {
         return (
-            <option key={i} value={item}>{item}</option>
+            <button onClick={() => setAbhaAddress(patient.phrAddress[i])} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
         )
     });
 
@@ -36,7 +33,9 @@ const LinkABHAAddress = (props) => {
     function mapPatient(){
         var identifier = patient?.phone !== undefined ? [{
             value: patient.phone
-        }] : undefined;
+        }] : (patient?.mobile !== undefined ? [{
+            value: patient.mobile
+        }] : undefined);
         var address =  {
             line: getAddressLine().join(', '),
             district: patient?.district,
@@ -45,20 +44,23 @@ const LinkABHAAddress = (props) => {
         };
         const ndhm = {
             healthNumber: patient.healthIdNumber,
-            id: abhaAddressCreated ? (newAbhaAddress + "@" + cmSuffix) : abhaAddress,
+            id: abhaAddressCreated ? newAbhaAddress : abhaAddress,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: false,
-            dateOfBirth: patient?.birthdate.split('-').reverse().join('-'),
+            dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
             address: address,
             identifiers: identifier
         };
-        console.log(ndhm);
         setMappedPatient(ndhm);
     }
 
     function gotoLink(){
         setLink(true);
+    }
+
+    function gotoCreate(){
+        setcreateNewABHA(true);
     }
 
     useEffect(() => {
@@ -68,40 +70,37 @@ const LinkABHAAddress = (props) => {
     },[abhaAddressCreated])
 
 
-
     return (
         <div>
-            {!link && !proceed &&
+            {!createNewABHA && !link && !proceed &&
             <div>
-                {patient.phrAddress === undefined &&
+                {patient.new === undefined && patient.phrAddress === undefined &&
                  <p className="note">No Mapped ABHA Address found</p>}
                 {patient.phrAddress !== undefined &&
                 <div>
-                    <div className="select-option">
-                        <label htmlFor="abha-address">Choose ABHA-Address</label>
-                        <div className="select-btn">
-                            <div className="select">
-                                <select id="auth-modes" onChange={onABHAAddressChange}>
-                                    <option>ABHA-Address</option>
-                                    {phrAddressList}
-                                </select>
-                            </div>
+                    <div className="choose-abha-address">
+                        <div className="abha-list-label">
+                            <label htmlFor="abha-address">Choose ABHA-Address from the ABHA Number mapped ABHA
+                                Address</label>
                         </div>
+                            {phrAddressList}
                     </div>
-                    <div className="message">The above lists all the ABHA address mapped to the ABHA Number.
-                        Chosen ABHA Address will be linked in Bahmni.</div>
                     <div className="center">
                         <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
                     </div>
                 </div>}
-                <p className="note">OR</p>
-                <div className="linkButton">
+                <div className="left-button">
                     <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>
                 </div>
-                <p className="note">OR</p>
-                <CreateABHAAddress newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
+
+                <div className="right-button">
+                    <button type="button" className="proceed" onClick={gotoCreate}>Create ABHA Address</button>
+                </div>
             </div>}
-            {link && <VerifyMobileEmail healthIdNumber={patient.healthIdNumber} />}
+            {!proceed && createNewABHA &&
+             <CreateABHAAddress newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
+            }
+            {link && <VerifyMobileEmail patient={patient} />}
             {proceed && <PatientDetails ndhmDetails={mappedPatient}/>}
         </div>
     );

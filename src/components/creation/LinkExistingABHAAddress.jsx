@@ -2,7 +2,9 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import {getAuthMethods, transaction, verifyOtpInput} from "../../api/hipServiceApi";
+import {getAuthMethods, linkORUnlinkABHAAddress, transaction, verifyOtpInput} from "../../api/hipServiceApi";
+import PatientDetails from "../patient-details/patientDetails";
+import {getDate} from "../Common/DateUtil";
 import {GoVerified} from "react-icons/all";
 
 const LinkExistingABHAAddress = (props) => {
@@ -10,15 +12,18 @@ const LinkExistingABHAAddress = (props) => {
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [error, setError] = useState('');
     const [otp, setOtp] = useState('');
-    const [otpVerified, setOtpVerified] = useState(false);
     const [authModes, setAuthmodes]= useState([])
     const [chosenAuthMode, setChosenAuthMode] = useState('');
+    const patient = props.patient
+    const [isPatientMapped,setIsPatientMapped] = useState(false);
+    const [mappedPatient,setMappedPatient] = useState({});
+    const [otpVerified, setOtpVerified] = useState(false);
 
 
     function onAuthModeChange(e) {
         setChosenAuthMode(e.target.value);
+        setError('');
     }
-
 
     function resetToDefault(){
         setError('');
@@ -27,10 +32,11 @@ const LinkExistingABHAAddress = (props) => {
     }
 
     async function verifyOtp() {
+        setLoader(true);
+        setError('');
         if (otp === '') {
             setError("otp cannot be empty")
         } else {
-            setLoader(true);
             var response = await verifyOtpInput(otp);
             if (response) {
                 setLoader(false);
@@ -47,10 +53,57 @@ const LinkExistingABHAAddress = (props) => {
         }
     }
 
+    async function link() {
+        setLoader(true);
+        var response = await linkORUnlinkABHAAddress("LINK");
+        if (response) {
+            setLoader(false);
+            if (response.data === undefined) {
+                if (response.details !== undefined && response.details.length > 0)
+                    setError(response.details[0].message)
+                else
+                    setError("An error occurred while processing your request")
+            }
+            else {
+                if(response.data.success === "true")
+                    mapPatient();
+                else {
+                    setError("Failure in linking ABHA Address to ABHA Number")
+                }
+            }
+        }
+    }
+
+    function mapPatient() {
+        var identifier = patient?.phone !== undefined ? [{
+            value: patient.phone
+        }] : (patient?.mobile !== undefined ? [{
+            value: patient.mobile
+        }] : undefined);
+        var address =  {
+            line: undefined,
+            district: patient?.districtName,
+            state: patient?.stateName,
+            pincode: patient?.pincode
+        };
+        const ndhm = {
+            healthNumber: patient.healthIdNumber,
+            id: props.healthId,
+            gender: patient.gender,
+            name: patient.name,
+            isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
+            dateOfBirth: getDate(patient),
+            address: address,
+            identifiers: identifier
+        };
+        setMappedPatient(ndhm);
+        setIsPatientMapped(true);
+    }
+
     async function fetchAuthModes() {
         resetToDefault()
         setLoader(true);
-        var response = await getAuthMethods(props.healthIdNumber);
+        var response = await getAuthMethods(props.patient.healthIdNumber);
         if (response) {
             setLoader(false);
             if (response.data === undefined) {
@@ -61,6 +114,7 @@ const LinkExistingABHAAddress = (props) => {
             }
             else {
                setAuthmodes(response.data.authMethods);
+               setChosenAuthMode(response.data.authMethods[0]);
             }
         }
     }
@@ -84,6 +138,7 @@ const LinkExistingABHAAddress = (props) => {
 
 
     useEffect(() => {
+        setError('');
         if(otp !== '')
             verifyOtp();
     },[otp]);
@@ -96,12 +151,12 @@ const LinkExistingABHAAddress = (props) => {
 
     return (
         <div>
-            {!otpVerified && <div>
+            {!isPatientMapped && <div>
                 <div className="abha">
                     <label htmlFor="abha-number" className="label">ABHA Number</label>
                     <div className="verify-abha-input-btn">
                         <div className="verify-abha-input">
-                            <input type="text" id="abha-number" name="abha-number" value={props.healthIdNumber} disabled={true} />
+                            <input type="text" id="abha-number" name="abha-number" value={props.patient.healthIdNumber} disabled={true} />
                         </div>
                         <button type="submit" className="proceed" onClick={fetchAuthModes}>verify</button>
                     </div>
@@ -119,10 +174,14 @@ const LinkExistingABHAAddress = (props) => {
                    </div>
                </div>}
             {showOtpInput && <VerifyOTP setOtp={setOtp}/>}
+            {otpVerified && <p className="note success"> <GoVerified /> <strong>OTP Verfied Successfully</strong></p>}
+            {otpVerified  &&  <div className="center">
+                <button type="button" className="proceed" onClick={link}>Proceed</button>
+                </div>}
+            </div>}
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
-            </div>}
-            {otpVerified &&  <p className="note success"> <GoVerified /> <strong>ABHA Address Linked Successfully</strong></p>}
+            {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} />}
         </div>
     );
 }

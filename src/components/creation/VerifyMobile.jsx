@@ -2,9 +2,10 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import {generateMobileOtp, verifyMobileOtp} from "../../api/hipServiceApi";
-import CreateABHA from "./CreateABHA";
+import {createABHA, generateMobileOtp, verifyMobileOtp} from "../../api/hipServiceApi";
 import {GoVerified} from "react-icons/all";
+import Footer from "./Footer";
+import ABHACreationSuccess from "./ABHACreationSuccess";
 const VerifyMobile = (props) => {
     const [mobile, setMobile] = useState('');
     const [loader, setLoader] = useState(false);
@@ -14,6 +15,8 @@ const VerifyMobile = (props) => {
     const [proceed, setProceed] = useState(false);
     const [otp, setOtp] = useState('');
     const [otpVerified, setOtpVerified] = useState(false);
+    const [patient, setPatient] = useState({});
+    const [abhaCreated, setABHACreated] = useState(false);
 
 
     function OnChangeHandler(e) {
@@ -81,18 +84,35 @@ const VerifyMobile = (props) => {
             verifyOtp();
         },[otp]);
 
-    function onBack(){
-        props.setGoBack(true);
+    async function createABHANumber() {
+        setLoader(true);
+        var response = await createABHA();
+        if (response) {
+            setLoader(false);
+            if (response.data === undefined) {
+                if (response.details !== undefined && response.details.length > 0)
+                    setError(response.details[0].message)
+                else
+                    setError("An error occurred while processing your request")
+            }
+            else {
+                setPatient(response.data);
+                setABHACreated(true);
+            }
+        }
     }
 
-    function onClick(){
-       setProceed(true);
-    }
+    useEffect(async () => {
+        if (proceed) {
+            await createABHANumber();
+        }
+    },[proceed])
+
 
 
     return (
         <div>
-                { !proceed &&
+            {!proceed &&
                 <div>
                     <div>
                         <div className="mobile">
@@ -113,16 +133,10 @@ const VerifyMobile = (props) => {
                     {otpVerified && <p className="note success"> <GoVerified /> <strong>OTP Verfied Successfully</strong></p>}
                     {mobileLinked && <p className="note success"> <GoVerified /> <strong>mobile already Linked </strong></p>}
                     {loader && <Spinner />}
-                    <div className="footer">
-                        <div className="left-button">
-                            <button type="button" type="button" className="back" onClick={onBack}>Back</button>
-                        </div>
-                        {(otpVerified || mobileLinked) && <div className="right-button">
-                            <button type="button" type="button" className="proceed" onClick={onClick}>Proceed</button>
-                        </div>}
-                    </div>
+                    <Footer setProceed={setProceed}/>
                 </div>}
-                {proceed && <CreateABHA />}
+                 {proceed && !abhaCreated && <Spinner />}
+                {abhaCreated && <ABHACreationSuccess patient={patient}/>}
             </div>
     );
 }

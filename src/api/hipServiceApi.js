@@ -240,12 +240,9 @@ export const verifyMobileOtp = async (otp) => {
     }
 }
 
-export const createABHA = async (abhaAddress) => {
-    const data = {
-        "healthId": abhaAddress
-    };
+export const createABHA = async () => {
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, data, Constants.headers);
+        const response = await axios.get(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, Constants.headers);
         return response;
     }
     catch (error) {
@@ -256,12 +253,9 @@ export const createABHA = async (abhaAddress) => {
     }
 }
 
-export const getCard = async (token) => {
-    const data = {
-        "token": token
-    };
+export const getCard = async () => {
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.getPngCard, data,{
+        const response = await axios.get(Constants.hipServiceUrl + Constants.getPngCard,{
             responseType: 'arraybuffer'
         });
         return response;
@@ -373,7 +367,6 @@ export const createABHAAddress = async (phrAddress,preferred) => {
         "phrAddress": phrAddress,
         "preferred": preferred
     };
-    console.log(data);
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.createABHAAddress, data, Constants.headers);
         return response;
