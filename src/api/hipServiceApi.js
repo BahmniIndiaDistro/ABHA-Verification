@@ -367,3 +367,21 @@ export const transaction = async (authMethod) => {
             return Constants.serviceUnavailableError;
     }
 }
+
+export const createABHAAddress = async (phrAddress,preferred) => {
+    const data = {
+        "phrAddress": phrAddress,
+        "preferred": preferred
+    };
+    console.log(data);
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createABHAAddress, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}

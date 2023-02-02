@@ -1,128 +1,108 @@
 import React, {useEffect, useState} from "react";
 import './creation.scss';
-import VerifyOTP from "./verifyOtp";
-import Spinner from "../spinner/spinner";
-import {getAuthMethods, transaction, verifyOtpInput} from "../../api/hipServiceApi";
-import {GoVerified} from "react-icons/all";
+import PatientDetails from "../patient-details/patientDetails";
+import VerifyMobileEmail from "./VerifyMobileEmail";
+import {cmSuffix} from "../../api/constants";
+import CreateABHAAddress from "./CreateABHAAddress";
 
 const LinkABHAAddress = (props) => {
-    const [loader, setLoader] = useState(false);
-    const [showOtpInput, setShowOtpInput] = useState(false);
-    const [error, setError] = useState('');
-    const [otp, setOtp] = useState('');
-    const [otpVerified, setOtpVerified] = useState(false);
-    const [authModes, setAuthmodes]= useState([])
-    const [chosenAuthMode, setChosenAuthMode] = useState('');
+    const patient = props.patient;
+    const [abhaAddress, setAbhaAddress] = useState('');
+    const [proceed, setProceed] = useState(false);
+    const [mappedPatient, setMappedPatient] = useState({});
+    const [link, setLink] = useState(false);
+    const [newAbhaAddress, setNewAbhaAddress] = useState('');
+    const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
 
-
-    function onAuthModeChange(e) {
-        setChosenAuthMode(e.target.value);
+    function onABHAAddressChange(e) {
+        setAbhaAddress(e.target.value);
     }
 
-
-    function resetToDefault(){
-        setError('');
-        setOtp('');
-        setShowOtpInput(false);
+    function onProceed() {
+        mapPatient();
+        setProceed(true);
     }
 
-    async function verifyOtp() {
-        if (otp === '') {
-            setError("otp cannot be empty")
-        } else {
-            setLoader(true);
-            var response = await verifyOtpInput(otp);
-            if (response) {
-                setLoader(false);
-                if (response.data === undefined) {
-                    if (response.details !== undefined && response.details.length > 0)
-                        setError(response.details[0].message)
-                    else
-                        setError("An error occurred while processing your request")
-                }
-                else {
-                    setOtpVerified(true);
-                }
-            }
-        }
-    }
-
-    async function fetchAuthModes() {
-        resetToDefault()
-        setLoader(true);
-        var response = await getAuthMethods(props.healthIdNumber);
-        if (response) {
-            setLoader(false);
-            if (response.data === undefined) {
-                if (response.details !== undefined && response.details.length > 0)
-                    setError(response.details[0].message)
-                else
-                    setError("An error occurred while processing your request")
-            }
-            else {
-               setAuthmodes(response.data.authMethods);
-            }
-        }
-    }
-
-    async function authenticate() {
-        setLoader(true);
-        var response = await transaction(chosenAuthMode);
-        if (response) {
-            setLoader(false);
-            if (response.data === undefined) {
-                if (response.details !== undefined && response.details.length > 0)
-                    setError(response.details[0].message)
-                else
-                    setError("An error occurred while processing your request")
-            }
-            else {
-                setShowOtpInput(true);
-            }
-        }
-    }
-
-
-    useEffect(() => {
-        if(otp !== '')
-            verifyOtp();
-    },[otp]);
-
-    let authModesList = authModes.length > 0 && authModes.map((item, i) => {
+    let phrAddressList = patient.phrAddress !== undefined && patient.phrAddress.length > 0 && patient.phrAddress.map((item, i) => {
         return (
             <option key={i} value={item}>{item}</option>
         )
     });
 
+    function getAddressLine(){
+        return [patient?.districtName,patient?.stateName,patient?.pincode].filter(e => e !== undefined);
+    }
+
+    function mapPatient(){
+        var identifier = patient?.phone !== undefined ? [{
+            value: patient.phone
+        }] : undefined;
+        var address =  {
+            line: getAddressLine().join(', '),
+            district: patient?.district,
+            state: patient?.state,
+            pincode: patient?.pincode
+        };
+        const ndhm = {
+            healthNumber: patient.healthIdNumber,
+            id: abhaAddressCreated ? (newAbhaAddress + "@" + cmSuffix) : abhaAddress,
+            gender: patient.gender,
+            name: patient.name,
+            isBirthDateEstimated: false,
+            dateOfBirth: patient?.birthdate.split('-').reverse().join('-'),
+            address: address,
+            identifiers: identifier
+        };
+        console.log(ndhm);
+        setMappedPatient(ndhm);
+    }
+
+    function gotoLink(){
+        setLink(true);
+    }
+
+    useEffect(() => {
+        if(abhaAddressCreated){
+            onProceed();
+        }
+    },[abhaAddressCreated])
+
+
+
     return (
         <div>
-            {!otpVerified && <div>
-                <div className="abha">
-                    <label htmlFor="abha-number" className="label">ABHA Number</label>
-                    <div className="verify-abha-input-btn">
-                        <div className="verify-abha-input">
-                            <input type="text" id="abha-number" name="abha-number" value={props.healthIdNumber} disabled={true} />
+            {!link && !proceed &&
+            <div>
+                {patient.phrAddress === undefined &&
+                 <p className="note">No Mapped ABHA Address found</p>}
+                {patient.phrAddress !== undefined &&
+                <div>
+                    <div className="select-option">
+                        <label htmlFor="abha-address">Choose ABHA-Address</label>
+                        <div className="select-btn">
+                            <div className="select">
+                                <select id="auth-modes" onChange={onABHAAddressChange}>
+                                    <option>ABHA-Address</option>
+                                    {phrAddressList}
+                                </select>
+                            </div>
                         </div>
-                        <button type="submit" className="proceed" onClick={fetchAuthModes}>verify</button>
                     </div>
+                    <div className="message">The above lists all the ABHA address mapped to the ABHA Number.
+                        Chosen ABHA Address will be linked in Bahmni.</div>
+                    <div className="center">
+                        <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
+                    </div>
+                </div>}
+                <p className="note">OR</p>
+                <div className="linkButton">
+                    <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>
                 </div>
-                {authModes.length > 0 &&
-                <div className="select-option">
-                    <label htmlFor="auth-modes">Preferred mode of Authentication</label>
-                    <div className="select-btn">
-                        <div className="select">
-                           <select id="auth-modes" onChange={onAuthModeChange}>
-                               {authModesList}
-                           </select>
-                       </div>
-                       <button type="button" disabled={chosenAuthMode === ''} onClick={authenticate}>Authenticate</button>
-                   </div>
-               </div>}
-            {showOtpInput && <VerifyOTP setOtp={setOtp}/>}
-            {error !== '' && <h6 className="error">{error}</h6>}
-            {loader && <Spinner />}
+                <p className="note">OR</p>
+                <CreateABHAAddress newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
             </div>}
-            {otpVerified &&  <p className="note success"> <GoVerified /> <strong>ABHA Address Linked Successfully</strong></p>}
+            {link && <VerifyMobileEmail healthIdNumber={patient.healthIdNumber} />}
+            {proceed && <PatientDetails ndhmDetails={mappedPatient}/>}
         </div>
     );
 }
