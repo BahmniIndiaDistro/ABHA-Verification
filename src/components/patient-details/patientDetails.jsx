@@ -10,7 +10,6 @@ import PatientQueue from "../patient-queue/patientQueue";
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
-    const [noRecords, setNoRecords] = useState(false);
     const [back, GoBack] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
@@ -24,9 +23,6 @@ const PatientDetails = (props) => {
         if (response.error === undefined && response.length > 0) {
             const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
-        }
-        else{
-            setNoRecords(true);
         }
     }
 
@@ -104,12 +100,15 @@ const PatientDetails = (props) => {
          {!back && <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
-                    {noRecords && <b>No Bahmni Record Found</b>}
-                    {!noRecords && <b>Following Matched Bahmni Record Found:</b>}
-                    {!noRecords && <div className="note">
-                        <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
-                    </div>}
-                    {prepareMatchingPatientsList()}
+                    {patients.length === 0 && <b>No Bahmni Record Found</b>}
+                    {patients.length > 0 &&
+                     <div>
+                         <b>Following Matched Bahmni Record Found:</b>
+                         <div className="note">
+                             <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
+                         </div>
+                         {prepareMatchingPatientsList()}
+                     </div>}
                     <div className="create-confirm-btns">
                         <button onClick={() => GoBack(true)}>Go back</button>
                         <button onClick={updateRecord}> Create New Record </button>
