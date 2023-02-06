@@ -17,7 +17,10 @@ const VerifyAadhaar = () => {
 
 
     function idOnChangeHandler(e) {
-        setAadhaar(e.target.value);
+        const re = /^[0-9\b]+$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            setAadhaar(e.target.value);
+        }
         setError('');
         setShowOtpInput(false);
     }
