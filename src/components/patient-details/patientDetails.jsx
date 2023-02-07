@@ -1,16 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {fetchPatientDetailsFromBahmni, saveDemographics} from '../../api/hipServiceApi';
 import './patientDetails.scss';
-import {Address, FhirPatient, GENDER, Identifier, Name, Telecom, Type} from "../../FhirPatient";
+import {Address, FhirPatient, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import PatientInfo from "./patientInfo";
-import PatientQueue from "../patient-queue/patientQueue";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
     const [patients, setPatients] = useState([]);
-    const [back, GoBack] = useState(false);
 
     const ndhmDetails = props.ndhmDetails;
 
@@ -97,26 +95,25 @@ const PatientDetails = (props) => {
 
     return (
      <div className="matching-patients">
-         {!back && <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
-                    <b>ABDM Record: </b>
-                    <PatientInfo patient={ndhmDetails}/><br/>
-                    {patients.length === 0 && <b>No Bahmni Record Found</b>}
-                    {patients.length > 0 &&
-                     <div>
-                         <b>Following Matched Bahmni Record Found:</b>
-                         <div className="note">
-                             <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
-                         </div>
-                         {prepareMatchingPatientsList()}
-                     </div>}
-                    <div className="create-confirm-btns">
-                        <button onClick={() => GoBack(true)}>Go back</button>
-                        <button onClick={updateRecord}> Create New Record </button>
+           <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
+                <b>ABDM Record: </b>
+                <PatientInfo patient={ndhmDetails}/><br/>
+                {patients.length === 0 && <b>No Bahmni Record Found</b>}
+                {patients.length > 0 &&
+                <div>
+                    <b>Following Matched Bahmni Record Found:</b>
+                    <div className="note">
+                        <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
                     </div>
+                    {prepareMatchingPatientsList()}
                 </div>}
-                {!back && checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
-            {back && <PatientQueue />}
+                <div className="create-confirm-btns">
+                    {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
+                    <button onClick={updateRecord}> Create New Record </button>
+                </div>
             </div>
+            {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+     </div>
     );
 };
 export default PatientDetails;

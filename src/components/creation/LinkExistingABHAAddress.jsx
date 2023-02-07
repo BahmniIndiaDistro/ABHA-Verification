@@ -6,6 +6,7 @@ import {getAuthMethods, linkORUnlinkABHAAddress, transaction, verifyOtpInput} fr
 import PatientDetails from "../patient-details/patientDetails";
 import {getDate} from "../Common/DateUtil";
 import {GoVerified} from "react-icons/all";
+import Footer from "./Footer";
 
 const LinkExistingABHAAddress = (props) => {
     const [loader, setLoader] = useState(false);
@@ -177,13 +178,16 @@ const LinkExistingABHAAddress = (props) => {
             {otpVerified && <p className="note success"> <GoVerified /> <strong>OTP Verfied Successfully</strong></p>}
             {otpVerified  &&  <div className="center">
                 <button type="button" className="proceed" onClick={link}>Proceed</button>
-                </div>}
+                </div>
+            }
+                {error !== '' && <h6 className="error">{error}</h6>}
+                {loader && <Spinner />}
+                <Footer setBack={props.setBack} />
             </div>}
-            {error !== '' && <h6 className="error">{error}</h6>}
-            {loader && <Spinner />}
+            {isPatientMapped && error !== '' && <h6 className="error">{error}</h6>}
+            {isPatientMapped && loader && <Spinner />}
             {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} />}
         </div>
     );
 }
-
 export default LinkExistingABHAAddress;

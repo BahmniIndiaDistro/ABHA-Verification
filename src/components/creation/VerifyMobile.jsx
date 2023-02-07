@@ -6,6 +6,7 @@ import {createABHA, generateMobileOtp, verifyMobileOtp} from "../../api/hipServi
 import {GoVerified} from "react-icons/all";
 import Footer from "./Footer";
 import ABHACreationSuccess from "./ABHACreationSuccess";
+
 const VerifyMobile = (props) => {
     const [mobile, setMobile] = useState('');
     const [loader, setLoader] = useState(false);
@@ -133,9 +134,10 @@ const VerifyMobile = (props) => {
                     {otpVerified && <p className="note success"> <GoVerified /> <strong>OTP Verfied Successfully</strong></p>}
                     {mobileLinked && <p className="note success"> <GoVerified /> <strong>mobile already Linked </strong></p>}
                     {loader && <Spinner />}
-                    <Footer setProceed={setProceed}/>
+                    <Footer setBack={props.setBack}/>
+                    {otpVerified && <Footer setProceed={setProceed}/>}
                 </div>}
-                 {proceed && !abhaCreated && <Spinner />}
+                {proceed && !abhaCreated && <Spinner />}
                 {abhaCreated && <ABHACreationSuccess patient={patient}/>}
             </div>
     );

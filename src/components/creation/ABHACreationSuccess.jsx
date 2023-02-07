@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import Footer from "./Footer";
 import {getDate} from "../Common/DateUtil";
-import PatientDetails from "../patient-details/patientDetails";
 import {GoVerified} from "react-icons/all";
 import ABHACardDownload from "./ABHACardDownload";
 import LinkABHAAddress from "./LinkABHAAddress";

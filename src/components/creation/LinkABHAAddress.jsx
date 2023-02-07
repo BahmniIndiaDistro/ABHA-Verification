@@ -4,6 +4,7 @@ import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
 import {getDate} from "../Common/DateUtil";
+import {cmSuffix} from "../../api/constants";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -14,6 +15,7 @@ const LinkABHAAddress = (props) => {
     const [createNewABHA, setcreateNewABHA] = useState(false);
     const [newAbhaAddress, setNewAbhaAddress] = useState('');
     const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
+    const [back, setBack] = useState(false);
 
     function onProceed() {
         mapPatient();
@@ -44,7 +46,7 @@ const LinkABHAAddress = (props) => {
         };
         const ndhm = {
             healthNumber: patient.healthIdNumber,
-            id: abhaAddressCreated ? newAbhaAddress : abhaAddress,
+            id: abhaAddressCreated ? newAbhaAddress.append(cmSuffix) : abhaAddress,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: false,
@@ -67,7 +69,16 @@ const LinkABHAAddress = (props) => {
         if(abhaAddressCreated){
             onProceed();
         }
-    },[abhaAddressCreated])
+        if(back){
+            setcreateNewABHA(false);
+            setLink(false);
+            setProceed(false);
+            setAbhaAddress('');
+            setNewAbhaAddress('');
+            setABHAAddressCreated(false);
+            setBack(false);
+        }
+    },[abhaAddressCreated, back])
 
 
     return (
@@ -85,9 +96,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    <div className="center">
+                    {abhaAddress !== '' && <div className="center">
                         <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
-                    </div>
+                    </div>}
                 </div>}
                 <div className="left-button">
                     <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>
@@ -98,10 +109,10 @@ const LinkABHAAddress = (props) => {
                 </div>
             </div>}
             {!proceed && createNewABHA &&
-             <CreateABHAAddress newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
+             <CreateABHAAddress setBack={setBack} newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
             }
-            {link && <VerifyMobileEmail patient={patient} />}
-            {proceed && <PatientDetails ndhmDetails={mappedPatient}/>}
+            {link && <VerifyMobileEmail patient={patient} setBack={setBack}/>}
+            {proceed && <PatientDetails ndhmDetails={mappedPatient} setBack={ !abhaAddressCreated ? setBack : undefined}/>}
         </div>
     );
 }
