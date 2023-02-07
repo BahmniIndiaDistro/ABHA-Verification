@@ -4,6 +4,7 @@ import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
 import {getDate} from "../Common/DateUtil";
+import {cmSuffix} from "../../api/constants";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -45,7 +46,7 @@ const LinkABHAAddress = (props) => {
         };
         const ndhm = {
             healthNumber: patient.healthIdNumber,
-            id: abhaAddressCreated ? newAbhaAddress : abhaAddress,
+            id: abhaAddressCreated ? newAbhaAddress.append(cmSuffix) : abhaAddress,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: false,
@@ -95,9 +96,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    <div className="center">
-                        <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
-                    </div>
+                    {abhaAddress !== '' && <div className="center">
+                        <button className="proceed" onClick={onProceed}> Proceed</button>
+                    </div>}
                 </div>}
                 <div className="left-button">
                     <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>

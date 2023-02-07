@@ -3,6 +3,7 @@ import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {createABHAAddress} from "../../api/hipServiceApi";
 import Footer from "./Footer";
+import {cmSuffix} from "../../api/constants";
 
 const CreateABHAAddress = (props) => {
     const [loader, setLoader] = useState(false);
@@ -48,6 +49,7 @@ const CreateABHAAddress = (props) => {
                     <div className="abha-adddress-input" >
                         <div className="new-abha-address-input">
                             <input type="text" id="abhaAdddress" name="abhaAdddress" value={newAbhaAddress} onChange={OnChangeHandler} />
+                            <span className="abha-address-suffix">{cmSuffix}</span>
                         </div>
                     </div>
                 </div>
