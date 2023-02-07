@@ -2,9 +2,18 @@
   margin-top: 50px;
   margin-left: 30px;
 
-  .aadhaar, .mobile, .abha-address
+  .aadhaar, .mobile, .select-option,.abha, .abha-address
   {
     display: flex;
+  }
+  .select-option {
+    padding-top: 20px;
+    margin-bottom: 1%;
+  }
+
+  .radio-btn {
+    padding-top: 20px;
+    margin-bottom: 1%;
   }
 
   .otp-verify{
@@ -15,17 +24,17 @@
     width: 40%;
   }
 
-  .verify-aadhaar-input-btn, .otp-verify-input-btn, .verify-mobile-input-btn {
+  .verify-aadhaar-input-btn, .otp-verify-input-btn, .verify-mobile-input-btn, .select-btn, .verify-abha-input-btn {
     display: flex;
     width: 60%;
   }
 
-  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input, .abha-adddress-input {
+  .verify-aadhaar-input, .otp-verify-input, .verify-mobile-input, .abha-adddress-input, .select, .verify-abha-input {
     width: 60%;
     padding-right: 20px;
   }
 
-  input {
+  input, select {
     width: 100%;
     height: 30px;
     box-sizing: border-box;
@@ -70,10 +79,8 @@ button:active{
   color: #88af28;
 }
 
-
-
 .footer{
-   margin-top: 20%;
+   margin-top: 5%;
 }
 
 .back {
@@ -110,17 +117,59 @@ img {
   margin-left: 5%;
 }
 
-.downloadButton {
+.downloadButton, .linkButton {
   text-align: center;
   width: 100%;
+}
+
+.linkButton{
+  margin-top: 2%;
+}
+
+.center{
+  margin-left: 40%;
 }
 
 .abha-creation .abha-address input {
   width: 85%;
 }
 
-.abha-address-suffix{
-  border: 1px solid #888888;
-  padding: 3px 6px 6px 6px;
+.center {
+  .checkbox {
+    width: auto;
+  }
+}
+
+.abha-list-label {
+  text-align: center;
+  margin-bottom: 2%;
+}
+
+.abha-list{
+  margin-left: 10%;
+  width: 80%;
+  height: 10%;
+  background: linear-gradient(to bottom, #FFF, #DDD);
+  color: black;
+  border: 2px solid #DDD;
+
+  :active {
+    opacity: 0.3;
+  }
+}
+
+.active {
+  margin-left: 10%;
+  width: 80%;
+  height: 10%;
+  background: linear-gradient(to bottom, #DDD, #DDD);
+  color: black;
+  border: 3px solid #4169e9;
+}
+
+
+.error-msg {
+  text-align: center;
+  color: red;
 }
 

@@ -77,7 +77,7 @@ const PatientInfo = (props) => {
             Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
             {address.length != 0 && <span>{address}<br/></span>}
             Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
-            {patient?.healthId != undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
+            {patient?.id != undefined && <span><br/>ABHA Address: {patient?.id}</span>}
         </p>
     )
 }

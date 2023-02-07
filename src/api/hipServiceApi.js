@@ -240,12 +240,9 @@ export const verifyMobileOtp = async (otp) => {
     }
 }
 
-export const createABHA = async (abhaAddress) => {
-    const data = {
-        "healthId": abhaAddress
-    };
+export const createABHA = async () => {
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, data, Constants.headers);
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, Constants.headers);
         return response;
     }
     catch (error) {
@@ -256,14 +253,122 @@ export const createABHA = async (abhaAddress) => {
     }
 }
 
-export const getCard = async (token) => {
-    const data = {
-        "token": token
-    };
+export const getCard = async () => {
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.getPngCard, data,{
+        const response = await axios.get(Constants.hipServiceUrl + Constants.getPngCard,{
             responseType: 'arraybuffer'
         });
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const mobileEmailInit = async (mobile) => {
+    const data = {
+        "input": mobile
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.mobileEmailInit, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const verifyOtpInput = async (otp, isHealthIdNumberOtp = false) => {
+    const data = {
+        "otp": otp,
+        "isHealthIdNumberOtp": isHealthIdNumberOtp
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.mobileEmailPreverification, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const getUserToken = async (phrAddress) => {
+    const data = {
+        "phrAddress": phrAddress
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getUserToken, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const linkORUnlinkABHAAddress = async (action) => {
+    const data = {
+        "action": action
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.linkABHAAddress, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const getAuthMethods = async (healthIdNumber) => {
+    const data = {
+        "healhtIdNumber": healthIdNumber
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.authMethods, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const transaction = async (authMethod) => {
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.transaction + "?authMode=" + authMethod, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
+export const createABHAAddress = async (phrAddress,preferred) => {
+    const data = {
+        "phrAddress": phrAddress,
+        "preferred": preferred
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createABHAAddress, data, Constants.headers);
         return response;
     }
     catch (error) {

@@ -15,7 +15,7 @@ const ABHACardDownload = (props) => {
     async function download() {
         setIsCardDownloaded(false);
         setLoader(true);
-        var response = await getCard(patient.jwtResponse !== undefined ? patient.jwtResponse?.token : patient.token);
+        var response = await getCard();
         if (response) {
             setLoader(false);
             if (response.data === undefined) {
