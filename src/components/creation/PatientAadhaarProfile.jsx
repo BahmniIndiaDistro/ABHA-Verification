@@ -25,7 +25,13 @@ const PatientAadhaarProfile = (props) => {
             else
                 setLinkAbhaAdress(true);
         }
-    },[proceed])
+        if(back) {
+            setLinkAbhaAdress(false);
+            setIsNewABHA(false);
+            setProceed(false);
+            setBack(false);
+        }
+    },[proceed, back])
 
     function getAddress() {
         var address = getAddressLine();
@@ -36,7 +42,7 @@ const PatientAadhaarProfile = (props) => {
 
     return (
         <div>
-            {!back && !linkABHAAddress && !isNewABHA &&
+            {!linkABHAAddress && !isNewABHA &&
             <div>
                 <div className="patient-profile">
                     <h3>Profile Details As Per Aadhaar</h3>
@@ -49,12 +55,11 @@ const PatientAadhaarProfile = (props) => {
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
                     {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
-                    <Footer setProceed={setProceed} setBack={setBack} />
+                    <Footer setProceed={setProceed} setBack={props.setBack} />
                 </div>
             </div>}
-            {back && <VerifyAadhaar />}
             {linkABHAAddress && <LinkABHAAddress patient={patient}/>}
-            {isNewABHA && <VerifyMobile patient={patient}/>}
+            {isNewABHA && <VerifyMobile patient={patient} setBack={setBack}/>}
         </div>
     );
 }

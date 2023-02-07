@@ -14,10 +14,14 @@ const VerifyAadhaar = () => {
     const [patient, setPatient] = useState({});
     const [otp, setOtp] = useState('');
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
+    const [back, setBack] = useState(false);
 
 
     function idOnChangeHandler(e) {
-        setAadhaar(e.target.value);
+        const re = /^[0-9\b]+$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            setAadhaar(e.target.value);
+        }
         setError('');
         setShowOtpInput(false);
     }
@@ -68,10 +72,22 @@ const VerifyAadhaar = () => {
         }
     }
 
-    useEffect(() =>{
+    useEffect(() => {
         if(otp !== '')
-            verifyOtp()
-    },[otp])
+            verifyOtp();
+    },[otp]);
+
+    useEffect (() => {
+        if (back) {
+            setAadhaar('');
+            setShowOtpInput(false);
+            setOtp('');
+            setError('');
+            setLoader(false);
+            setOtpVerified(false);
+            setBack(false);
+        }
+    },[back]);
 
     return (
        <div className="abha-creation">
@@ -89,7 +105,7 @@ const VerifyAadhaar = () => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {otpVerified && <PatientAadhaarProfile patient={patient}/>}
+           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack}/>}
         </div>
 
     );

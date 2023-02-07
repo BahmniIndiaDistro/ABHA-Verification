@@ -6,7 +6,6 @@ import {createABHA, generateMobileOtp, verifyMobileOtp} from "../../api/hipServi
 import {GoVerified} from "react-icons/all";
 import Footer from "./Footer";
 import ABHACreationSuccess from "./ABHACreationSuccess";
-import PatientAadhaarProfile from "./PatientAadhaarProfile";
 
 const VerifyMobile = (props) => {
     const [mobile, setMobile] = useState('');
@@ -15,7 +14,6 @@ const VerifyMobile = (props) => {
     const [error, setError] = useState('');
     const [mobileLinked, setMobileLinked] = useState(false);
     const [proceed, setProceed] = useState(false);
-    const [back, setBack] = useState(false);
     const [otp, setOtp] = useState('');
     const [otpVerified, setOtpVerified] = useState(false);
     const [patient, setPatient] = useState({});
@@ -115,7 +113,7 @@ const VerifyMobile = (props) => {
 
     return (
         <div>
-            {!back && !proceed &&
+            {!proceed &&
                 <div>
                     <div>
                         <div className="mobile">
@@ -136,10 +134,9 @@ const VerifyMobile = (props) => {
                     {otpVerified && <p className="note success"> <GoVerified /> <strong>OTP Verfied Successfully</strong></p>}
                     {mobileLinked && <p className="note success"> <GoVerified /> <strong>mobile already Linked </strong></p>}
                     {loader && <Spinner />}
-                    <Footer setBack={setBack}/>
+                    <Footer setBack={props.setBack}/>
                     {otpVerified && <Footer setProceed={setProceed}/>}
                 </div>}
-                {back && <PatientAadhaarProfile patient={props.patient}/>}
                 {proceed && !abhaCreated && <Spinner />}
                 {abhaCreated && <ABHACreationSuccess patient={patient}/>}
             </div>

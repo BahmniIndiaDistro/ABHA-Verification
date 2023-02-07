@@ -242,7 +242,7 @@ export const verifyMobileOtp = async (otp) => {
 
 export const createABHA = async () => {
     try {
-        const response = await axios.get(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, Constants.headers);
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, Constants.headers);
         return response;
     }
     catch (error) {

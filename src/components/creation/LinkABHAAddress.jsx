@@ -97,7 +97,7 @@ const LinkABHAAddress = (props) => {
                             {phrAddressList}
                     </div>
                     {abhaAddress !== '' && <div className="center">
-                        <button className="proceed" onClick={onProceed}> Proceed</button>
+                        <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 <div className="left-button">
