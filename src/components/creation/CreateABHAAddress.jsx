@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import './creation.scss';
-import {cmSuffix} from "../../api/constants";
 import Spinner from "../spinner/spinner";
 import {createABHAAddress} from "../../api/hipServiceApi";
+import Footer from "./Footer";
 
 const CreateABHAAddress = (props) => {
     const [loader, setLoader] = useState(false);
@@ -60,6 +60,7 @@ const CreateABHAAddress = (props) => {
                 <div className="center">
                     <button type="button" className="proceed" onClick={onCreate}>Create</button>
                 </div>
+                <Footer setBack={props.setBack} />
             </div>
         </div>
     );

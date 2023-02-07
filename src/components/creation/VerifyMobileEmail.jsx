@@ -4,6 +4,7 @@ import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {getUserToken, mobileEmailInit, verifyOtpInput} from "../../api/hipServiceApi";
 import LinkExistingABHAAddress from "./LinkExistingABHAAddress";
+import Footer from "./Footer";
 
 const VerifyMobileEmail = (props) => {
     const [mobile, setMobile] = useState('');
@@ -16,6 +17,8 @@ const VerifyMobileEmail = (props) => {
     const [proceed, setProceed] = useState(false);
     const [ABHAAlreadyLinked, setABHAAlreadyLinked ] = useState(false);
     const [ABHALinkError, setABHALinkError]=useState('');
+    const [back, setBack] = useState(false);
+    const [link, goToLink] = useState(false);
 
 
     function OnChangeHandler(e) {
@@ -27,6 +30,7 @@ const VerifyMobileEmail = (props) => {
         setError('');
         setShowOtpInput(false);
         setABHALinkError('');
+        setOtp('');
     }
 
     async function onVerify() {
@@ -106,12 +110,29 @@ const VerifyMobileEmail = (props) => {
         }
     }
 
+    function setToInitialValues() {
+        setABHALinkError('');
+        setABHAAlreadyLinked(true);
+        setMobile('');
+        setShowOtpInput(false);
+        setMappedPhrAddress([]);
+        goToLink(false);
+        setOtp('');
+        setLoader(false);
+        setError('');
+        setProceed(false);
+        setBack(false);
+    }
+
 
     useEffect(() => {
         if(otp !== '') {
             verifyOtp();
         }
-    },[otp]);
+        if(back || link){
+            setToInitialValues()
+        }
+    },[otp,back,link]);
 
 
     let abhaAddressList = mappedPhrAddress.length > 0 && mappedPhrAddress.map((item, i) => {
@@ -138,8 +159,9 @@ const VerifyMobileEmail = (props) => {
                 {showOtpInput && <VerifyOTP setOtp={setOtp}/>}
                 {error !== '' && <h6 className="error">{error}</h6>}
                 {loader && <Spinner />}
+                <Footer setBack={props.setBack}/>
             </div>}
-            {!ABHAAlreadyLinked && mappedPhrAddress.length > 0 &&
+            {!proceed && !ABHAAlreadyLinked && mappedPhrAddress.length > 0 &&
             <div>
                 {abhaAddress === '' &&
                 <div>
@@ -155,9 +177,10 @@ const VerifyMobileEmail = (props) => {
                     {loader && <Spinner />}
                 </div>}
                 {loader && abhaAddress !== '' && <Spinner />}
+                <Footer setBack={goToLink}/>
             </div>
             }
-            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress}/>}
+            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} setBack={setBack}/>}
         </div>
     );
 }

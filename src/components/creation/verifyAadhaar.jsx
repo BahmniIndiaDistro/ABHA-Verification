@@ -4,6 +4,7 @@ import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
+
 const VerifyAadhaar = () => {
     const [aadhaar, setAadhaar] = useState('');
     const [loader, setLoader] = useState(false);
@@ -12,7 +13,6 @@ const VerifyAadhaar = () => {
     const [otpVerified, setOtpVerified] = useState(false);
     const [patient, setPatient] = useState({});
     const [otp, setOtp] = useState('');
-    const [goBack, setGoBack] = useState(false);
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
 
 
@@ -71,13 +71,7 @@ const VerifyAadhaar = () => {
     useEffect(() =>{
         if(otp !== '')
             verifyOtp()
-        if(goBack) {
-            setOtpVerified(false);
-            setLoader(false);
-            setAadhaar('');
-            setShowOtpInput(false);
-        }
-    },[otp,goBack])
+    },[otp])
 
     return (
        <div className="abha-creation">
@@ -95,7 +89,7 @@ const VerifyAadhaar = () => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {otpVerified && <PatientAadhaarProfile patient={patient} setGoBack={setGoBack}/>}
+           {otpVerified && <PatientAadhaarProfile patient={patient}/>}
         </div>
 
     );

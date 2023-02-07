@@ -13,6 +13,7 @@ const PatientQueue = (props) => {
     const [patient,setPatients] = useState([]);
     const [selectedPatient, setSelectedPatient] = useState({});
     const [matchFound, setMatchFound] = useState(null);
+    const [back, setBack] = useState(false);
 
     useEffect(() => {
         getPatient()
@@ -46,6 +47,14 @@ const PatientQueue = (props) => {
         window.parent.postMessage({"patientUuid" : matchFound }, "*");
     }
 
+    useEffect(() => {
+        if(back){
+            setSelectedPatient({});
+            setMatchFound(null);
+            setBack(false);
+        }
+    },[back])
+
     return(
         <div>
             {patient.length == 0 && 
@@ -69,7 +78,7 @@ const PatientQueue = (props) => {
 
                 </tbody>
             </table>}
-            {!matchFound && checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient}></PatientDetails>}
+            {!matchFound && checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient} setBack={setBack}></PatientDetails>}
             {matchFound && <div>
                 <b>ABDM Record: </b>
                 <PatientInfo patient={selectedPatient}/><br/>

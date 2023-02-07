@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     getAuthModes,
     fetchPatientFromBahmniWithHealthId,
@@ -24,6 +24,7 @@ const VerifyHealthId = () => {
     const [loader, setLoader] = useState(false);
     const [scanningStatus, setScanningStatus] = useState(false);
     const [ndhmDetails, setNdhmDetails] = useState({});
+    const [back, setBack] = useState(false);
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -126,6 +127,21 @@ const VerifyHealthId = () => {
         window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
     }
 
+    useEffect(() => {
+        if(back){
+            setNdhmDetails({});
+            setId('');
+            setShowError(false);
+            setShowAuthModes(false);
+            setAuthModes([]);
+            setMatchingPatientFound(false);
+            setHealthIdIsVoided(false);
+            setLoader(false);
+            setBack(false);
+        }
+
+    },[back])
+
     return (
         <div>
         {!checkIfNotNull(ndhmDetails) &&
@@ -160,7 +176,7 @@ const VerifyHealthId = () => {
                 {loader && <Spinner />}
                 {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
             </div>}
-            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} />}
+            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} />}
         </div>
     );
 }

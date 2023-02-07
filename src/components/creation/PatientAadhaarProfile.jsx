@@ -4,14 +4,14 @@ import Footer from "./Footer";
 import ABHACardDownload from "./ABHACardDownload";
 import LinkABHAAddress from "./LinkABHAAddress";
 import VerifyMobile from "./VerifyMobile";
+import VerifyAadhaar from "./verifyAadhaar";
 
 const PatientAadhaarProfile = (props) => {
     const [proceed, setProceed] = useState(false);
     const [linkABHAAddress, setLinkAbhaAdress] = useState(false);
     const patient = props.patient;
     const imgSrc = "data:image/jpg;base64," + patient.photo;
-    const [setGoBack] = [props.setGoBack];
-    const [back, goBack] = useState(false);
+    const [back, setBack] = useState(false);
     const [isNewABHA, setIsNewABHA]= useState(false);
 
     function getAddressLine(){
@@ -25,12 +25,7 @@ const PatientAadhaarProfile = (props) => {
             else
                 setLinkAbhaAdress(true);
         }
-        if(back){
-            setLinkAbhaAdress(false);
-            setProceed(false);
-            goBack(false);
-        }
-    },[proceed,back])
+    },[proceed])
 
     function getAddress() {
         var address = getAddressLine();
@@ -41,7 +36,7 @@ const PatientAadhaarProfile = (props) => {
 
     return (
         <div>
-            {!linkABHAAddress && !isNewABHA &&
+            {!back && !linkABHAAddress && !isNewABHA &&
             <div>
                 <div className="patient-profile">
                     <h3>Profile Details As Per Aadhaar</h3>
@@ -54,11 +49,12 @@ const PatientAadhaarProfile = (props) => {
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
                     {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
-                    <Footer setProceed={setProceed} />
+                    <Footer setProceed={setProceed} setBack={setBack} />
                 </div>
             </div>}
+            {back && <VerifyAadhaar />}
             {linkABHAAddress && <LinkABHAAddress patient={patient}/>}
-            {isNewABHA && <VerifyMobile setGoBack={goBack}/>}
+            {isNewABHA && <VerifyMobile patient={patient}/>}
         </div>
     );
 }
