@@ -4,7 +4,7 @@ import Footer from "./Footer";
 import ABHACardDownload from "./ABHACardDownload";
 import LinkABHAAddress from "./LinkABHAAddress";
 import VerifyMobile from "./VerifyMobile";
-import VerifyAadhaar from "./verifyAadhaar";
+import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 
 const PatientAadhaarProfile = (props) => {
     const [proceed, setProceed] = useState(false);
@@ -13,6 +13,7 @@ const PatientAadhaarProfile = (props) => {
     const imgSrc = "data:image/jpg;base64," + patient.photo;
     const [back, setBack] = useState(false);
     const [isNewABHA, setIsNewABHA]= useState(false);
+    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
 
     function getAddressLine(){
         return [patient?.house,patient?.street, patient?.landmark, patient?.locality, patient?.villageTownCity, patient?.subDist].filter(e => e !== undefined);
@@ -54,8 +55,13 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined && <p>
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
-                    {patient.healthIdNumber !== undefined && <ABHACardDownload patient={patient}/>}
-                    <Footer setProceed={setProceed} setBack={props.setBack} />
+                    {patient.healthIdNumber !== undefined &&
+                    <div>
+                        <CheckIdentifierExists id={patient.healthIdNumber} setABHAAlreadyExists={setABHAAlreadyExists}/>
+                        <ABHACardDownload patient={patient}/>
+                    </div>}
+                    <Footer setBack={props.setBack} />
+                    {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
                 </div>
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient}/>}
