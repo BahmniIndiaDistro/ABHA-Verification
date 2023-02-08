@@ -46,7 +46,7 @@ const LinkABHAAddress = (props) => {
         };
         const ndhm = {
             healthNumber: patient.healthIdNumber,
-            id: abhaAddressCreated ? newAbhaAddress.append(cmSuffix) : abhaAddress,
+            id: abhaAddressCreated ? newAbhaAddress.concat(cmSuffix) : abhaAddress,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: false,

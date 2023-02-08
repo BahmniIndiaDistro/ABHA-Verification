@@ -135,7 +135,7 @@ const VerifyMobile = (props) => {
                     {mobileLinked && <p className="note success"> <GoVerified /> <strong>mobile already Linked </strong></p>}
                     {loader && <Spinner />}
                     <Footer setBack={props.setBack}/>
-                    {otpVerified && <Footer setProceed={setProceed}/>}
+                    {(otpVerified || mobileLinked) && <Footer setProceed={setProceed}/>}
                 </div>}
                 {proceed && !abhaCreated && <Spinner />}
                 {abhaCreated && <ABHACreationSuccess patient={patient}/>}
