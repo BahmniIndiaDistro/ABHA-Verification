@@ -85,14 +85,16 @@ const LinkABHAAddress = (props) => {
         <div>
             {!createNewABHA && !link && !proceed &&
             <div>
-                {patient.new === undefined && patient.phrAddress === undefined &&
-                 <p className="note">No Mapped ABHA Address found</p>}
+                {patient.phrAddress === undefined &&
+                <div className="no-abha-address">
+                 <p className="note">No ABHA address found linked to the ABHA number</p>
+                 <p className="note">Please proceed with linking the ABHA address that is already mapped to the mobile number or email, or create a new ABHA address.</p>
+                </div>}
                 {patient.phrAddress !== undefined &&
                 <div>
                     <div className="choose-abha-address">
                         <div className="abha-list-label">
-                            <label htmlFor="abha-address">Choose ABHA-Address from the ABHA Number mapped ABHA
-                                Address</label>
+                            <label htmlFor="abha-address">Choose from existing ABHA Addresses</label>
                         </div>
                             {phrAddressList}
                     </div>

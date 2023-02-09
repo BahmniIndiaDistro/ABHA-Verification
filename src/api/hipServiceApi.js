@@ -378,3 +378,16 @@ export const createABHAAddress = async (phrAddress,preferred) => {
             return Constants.serviceUnavailableError;
     }
 }
+
+export const checkIfABHAAddressExists = async (phrAddress) => {
+    try {
+        const response = await axios.get(Constants.hipServiceUrl + Constants.checkIfABHAAddressExists + "?phrAddress=" + phrAddress, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}

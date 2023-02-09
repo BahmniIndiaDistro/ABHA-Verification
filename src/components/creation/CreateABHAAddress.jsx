@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './creation.scss';
 import Spinner from "../spinner/spinner";
-import {createABHAAddress} from "../../api/hipServiceApi";
+import {checkIfABHAAddressExists, createABHAAddress} from "../../api/hipServiceApi";
 import Footer from "./Footer";
 import {cmSuffix} from "../../api/constants";
 
@@ -18,23 +18,41 @@ const CreateABHAAddress = (props) => {
     }
 
     async function onCreate() {
+        setError('');
         if (newAbhaAddress === '') {
             setError("ABHA Address cannot be empty")
         } else {
             setLoader(true);
-            var response = await createABHAAddress(newAbhaAddress,isPreferred);
-            if (response) {
+            var ifABHAExists = await checkIfABHAAddressExists(newAbhaAddress);
+            if (ifABHAExists) {
                 setLoader(false);
-                if (response.data === undefined) {
-                    if (response.details !== undefined && response.details.length > 0)
-                        setError(response.details[0].message)
-                    else
-                        setError("An error occurred while processing your request")
+                if (ifABHAExists.data !== undefined) {
+                    if (!ifABHAExists.data) {
+                        setLoader(true);
+                        var response = await createABHAAddress(newAbhaAddress, isPreferred);
+                        if (response) {
+                            setLoader(false);
+                            if (response.data === undefined) {
+                                processingError(response);
+                            } else {
+                                props.setABHAAddressCreated(true);
+                            }
+                        }
+                    } else {
+                        setError("ABHA Address already Exists");
+                    }
                 } else {
-                    props.setABHAAddressCreated(true);
+                    processingError(ifABHAExists);
                 }
             }
         }
+    }
+
+    function processingError(response){
+        if (response.details !== undefined && response.details.length > 0)
+            setError(response.details[0].message)
+        else
+            setError("An error occurred while processing your request")
     }
 
     function OnClick(){
@@ -54,7 +72,8 @@ const CreateABHAAddress = (props) => {
                     </div>
                 </div>
                 <div className="center" >
-                    <input type="checkbox" id="preferred" checked={isPreferred} className="checkbox" onChange={OnClick}/> Preferred
+                    <input type="checkbox" id="preferred" checked={isPreferred} className="checkbox" onChange={OnClick}/>
+                    <span className="preferred"> Preferred </span>
                 </div>
                 <p className="message">Click on the check box to make the above abha-address as a default</p>
                 {error !== '' && <h6 className="error">{error}</h6>}
