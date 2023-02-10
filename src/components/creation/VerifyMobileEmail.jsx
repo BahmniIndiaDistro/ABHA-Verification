@@ -134,10 +134,14 @@ const VerifyMobileEmail = (props) => {
         if(back || link){
             setToInitialValues()
         }
+    },[otp,back,link]);
+
+
+    useEffect(() => {
         if(ABHAChosen){
             authenticate();
         }
-    },[otp,back,link,ABHAChosen]);
+    },[ABHAChosen])
 
     function onSelect(abha){
         setABHAChosen(false);
@@ -149,7 +153,7 @@ const VerifyMobileEmail = (props) => {
 
     let abhaAddressList = mappedPhrAddress.length > 0 && mappedPhrAddress.map((item, i) => {
         return (
-            <button onClick={() =>{ onSelect(mappedPhrAddress[i]) }} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
+            <button onClick={() => onSelect(mappedPhrAddress[i]) } className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
         )
     });
 
