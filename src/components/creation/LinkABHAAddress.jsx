@@ -5,6 +5,7 @@ import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
 import {getDate} from "../Common/DateUtil";
 import {cmSuffix} from "../../api/constants";
+import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -24,7 +25,9 @@ const LinkABHAAddress = (props) => {
 
     let phrAddressList = patient.phrAddress !== undefined && patient.phrAddress.length > 0 && patient.phrAddress.map((item, i) => {
         return (
-            <button onClick={() => setAbhaAddress(patient.phrAddress[i])} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
+            <div>
+                <button onClick={() => setAbhaAddress(patient.phrAddress[i])} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
+            </div>
         )
     });
 
@@ -98,6 +101,7 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
+                    <CheckIdentifierExists id={abhaAddress}/>
                     {abhaAddress !== '' && <div className="center">
                         <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
