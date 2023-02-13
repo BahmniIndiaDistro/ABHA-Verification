@@ -196,7 +196,7 @@ const VerifyMobileEmail = (props) => {
                 {!ABHAAlreadyExists && <Footer setProceed={setABHAChosen}/>}
             </div>
             }
-            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} setBack={setBack}/>}
+            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} mappedPatient={props.mappedPatient} setBack={setBack}/>}
         </div>
     );
 }

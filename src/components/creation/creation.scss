@@ -65,6 +65,10 @@ button:active{
   border: 3px solid #4169e9;
 }
 
+button:disabled {
+  opacity: 0.5;
+}
+
 .message {
   margin-left: 40%;
   font-size: medium;

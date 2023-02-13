@@ -17,6 +17,7 @@ const LinkABHAAddress = (props) => {
     const [newAbhaAddress, setNewAbhaAddress] = useState('');
     const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
     const [back, setBack] = useState(false);
+    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
 
     function onProceed() {
         mapPatient();
@@ -31,33 +32,10 @@ const LinkABHAAddress = (props) => {
         )
     });
 
-    function getAddressLine(){
-        return [patient?.districtName,patient?.stateName,patient?.pincode].filter(e => e !== undefined);
-    }
 
     function mapPatient(){
-        var identifier = patient?.phone !== undefined ? [{
-            value: patient.phone
-        }] : (patient?.mobile !== undefined ? [{
-            value: patient.mobile
-        }] : undefined);
-        var address =  {
-            line: getAddressLine().join(', '),
-            district: patient?.district,
-            state: patient?.state,
-            pincode: patient?.pincode
-        };
-        const ndhm = {
-            healthNumber: patient.healthIdNumber,
-            id: abhaAddressCreated ? newAbhaAddress.concat(cmSuffix) : abhaAddress,
-            gender: patient.gender,
-            name: patient.name,
-            isBirthDateEstimated: false,
-            dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
-            address: address,
-            identifiers: identifier
-        };
-        setMappedPatient(ndhm);
+        props.mappedPatient.id = abhaAddressCreated ? newAbhaAddress.concat(cmSuffix) : abhaAddress;
+        setMappedPatient(props.mappedPatient);
     }
 
     function gotoLink(){
@@ -101,9 +79,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    <CheckIdentifierExists id={abhaAddress}/>
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} />
                     {abhaAddress !== '' && <div className="center">
-                        <button type="button" className="proceed" onClick={onProceed}>Proceed</button>
+                        <button type="button" disabled={ABHAAlreadyExists} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 <div className="left-button">
@@ -117,7 +95,7 @@ const LinkABHAAddress = (props) => {
             {!proceed && createNewABHA &&
              <CreateABHAAddress setBack={setBack} newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
             }
-            {link && <VerifyMobileEmail patient={patient} setBack={setBack}/>}
+            {link && <VerifyMobileEmail patient={patient} setBack={setBack} mappedPatient={props.mappedPatient}/>}
             {proceed && <PatientDetails ndhmDetails={mappedPatient} setBack={ !abhaAddressCreated ? setBack : undefined}/>}
         </div>
     );
