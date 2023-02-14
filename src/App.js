@@ -17,7 +17,7 @@ function App() {
       );
     case "createABHA":
       return (
-          <VerifyAadhaar />
+          <VerifyAadhaar addOnlyAbhaNumber={searchParams.get('addOnlyAbhaNumber')}/>
       );
     default:
       return (

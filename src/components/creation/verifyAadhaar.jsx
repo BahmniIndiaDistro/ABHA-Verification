@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
+import PropTypes from "prop-types";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
 
-const VerifyAadhaar = () => {
+const VerifyAadhaar = props => {
+
+    const {addOnlyAbhaNumber} = props;
     const [aadhaar, setAadhaar] = useState('');
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
@@ -15,7 +18,6 @@ const VerifyAadhaar = () => {
     const [otp, setOtp] = useState('');
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
     const [back, setBack] = useState(false);
-
 
     function idOnChangeHandler(e) {
         const re = /^[0-9\b]+$/;
@@ -105,9 +107,14 @@ const VerifyAadhaar = () => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack}/>}
+           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} addOnlyAbhaNumber={addOnlyAbhaNumber}/>}
         </div>
 
     );
 }
+
+VerifyAadhaar.propTypes = {
+    addOnlyAbhaNumber: PropTypes.bool,
+};
+
 export default VerifyAadhaar;
