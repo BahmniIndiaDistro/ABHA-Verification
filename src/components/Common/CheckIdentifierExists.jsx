@@ -50,10 +50,10 @@ const CheckIdentifierExists = (props) => {
     return (
         <div>
             {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
-                Matching record with Health ID/PHR Address found
+                Matching record with {props.id} found
             </div>}
             {healthIdIsVoided && <div className="id-deactivated">
-                Health ID is deactivated
+                {props.id} is deactivated
             </div>}
             {showError && <h6 className="error">{errorHealthId}</h6>}
         </div>

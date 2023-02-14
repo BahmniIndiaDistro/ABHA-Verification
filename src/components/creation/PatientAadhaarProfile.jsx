@@ -34,6 +34,8 @@ const PatientAadhaarProfile = (props) => {
             setIsNewABHA(false);
             setProceedToLinking(false);
             setBack(false);
+            setIsPatientMapped(false);
+            setProceed(false);
         }
     },[proceedToLinking, back])
 
@@ -102,22 +104,24 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined && <p>
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
-                    {patient.healthIdNumber !== undefined && patient.healthId !== undefined &&
+                    {patient.healthId !== undefined &&
                     <div>
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
-                        <div className="linkButton">
-                            <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>
-                        </div>
+                        <CheckIdentifierExists id={patient.healthId} setABHAAlreadyExists={setABHAAlreadyExists}/>
                     </div>}
                     {patient.healthIdNumber !== undefined &&
                     <div>
                         <CheckIdentifierExists id={patient.healthIdNumber} setABHAAlreadyExists={setABHAAlreadyExists}/>
                         <ABHACardDownload patient={patient}/>
                     </div>}
-                    {console.log(patient)}
-                    <Footer setBack={props.setBack} />
-                    {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
+                    <div className="ButtonGroup">
+                        <Footer setBack={props.setBack} />
+                        <div className="linkButton">
+                            <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>
+                        </div>
+                        {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
+                    </div>
                 </div>
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
