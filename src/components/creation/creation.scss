@@ -39,13 +39,14 @@
     height: 30px;
     box-sizing: border-box;
   }
+
+  .error {
+    margin-left: 40%;
+    color: red;
+    margin-top: 0px;
+  }
 }
 
-.error {
-  margin-left: 40%;
-  color: red;
-  margin-top: 0px;
-}
 button {
   background-color: #88af28;
   color: white;
@@ -62,6 +63,10 @@ button:hover{
 
 button:active{
   border: 3px solid #4169e9;
+}
+
+button:disabled {
+  opacity: 0.5;
 }
 
 .message {
@@ -123,7 +128,7 @@ img {
 }
 
 .linkButton{
-  margin-top: 2%;
+  margin-top: 5%;
 }
 
 .center{
@@ -135,8 +140,12 @@ img {
 }
 
 .center {
+  display: flex;
   .checkbox {
     width: auto;
+  }
+  .preferred {
+    padding: 8px;
   }
 }
 
@@ -179,7 +188,15 @@ img {
 
 .abha-address-suffix{
   padding: 4px;
-  border: 1px solid black;
+  border: 1px solid #696666;
+  margin-left: -50px;
 }
 
+.no-abha-address {
+  padding-bottom: 10%;
+}
+
+.ButtonGroup {
+  display: flex;
+}
 

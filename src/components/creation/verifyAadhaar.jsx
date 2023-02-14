@@ -53,6 +53,7 @@ const VerifyAadhaar = props => {
     }
 
     async function verifyOtp() {
+        setError('');
         if (otp === '') {
             setError("otp cannot be empty")
         } else {

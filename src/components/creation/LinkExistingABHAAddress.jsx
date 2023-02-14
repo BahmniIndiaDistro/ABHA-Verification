@@ -4,7 +4,6 @@ import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {getAuthMethods, linkORUnlinkABHAAddress, transaction, verifyOtpInput} from "../../api/hipServiceApi";
 import PatientDetails from "../patient-details/patientDetails";
-import {getDate} from "../Common/DateUtil";
 import {GoVerified} from "react-icons/all";
 import Footer from "./Footer";
 
@@ -76,28 +75,8 @@ const LinkExistingABHAAddress = (props) => {
     }
 
     function mapPatient() {
-        var identifier = patient?.phone !== undefined ? [{
-            value: patient.phone
-        }] : (patient?.mobile !== undefined ? [{
-            value: patient.mobile
-        }] : undefined);
-        var address =  {
-            line: undefined,
-            district: patient?.districtName,
-            state: patient?.stateName,
-            pincode: patient?.pincode
-        };
-        const ndhm = {
-            healthNumber: patient.healthIdNumber,
-            id: props.healthId,
-            gender: patient.gender,
-            name: patient.name,
-            isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
-            dateOfBirth: getDate(patient),
-            address: address,
-            identifiers: identifier
-        };
-        setMappedPatient(ndhm);
+        props.mappedPatient.id = props.healthId
+        setMappedPatient(props.mappedPatient);
         setIsPatientMapped(true);
     }
 

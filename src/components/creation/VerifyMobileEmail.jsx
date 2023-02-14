@@ -5,6 +5,7 @@ import Spinner from "../spinner/spinner";
 import {getUserToken, mobileEmailInit, verifyOtpInput} from "../../api/hipServiceApi";
 import LinkExistingABHAAddress from "./LinkExistingABHAAddress";
 import Footer from "./Footer";
+import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 
 const VerifyMobileEmail = (props) => {
     const [mobile, setMobile] = useState('');
@@ -19,6 +20,8 @@ const VerifyMobileEmail = (props) => {
     const [ABHALinkError, setABHALinkError]=useState('');
     const [back, setBack] = useState(false);
     const [link, goToLink] = useState(false);
+    const [ABHAChosen, setABHAChosen ] = useState(false);
+    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
 
 
     function OnChangeHandler(e) {
@@ -79,9 +82,8 @@ const VerifyMobileEmail = (props) => {
     }
 
 
-    async function authenticate(abhaAddress) {
+    async function authenticate() {
         setLoader(true);
-        setABHAAddress(abhaAddress);
         var response = await getUserToken(abhaAddress);
         if (response) {
             setLoader(false);
@@ -135,9 +137,23 @@ const VerifyMobileEmail = (props) => {
     },[otp,back,link]);
 
 
+    useEffect(() => {
+        if(ABHAChosen){
+            authenticate();
+        }
+    },[ABHAChosen])
+
+    function onSelect(abha){
+        setABHAChosen(false);
+        setError('');
+        setABHAAddress(abha);
+    }
+
+
+
     let abhaAddressList = mappedPhrAddress.length > 0 && mappedPhrAddress.map((item, i) => {
         return (
-            <button onClick={() => authenticate(mappedPhrAddress[i])} className="abha-list">{item}</button>
+            <button onClick={() => onSelect(mappedPhrAddress[i]) } className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
         )
     });
 
@@ -163,7 +179,6 @@ const VerifyMobileEmail = (props) => {
             </div>}
             {!proceed && !ABHAAlreadyLinked && mappedPhrAddress.length > 0 &&
             <div>
-                {abhaAddress === '' &&
                 <div>
                     <div className="choose-abha-address">
                         <div className="abha-list-label">
@@ -173,14 +188,15 @@ const VerifyMobileEmail = (props) => {
                             {abhaAddressList}
                         </div>
                     </div>
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists}/>
                     {error !== '' && <h6 className="error">{error}</h6>}
                     {loader && <Spinner />}
-                </div>}
-                {loader && abhaAddress !== '' && <Spinner />}
+                </div>
                 <Footer setBack={goToLink}/>
+                {!ABHAAlreadyExists && <Footer setProceed={setABHAChosen}/>}
             </div>
             }
-            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} setBack={setBack}/>}
+            {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} mappedPatient={props.mappedPatient} setBack={setBack}/>}
         </div>
     );
 }
