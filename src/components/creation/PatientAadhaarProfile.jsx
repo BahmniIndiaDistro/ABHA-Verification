@@ -118,7 +118,7 @@ const PatientAadhaarProfile = (props) => {
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />
                         <div className="linkButton">
-                            <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>
+                            {patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
                         </div>
                         {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
                     </div>
