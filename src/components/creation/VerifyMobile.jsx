@@ -138,7 +138,7 @@ const VerifyMobile = (props) => {
                     {(otpVerified || mobileLinked) && <Footer setProceed={setProceed}/>}
                 </div>}
                 {proceed && !abhaCreated && <Spinner />}
-                {abhaCreated && <ABHACreationSuccess patient={patient}/>}
+                {abhaCreated && <ABHACreationSuccess patient={patient} mappedPatient={props.mappedPatient}/>}
             </div>
     );
 }

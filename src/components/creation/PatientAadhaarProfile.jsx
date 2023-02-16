@@ -59,8 +59,8 @@ const PatientAadhaarProfile = (props) => {
             pincode: patient?.pincode
         };
         const ndhm = {
-            healthNumber: patient.healthIdNumber,
-            id: patient.healthId,
+            healthIdNumber: patient?.healthIdNumber,
+            id: patient?.healthId,
             gender: patient.gender,
             name: patient.name,
             isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
@@ -73,14 +73,13 @@ const PatientAadhaarProfile = (props) => {
 
     useEffect(() => {
         if(proceed){
+            mapPatient();
             if(patient.healthIdNumber === undefined)
                 setIsNewABHA(true);
             else if(patient.healthId === undefined){
-                mapPatient();
                 setLinkAbhaAdress(true);
             }
             else {
-                mapPatient();
                 setIsPatientMapped(true);
             }
         }
@@ -125,7 +124,7 @@ const PatientAadhaarProfile = (props) => {
                 </div>
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
-            {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} />}
+            {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient}/>}
             {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
         </div>
     );

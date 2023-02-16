@@ -48,8 +48,8 @@ const PatientDetails = (props) => {
     }
 
     function getHealthNumber() {
-        if(ndhmDetails?.healthNumber)
-            return ndhmDetails?.healthNumber;
+        if(ndhmDetails?.healthIdNumber)
+            return ndhmDetails?.healthIdNumber;
         let healthNumber;
         ndhmDetails?.identifiers.forEach(id => {
             if (id.type.localeCompare("HEALTH_NUMBER") === 0) {

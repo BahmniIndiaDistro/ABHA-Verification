@@ -38,7 +38,8 @@ const PatientQueue = (props) => {
             isBirthDateEstimated: patient?.monthOfBirth == null || patient?.dayOfBirth == null,
             dateOfBirth: getDate(patient),
             address: patient.address,
-            identifiers: patient.identifiers
+            identifiers: patient.identifiers,
+            healthIdNumber: patient.healthIdNumber
         };
        setSelectedPatient(ndhm);
     }

@@ -14,9 +14,7 @@ const LinkExistingABHAAddress = (props) => {
     const [otp, setOtp] = useState('');
     const [authModes, setAuthmodes]= useState([])
     const [chosenAuthMode, setChosenAuthMode] = useState('');
-    const patient = props.patient
     const [isPatientMapped,setIsPatientMapped] = useState(false);
-    const [mappedPatient,setMappedPatient] = useState({});
     const [otpVerified, setOtpVerified] = useState(false);
 
 
@@ -76,7 +74,6 @@ const LinkExistingABHAAddress = (props) => {
 
     function mapPatient() {
         props.mappedPatient.id = props.healthId
-        setMappedPatient(props.mappedPatient);
         setIsPatientMapped(true);
     }
 
@@ -165,7 +162,7 @@ const LinkExistingABHAAddress = (props) => {
             </div>}
             {isPatientMapped && error !== '' && <h6 className="error">{error}</h6>}
             {isPatientMapped && loader && <Spinner />}
-            {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} />}
+            {isPatientMapped && <PatientDetails ndhmDetails={props.mappedPatient} />}
         </div>
     );
 }

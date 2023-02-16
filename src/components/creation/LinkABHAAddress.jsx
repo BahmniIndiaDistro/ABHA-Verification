@@ -11,7 +11,6 @@ const LinkABHAAddress = (props) => {
     const patient = props.patient;
     const [abhaAddress, setAbhaAddress] = useState('');
     const [proceed, setProceed] = useState(false);
-    const [mappedPatient, setMappedPatient] = useState({});
     const [link, setLink] = useState(false);
     const [createNewABHA, setcreateNewABHA] = useState(false);
     const [newAbhaAddress, setNewAbhaAddress] = useState('');
@@ -35,7 +34,6 @@ const LinkABHAAddress = (props) => {
 
     function mapPatient(){
         props.mappedPatient.id = abhaAddressCreated ? newAbhaAddress.concat(cmSuffix) : abhaAddress;
-        setMappedPatient(props.mappedPatient);
     }
 
     function gotoLink(){
@@ -96,7 +94,7 @@ const LinkABHAAddress = (props) => {
              <CreateABHAAddress setBack={setBack} newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />
             }
             {link && <VerifyMobileEmail patient={patient} setBack={setBack} mappedPatient={props.mappedPatient}/>}
-            {proceed && <PatientDetails ndhmDetails={mappedPatient} setBack={ !abhaAddressCreated ? setBack : undefined}/>}
+            {proceed && <PatientDetails ndhmDetails={props.mappedPatient} setBack={ !abhaAddressCreated ? setBack : undefined}/>}
         </div>
     );
 }
