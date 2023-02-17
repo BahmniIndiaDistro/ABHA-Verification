@@ -26,7 +26,7 @@ const AuthModes = (props) => {
 
     async function authenticate() {
         setLoader(true);
-        if (selectedAuthMode !== "DEMOGRAPHICS") {
+        if (selectedAuthMode !== "DEMOGRAPHICS" && selectedAuthMode !== 'PASSWORD') {
             setShowError(false)
             const response = await authInit(id, selectedAuthMode);
             if (response.error !== undefined) {

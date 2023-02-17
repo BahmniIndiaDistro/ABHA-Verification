@@ -3,14 +3,16 @@ import React from "react";
 import VerifyHealthId from './components/verifyHealthId/verifyHealthId';
 import './ndhm.scss';
 import PatientQueue from './components/patient-queue/patientQueue';
-import { useSearchParams } from 'react-router-dom'
 import VerifyAadhaar from "./components/creation/verifyAadhaar";
 
 
 function App() {
-  const [searchParams] = useSearchParams();
+  const params = Object.fromEntries(
+		new URLSearchParams(window.location.search)
+	);
+	console.log("params", params);
 
-  switch (searchParams.get('action')) {
+  switch (params['action']) {
     case "patientQueue":
       return (
           <PatientQueue />
