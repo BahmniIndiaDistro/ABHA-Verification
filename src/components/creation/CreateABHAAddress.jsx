@@ -21,7 +21,7 @@ const CreateABHAAddress = (props) => {
         setError('');
         if (newAbhaAddress === '') {
             setError("ABHA Address cannot be empty")
-        } else {
+        } else if(newAbhaAddress.length > 3) {
             setLoader(true);
             var ifABHAExists = await checkIfABHAAddressExists(newAbhaAddress);
             if (ifABHAExists) {
@@ -45,6 +45,9 @@ const CreateABHAAddress = (props) => {
                     processingError(ifABHAExists);
                 }
             }
+        }
+        else {
+            setError("ABHA Address should have minimum of 4 characters");
         }
     }
 
