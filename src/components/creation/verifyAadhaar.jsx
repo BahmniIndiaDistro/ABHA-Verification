@@ -1,11 +1,14 @@
 import React, {useEffect, useState} from "react";
+import PropTypes from "prop-types";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
 
-const VerifyAadhaar = () => {
+const VerifyAadhaar = props => {
+
+    const {patientUuid} = props;
     const [aadhaar, setAadhaar] = useState('');
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
@@ -106,9 +109,14 @@ const VerifyAadhaar = () => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack}/>}
+           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} patientUuid={patientUuid}/>}
         </div>
 
     );
 }
+
+VerifyAadhaar.propTypes = {
+    patientUuid: PropTypes.string,
+};
+
 export default VerifyAadhaar;

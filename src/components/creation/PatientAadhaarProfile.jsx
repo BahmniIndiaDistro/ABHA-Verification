@@ -7,11 +7,13 @@ import VerifyMobile from "./VerifyMobile";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 import PatientDetails from "../patient-details/patientDetails";
 import {getDate} from "../Common/DateUtil";
+import {checkABHAAddressForPatient} from "../../api/hipServiceApi";
 
 const PatientAadhaarProfile = (props) => {
     const [proceedToLinking, setProceedToLinking] = useState(false);
     const [linkABHAAddress, setLinkAbhaAdress] = useState(false);
     const patient = props.patient;
+    const patientUuid = props.patientUuid;
     const imgSrc = "data:image/jpg;base64," + patient.photo;
     const [back, setBack] = useState(false);
     const [isNewABHA, setIsNewABHA]= useState(false);
@@ -19,6 +21,7 @@ const PatientAadhaarProfile = (props) => {
     const [proceed, setProceed] = useState(false);
     const [mappedPatient,setMappedPatient] = useState({});
     const [isPatientMapped,setIsPatientMapped] = useState(false);
+    const [healthIdExists, setHealthIdExists] = useState(false);
 
     function getAddressLine(){
         return [patient?.house,patient?.street, patient?.landmark, patient?.locality, patient?.villageTownCity, patient?.subDist].filter(e => e !== undefined);
@@ -39,6 +42,12 @@ const PatientAadhaarProfile = (props) => {
         }
     },[proceedToLinking, back])
 
+    useEffect(async () => {
+        if(patientUuid) {
+            setHealthIdExists(await checkABHAAddressForPatient(patientUuid));
+        }
+    },[patientUuid])
+
     function getAddress() {
         var address = getAddressLine();
         address.push(patient?.district,patient?.state,patient?.pincode);
@@ -56,30 +65,36 @@ const PatientAadhaarProfile = (props) => {
             state: patient?.state,
             pincode: patient?.pincode
         };
-        const ndhm = {
-            healthIdNumber: patient?.healthIdNumber,
-            id: patient?.healthId,
-            gender: patient.gender,
-            name: patient.name,
-            isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
-            dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
-            address: address,
-            identifiers: identifier
-        };
+        let ndhm = {};
+        if (healthIdExists) {
+            ndhm = {
+                healthIdNumber: patient?.healthIdNumber,
+                patientUuid: patientUuid
+            }
+        } else {
+            ndhm = {
+                healthIdNumber: patient?.healthIdNumber,
+                id: patient?.healthId,
+                gender: patient.gender,
+                name: patient.name,
+                isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
+                dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
+                address: address,
+                identifiers: identifier
+            };
+        }
         setMappedPatient(ndhm);
     }
 
     useEffect(() => {
         if(proceed){
             mapPatient();
-            if(patient.healthIdNumber === undefined)
+            if(patient.healthIdNumber === undefined && !healthIdExists)
                 setIsNewABHA(true);
-            else if(patient.healthId === undefined){
+            else if(patient.healthId === undefined && !healthIdExists)
                 setLinkAbhaAdress(true);
-            }
-            else {
+            else
                 setIsPatientMapped(true);
-            }
         }
     },[proceed])
 
@@ -101,7 +116,7 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined && <p>
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
-                    {patient.healthId !== undefined &&
+                    {patient.healthId !== undefined && healthIdExists &&
                     <div>
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
@@ -115,7 +130,7 @@ const PatientAadhaarProfile = (props) => {
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />
                         <div className="linkButton">
-                            {patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
+                            {!healthIdExists && patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
                         </div>
                         {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
                     </div>
@@ -123,7 +138,7 @@ const PatientAadhaarProfile = (props) => {
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
             {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient}/>}
-            {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
+            {healthIdExists && isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
         </div>
     );
 }
