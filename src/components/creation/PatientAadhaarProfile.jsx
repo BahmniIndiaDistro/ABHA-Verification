@@ -49,9 +49,7 @@ const PatientAadhaarProfile = (props) => {
     function mapPatient(){
         var identifier = patient?.phone !== undefined ? [{
             value: patient.phone
-        }] : (patient?.mobile !== undefined ? [{
-            value: patient.mobile
-        }] : undefined);
+        }] : undefined;
         var address =  {
             line: getAddressLine().join(', '),
             district: patient?.district,

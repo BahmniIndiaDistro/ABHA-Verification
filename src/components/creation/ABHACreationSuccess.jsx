@@ -12,6 +12,11 @@ const ABHACreationSuccess = (props) => {
 
     function mapHealthIdNumber(){
         props.mappedPatient.healthIdNumber = patient.healthIdNumber;
+        if(props.mappedPatient.identifiers === undefined){
+            props.mappedPatient.identifiers = patient?.mobile !== undefined ? [{
+                value: patient.mobile
+            }] : undefined
+        }
     }
 
     useEffect(() => {
