@@ -109,11 +109,11 @@ export class FhirPatient {
         this.id = id
         this.gender = gender
         this.identifiers= identifier
-        this.names = [name]
+        this.names = name ? [name] : null
         this.birthDate = dob
         this.isBirthDateEstimated = isBirthDateEstimated
-        this.address = [address]
-        this.contactPoint = [telecom]
-        this.contact = [contact]
+        this.address = address ? [address] : null
+        this.contactPoint = telecom ? [telecom] : null
+        this.contact = contact ? [contact] : null
     }
 }
