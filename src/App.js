@@ -10,7 +10,6 @@ function App() {
   const params = Object.fromEntries(
 		new URLSearchParams(window.location.search)
 	);
-	console.log("params", params);
 
   switch (params['action']) {
     case "patientQueue":
@@ -19,7 +18,7 @@ function App() {
       );
     case "createABHA":
       return (
-          <VerifyAadhaar />
+          <VerifyAadhaar patientUuid={params['patientUuid']}/>
       );
     default:
       return (
