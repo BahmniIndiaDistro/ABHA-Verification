@@ -28,7 +28,7 @@ export const saveDemographics = async (healthId,ndhmDetails) => {
             "name": ndhmDetails.name,
             "gender": ndhmDetails.gender,
             "dateOfBirth": ndhmDetails.dateOfBirth,
-            "phoneNumber": ndhmDetails.identifiers[0].value
+            "phoneNumber": ndhmDetails.identifiers ? ndhmDetails.identifiers[0].value : null
     };
 
     try {
@@ -389,5 +389,14 @@ export const checkIfABHAAddressExists = async (phrAddress) => {
             return error.response.data;
         else
             return Constants.serviceUnavailableError;
+    }
+}
+
+export const checkABHAAddressForPatient = async (patientUuid) => {
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + Constants.abhaAddressCheckUrl + "/" + patientUuid, Constants.headers);
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
     }
 }
