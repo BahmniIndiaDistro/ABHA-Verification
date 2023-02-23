@@ -200,3 +200,27 @@ img {
   display: flex;
 }
 
+.consent-input {
+  display: flex;
+  .consent-checkbox {
+    width: auto;
+  }
+  .consent {
+    padding: 8px;
+  }
+}
+
+.consent-screen {
+  background-color: rgb(249, 250, 252);
+  padding: 16px;
+  margin-top: 8px;
+  border-radius: 16px;
+  max-height: 250px;
+  overflow-x: auto;
+  border-color: #696666;
+  margin-bottom: 40px;
+}
+
+.sub-consent-input {
+  padding-left: 5%;
+}
