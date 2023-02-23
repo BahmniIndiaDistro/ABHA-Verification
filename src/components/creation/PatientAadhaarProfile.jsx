@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './creation.scss';
 import Footer from "./Footer";
-import ABHACardDownload from "./ABHACardDownload";
+import ABHACard from "./ABHACard";
 import LinkABHAAddress from "./LinkABHAAddress";
 import VerifyMobile from "./VerifyMobile";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
@@ -125,7 +125,7 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined &&
                     <div>
                         <CheckIdentifierExists id={patient.healthIdNumber} setABHAAlreadyExists={setABHAAlreadyExists}/>
-                        <ABHACardDownload patient={patient}/>
+                        <ABHACard patient={patient}/>
                     </div>}
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />
