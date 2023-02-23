@@ -8,8 +8,8 @@ import VerifyAadhaar from "./components/creation/verifyAadhaar";
 
 function App() {
   const params = Object.fromEntries(
-		new URLSearchParams(window.location.search)
-	);
+    new URLSearchParams(window.location.search)
+  );
 
   switch (params['action']) {
     case "patientQueue":
