@@ -89,7 +89,7 @@ const PatientAadhaarProfile = (props) => {
     useEffect(() => {
         if(proceed){
             mapPatient();
-            if(patient.healthIdNumber === undefined && !healthIdExists)
+            if(patient.healthIdNumber === undefined)
                 setIsNewABHA(true);
             else if(patient.healthId === undefined && !healthIdExists)
                 setLinkAbhaAdress(true);
