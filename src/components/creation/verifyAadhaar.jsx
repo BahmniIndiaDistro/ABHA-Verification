@@ -5,6 +5,7 @@ import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
+import AadhaarConsent from "./AadhaarConsent";
 
 const VerifyAadhaar = props => {
 
@@ -18,6 +19,8 @@ const VerifyAadhaar = props => {
     const [otp, setOtp] = useState('');
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
     const [back, setBack] = useState(false);
+    const [isConsentGranted, setConsentGrated] = useState(false);
+    const [aadhaarError, setAadhaarError] = useState(false);
 
 
     function idOnChangeHandler(e) {
@@ -25,15 +28,15 @@ const VerifyAadhaar = props => {
         if (e.target.value === '' || re.test(e.target.value)) {
             setAadhaar(e.target.value);
         }
-        setError('');
+        setAadhaarError('');
         setShowOtpInput(false);
     }
 
     async function onVerify() {
-        setError('');
+        setAadhaarError('');
         setShowOtpInput(false);
         if (aadhaar === '') {
-            setError("Aadhaar number cannot be empty")
+            setAadhaarError("Aadhaar number cannot be empty")
         } else {
             setLoader(true);
             var response = await generateAadhaarOtp(aadhaar);
@@ -41,9 +44,9 @@ const VerifyAadhaar = props => {
                 setLoader(false);
                 if(response.data === undefined){
                     if(response.details !== undefined && response.details.length > 0)
-                       setError(response.details[0].message)
+                       setAadhaarError(response.details[0].message)
                     else
-                        setError("An error occurred while processing your request")
+                        setAadhaarError("An error occurred while processing your request")
                 }
                 else {
                     setShowOtpInput(true);
@@ -102,9 +105,15 @@ const VerifyAadhaar = props => {
                     <div className="verify-aadhaar-input">
                         <input type="text" id="aadhaar" name="aadhaar" value={aadhaar} onChange={idOnChangeHandler} />
                     </div>
-                    <button name="verify-btn" type="submit" onClick={onVerify}>Verify</button>
                 </div>
             </div>
+            {aadhaarError !== '' && <h6 className="error">{aadhaarError}</h6>}
+           <div className="consent-screen">
+               <AadhaarConsent setConsentGrated={setConsentGrated}/>
+           </div>
+           {!showOtpInput && !loader && <div className="center">
+                <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={onVerify}>Verify</button>
+            </div>}
             {showOtpInput && <VerifyOTP setOtp={setOtp} mobile={otpReceivingNumber}/>}
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
