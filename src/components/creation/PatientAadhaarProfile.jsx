@@ -138,7 +138,7 @@ const PatientAadhaarProfile = (props) => {
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
             {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient}/>}
-            {healthIdExists && isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
+            {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
         </div>
     );
 }
