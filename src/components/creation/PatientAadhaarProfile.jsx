@@ -116,7 +116,7 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined && <p>
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
-                    {patient.healthId !== undefined && healthIdExists &&
+                    {patient.healthId !== undefined && !healthIdExists &&
                     <div>
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
