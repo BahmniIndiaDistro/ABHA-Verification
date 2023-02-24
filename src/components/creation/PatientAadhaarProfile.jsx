@@ -43,7 +43,7 @@ const PatientAadhaarProfile = (props) => {
     },[proceedToLinking, back])
 
     useEffect(async () => {
-        if(patientUuid) {
+        if(patientUuid != "null" && patientUuid != "undefined") {
             setHealthIdExists(await checkABHAAddressForPatient(patientUuid));
         }
     },[patientUuid])
