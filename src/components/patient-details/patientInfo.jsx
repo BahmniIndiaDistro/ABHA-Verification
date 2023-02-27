@@ -6,10 +6,13 @@ const PatientInfo = (props) => {
     const patient = props.patient;
     function getCustomAddress(patient) {
         var customAddress = [];
-        if(typeof(patient.address) == "string")
+        if(typeof(patient.address) == 'string')
            return patient.address;
         for (var key in patient.address) {
-            if (patient.address[key] !== '-' && patient.address[key] !== '' && patient.address[key] !== undefined) {
+            if(patient.address[key] && typeof(patient.address[key]) === 'object') {
+                patient.address[key] = patient.address[key].filter(e => e !== null && e !== undefined && e !== "");
+            }
+            if (patient.address[key] && patient.address[key] !== '-' && patient.address[key] !== '' && patient.address[key] !== undefined) {
                 customAddress.push(patient.address[key]);
             }
         }

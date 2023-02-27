@@ -24,7 +24,7 @@ const PatientAadhaarProfile = (props) => {
     const [healthIdExists, setHealthIdExists] = useState(false);
 
     function getAddressLine(){
-        return [patient?.house,patient?.street, patient?.landmark, patient?.locality, patient?.villageTownCity, patient?.subDist].filter(e => e !== undefined);
+        return [patient?.house.concat(" ", patient?.street), patient?.locality];
     }
 
     useEffect(() => {
@@ -49,9 +49,8 @@ const PatientAadhaarProfile = (props) => {
     },[patientUuid])
 
     function getAddress() {
-        var address = getAddressLine();
-        address.push(patient?.district,patient?.state,patient?.pincode);
-        address.filter(e => e !== undefined && e !== "");
+        var address = [...getAddressLine(),patient?.district,patient?.state,patient?.pincode]
+            .filter(e => e !== null && e !== undefined && e !== "");
         return address.join(', ');
     }
 
@@ -60,7 +59,8 @@ const PatientAadhaarProfile = (props) => {
             value: patient.phone
         }] : undefined;
         var address =  {
-            line: getAddressLine().join(', '),
+            line: getAddressLine(),
+            city: patient?.villageTownCity,
             district: patient?.district,
             state: patient?.state,
             pincode: patient?.pincode
