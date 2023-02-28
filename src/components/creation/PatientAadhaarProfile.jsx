@@ -24,7 +24,7 @@ const PatientAadhaarProfile = (props) => {
     const [healthIdExists, setHealthIdExists] = useState(false);
 
     function getAddressLine(){
-        return [patient?.house.concat(" ", patient?.street), patient?.locality];
+        return [[patient?.house, patient?.street].join(' ').trim(), patient?.locality];
     }
 
     useEffect(() => {
