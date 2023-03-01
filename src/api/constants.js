@@ -28,6 +28,7 @@ export const authMethods = "/v1/phr/registration/hid/search/auth-methods";
 export const transaction = "/v1/phr/login/init/transaction";
 export const createABHAAddress = "/v2/account/phr-linked";
 export const checkIfABHAAddressExists = "/v1/phr/search/isExist"
+export const openmrsSession = "/openmrs/ws/rest/v1/session"
 export const cmSuffix = "@sbx";
 export const serviceUnavailableError = {
     "error": {
