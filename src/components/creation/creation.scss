@@ -214,11 +214,22 @@ img {
   background-color: rgb(249, 250, 252);
   padding: 16px;
   margin-top: 8px;
-  border-radius: 16px;
+  border-radius: 5px;
   max-height: 250px;
-  overflow-x: auto;
-  border-color: #696666;
+  overflow: scroll;
+  border: 1px solid black;
   margin-bottom: 40px;
+}
+
+.consent-screen::-webkit-scrollbar {
+  -webkit-appearance: none;
+   width: 11px;
+}
+
+.consent-screen::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  border: 2px solid white;
+  background-color: rgba(0, 0, 0, .4);
 }
 
 .sub-consent-input {

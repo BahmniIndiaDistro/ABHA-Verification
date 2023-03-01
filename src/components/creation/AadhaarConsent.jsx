@@ -66,7 +66,7 @@ const AadhaarConsent = (props) => {
     },[error])
 
     return (
-        <div>
+        <div className="consent-screen">
             <p>I hereby confirm my consent,</p>
             {AadhaarConsents.map((consent ,index) => {
                 return (

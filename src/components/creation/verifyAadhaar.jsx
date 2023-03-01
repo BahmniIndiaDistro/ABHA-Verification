@@ -108,11 +108,9 @@ const VerifyAadhaar = props => {
                 </div>
             </div>
             {aadhaarError !== '' && <h6 className="error">{aadhaarError}</h6>}
-           <div className="consent-screen">
-               <AadhaarConsent setConsentGrated={setConsentGrated}/>
-           </div>
+            {!showOtpInput && <AadhaarConsent setConsentGrated={setConsentGrated}/>}
            {!showOtpInput && !loader && <div className="center">
-                <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={onVerify}>Verify</button>
+                <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={onVerify}>Accept</button>
             </div>}
             {showOtpInput && <VerifyOTP setOtp={setOtp} mobile={otpReceivingNumber}/>}
             {error !== '' && <h6 className="error">{error}</h6>}
