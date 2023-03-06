@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from "react";
 import './creation.scss';
+import {getUserName} from "../../api/openmrServiceApi";
 
 const AadhaarConsent = (props) => {
+
+    const [userName, setUserName] = useState(undefined);
+    const [aadhaarConsent, setAadhaarConsent] = useState(
+        [true ,true ,true ,true ,false ,false]
+    );
+    const [error, setError] = useState(false);
 
     const AadhaarConsents = [
         "I am voluntarily sharing my Aadhaar Number / Virtual ID issued by the Unique Identification Authority of India (“UIDAI”), and my demographic information for the purpose of \n" +
@@ -15,58 +22,41 @@ const AadhaarConsent = (props) => {
 
         "I consent to the anonymization and subsequent use of my government health records for public health purposes.",
 
-        "I, (name of healthcare worker- depending on the username used for logging in into the system), confirm that I have duly informed and explained the beneficiary of the\n" +
-        "contents of consent for aforementioned purposes.",
+        `I (${userName}), confirm that I have duly informed and explained the beneficiary of the\n` +
+        `contents of consent for aforementioned purposes.`,
 
-        "I, (beneficiary name), have been explained about the consent as stated above and hereby provide my consent for the aforementioned purposes."
+        `I ${`<input type="text" placeholder="Beneficiary name">`}, have been explained about the consent as stated above and hereby provide my consent for the aforementioned purposes.`
     ]
 
-    const [aadhaarConsent, setAadhaarConsent] = useState(
-        [true ,true ,true ,true ,false ,false]
-    );
-    const [consentError, setConsentError]= useState(
-        new Array(AadhaarConsents.length).fill(false)
-    )
-    const [error, setError] = useState('');
-
     function onClick(e) {
-        setError('');
-        const updatedCheckedState = aadhaarConsent.map((item, index) => {
-                const updatedError = consentError.map((item, index) =>
-                    index.toString() === e.target.id ? !item : item );
-                setConsentError(updatedError);
-                return index.toString() === e.target.id ? !item : item;
-            }
+        const updatedCheckedState = aadhaarConsent.map((item, index) =>
+               index.toString() === e.target.id ? !item : item
         );
         setAadhaarConsent(updatedCheckedState);
     }
 
-
-    useEffect(() => {
-        if(!aadhaarConsent[4] && !aadhaarConsent[5] && !aadhaarConsent[3]){
-            setError('Consent is required or choose either of the below')
-        }
-        else
-        {
-            if(consentError.slice(0,3).filter(e => e === true).length > 0){
-                setError('Consent is required');
+    useEffect(async () => {
+        if (userName === undefined) {
+            var response = await getUserName();
+            if (response.user?.display !== undefined) {
+                setUserName(response.user.display);
             }
-        }
 
-    },[consentError])
+        }
+    },[]);
 
     useEffect(() => {
-        if(error === ''){
+        setError(true);
+        props.setConsentGrated(false);
+        if(aadhaarConsent.filter(e => e === true).length === aadhaarConsent.length){
+            setError(false)
             props.setConsentGrated(true);
         }
-        else
-        {
-            props.setConsentGrated(false);
-        }
-    },[error])
+    },[aadhaarConsent])
 
     return (
         <div>
+        <div className="consent-screen">
             <p>I hereby confirm my consent,</p>
             {AadhaarConsents.map((consent ,index) => {
                 return (
@@ -75,14 +65,15 @@ const AadhaarConsent = (props) => {
                         <input type="checkbox" id={index} checked={aadhaarConsent[index]} className="consent-checkbox" onChange={onClick}/>
                         <span className="consent">{consent}</span>
                     </div>}
-                     {consentError[index] && error !== '' && <h6 className="error">{error}</h6>}
                     {index > 3 && <div className="consent-input sub-consent-input">
                         <input type="checkbox" id={index} checked={aadhaarConsent[index]} className="consent-checkbox" onChange={onClick}/>
-                        <span className="consent">{consent}</span>
+                        <span className="consent" dangerouslySetInnerHTML={{ __html: consent }} />
                     </div>}
                     </div>
                 )}
             )}
+        </div>
+        {error && <p className="error-msg">*Please select all the above checkboxes to proceed</p>}
         </div>
     );
 }
