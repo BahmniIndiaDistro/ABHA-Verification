@@ -9,7 +9,6 @@ import AadhaarConsent from "./AadhaarConsent";
 
 const VerifyAadhaar = props => {
 
-    const {patientUuid} = props;
     const [aadhaar, setAadhaar] = useState('');
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
@@ -116,14 +115,10 @@ const VerifyAadhaar = props => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} patientUuid={patientUuid}/>}
+           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} />}
         </div>
 
     );
 }
-
-VerifyAadhaar.propTypes = {
-    patientUuid: PropTypes.string,
-};
 
 export default VerifyAadhaar;

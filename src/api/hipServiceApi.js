@@ -391,12 +391,3 @@ export const checkIfABHAAddressExists = async (phrAddress) => {
             return Constants.serviceUnavailableError;
     }
 }
-
-export const checkABHAAddressForPatient = async (patientUuid) => {
-    try {
-        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + Constants.abhaAddressCheckUrl + "/" + patientUuid, Constants.headers);
-        return response.data;
-    } catch (error) {
-        return Constants.openMrsDown;
-    }
-}

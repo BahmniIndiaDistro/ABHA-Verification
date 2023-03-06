@@ -13,8 +13,7 @@ const PatientDetails = (props) => {
     const ndhmDetails = props.ndhmDetails;
 
     useEffect(() => {
-        if(!ndhmDetails.patientUuid)
-            fetchBahmniDetails();
+        fetchBahmniDetails();
     }, []);
 
     async function fetchBahmniDetails() {
@@ -62,7 +61,7 @@ const PatientDetails = (props) => {
 
     function save(isConfirmSelected) {
         var healthNumber = new Identifier(new Type("ABHA Number"),getHealthNumber())
-        var healthId = ndhmDetails.patientUuid ? null : new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
+        var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
 
         var names = null;
         if(ndhmDetails.name) {
@@ -80,17 +79,14 @@ const PatientDetails = (props) => {
         var address = new Address(ndhmDetails.address?.line,ndhmDetails.address?.city,ndhmDetails.address?.district,ndhmDetails.address?.state,ndhmDetails.address?.pincode,"IN")
 
         var id;
-        if (ndhmDetails.patientUuid)
-            id = ndhmDetails.patientUuid;
-        if(isConfirmSelected && selectedPatient.uuid !== undefined && !ndhmDetails.patientUuid){
+        if(isConfirmSelected && selectedPatient.uuid !== undefined){
            id = selectedPatient.uuid;
         }
 
         let patient = new FhirPatient(id,[healthId,healthNumber],names,gender,dob,ndhmDetails?.isBirthDateEstimated, address,telecom,"")
 
         window.parent.postMessage({ "patient": patient }, "*");
-        if (!ndhmDetails.patientUuid)
-            saveDemographics(ndhmDetails?.id,ndhmDetails)
+        saveDemographics(ndhmDetails?.id,ndhmDetails)
     }
 
     function prepareMatchingPatientsList() {
@@ -102,13 +98,8 @@ const PatientDetails = (props) => {
     }
 
     return (
-     <div className="matching-patients">
-           <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
-                {ndhmDetails.patientUuid &&
-                    <span>ABHA Number: {ndhmDetails.healthIdNumber}</span>
-                }
-                {!ndhmDetails.patientUuid && 
-                    <div>
+        <div className="matching-patients">
+                <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
                     {patients.length === 0 && <b>No Bahmni Record Found</b>}
@@ -120,14 +111,13 @@ const PatientDetails = (props) => {
                         </div>
                         {prepareMatchingPatientsList()}
                     </div>}
-                </div>}
-                <div className="create-confirm-btns">
-                    {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
-                    <button onClick={updateRecord}> {ndhmDetails.patientUuid ? "Update Record" : "Create New Record" }</button>
+                    <div className="create-confirm-btns">
+                        {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
+                        <button onClick={updateRecord}> Create New Record </button>
+                    </div>
                 </div>
-            </div>
-            {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
-     </div>
+                {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
+        </div>
     );
 };
 export default PatientDetails;
