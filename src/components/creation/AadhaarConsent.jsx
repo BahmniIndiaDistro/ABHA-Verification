@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import './creation.scss';
 import {getUserName} from "../../api/openmrServiceApi";
+import reactStringReplace from "react-string-replace";
 
 const AadhaarConsent = (props) => {
 
@@ -8,6 +9,7 @@ const AadhaarConsent = (props) => {
     const [aadhaarConsent, setAadhaarConsent] = useState(
         [true ,true ,true ,true ,false ,false]
     );
+    const [beneficiary, setBeneficiary] = useState('');
     const [error, setError] = useState(false);
 
     const AadhaarConsents = [
@@ -25,7 +27,7 @@ const AadhaarConsent = (props) => {
         `I (${userName}), confirm that I have duly informed and explained the beneficiary of the\n` +
         `contents of consent for aforementioned purposes.`,
 
-        `I ${`<input type="text" placeholder="Beneficiary name">`}, have been explained about the consent as stated above and hereby provide my consent for the aforementioned purposes.`
+        "I {beneficiaryInputBox} , have been explained about the consent as stated above and hereby provide my consent for the aforementioned purposes."
     ]
 
     function onClick(e) {
@@ -48,11 +50,17 @@ const AadhaarConsent = (props) => {
     useEffect(() => {
         setError(true);
         props.setConsentGrated(false);
-        if(aadhaarConsent.filter(e => e === true).length === aadhaarConsent.length){
+        if(beneficiary !== '' && beneficiary.length > 2 && aadhaarConsent.filter(e => e === true).length === aadhaarConsent.length){
             setError(false)
             props.setConsentGrated(true);
         }
-    },[aadhaarConsent])
+    },[aadhaarConsent, beneficiary])
+
+    function updateBeneficiary(e){
+        const re= /^[a-zA-Z \s]+$/
+        if(e.target.value === '' || re.test(e.target.value))
+            setBeneficiary(e.target.value);
+    }
 
     return (
         <div>
@@ -61,19 +69,25 @@ const AadhaarConsent = (props) => {
             {AadhaarConsents.map((consent ,index) => {
                 return (
                     <div>
-                    {index <= 3 && <div className="consent-input">
+                    {index <= 3 &&
+                    <div className="consent-input">
                         <input type="checkbox" id={index} checked={aadhaarConsent[index]} className="consent-checkbox" onChange={onClick}/>
                         <span className="consent">{consent}</span>
                     </div>}
                     {index > 3 && <div className="consent-input sub-consent-input">
                         <input type="checkbox" id={index} checked={aadhaarConsent[index]} className="consent-checkbox" onChange={onClick}/>
-                        <span className="consent" dangerouslySetInnerHTML={{ __html: consent }} />
+                        <span className="consent">
+                        {reactStringReplace(consent, '{beneficiaryInputBox}', (match, i) => (
+                            <input type="text" minLength="3" required
+                                   placeholder="Beneficiary name" value={beneficiary} onChange={updateBeneficiary}/>
+                        ))}
+                        </span>
                     </div>}
                     </div>
                 )}
             )}
         </div>
-        {error && <p className="error-msg">*Please select all the above checkboxes to proceed</p>}
+        {error && <p className="error-msg">*Please select all the above checkboxes and enter beneficiary name to proceed</p>}
         </div>
     );
 }
