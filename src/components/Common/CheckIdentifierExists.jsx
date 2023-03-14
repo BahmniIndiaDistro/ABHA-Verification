@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
+import {fetchPatientFromBahmniWithHealthId, getHealthIdStatus, checkIfHealthNumberExists} from '../../api/hipServiceApi';
 import '../verifyHealthId/verifyHealthId.scss';
 
 const CheckIdentifierExists = (props) => {
@@ -8,10 +8,18 @@ const CheckIdentifierExists = (props) => {
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
+    const [healthIdNumberExists, setHealthIdNumberExists] = useState(false);
 
     async function checkIfAlreadyExistingIdentifier(id) {
         if(props.setABHAAlreadyExists !== undefined)
             props?.setABHAAlreadyExists(false);
+        if(props.setMatchingPatientUuid !== undefined)
+            props?.setMatchingPatientUuid('');
+        if(props.setHealthNumberAlreadyExists !== undefined)
+            props?.setHealthNumberAlreadyExists(false);
+        else
+            setHealthIdNumberExists(true);
+
         if (id !== '') {
             setHealthIdIsVoided(false);
             setMatchingPatientFound(false);
@@ -28,6 +36,15 @@ const CheckIdentifierExists = (props) => {
                 }
                 if(props.setABHAAlreadyExists !== undefined)
                     props?.setABHAAlreadyExists(true);
+                if(props.setMatchingPatientUuid !== undefined)
+                    props?.setMatchingPatientUuid(matchingPatientId);
+                if(props.setHealthNumberAlreadyExists !== undefined) {
+                    const response = await checkIfHealthNumberExists(matchingPatientId);
+                    if(response.error === undefined) {
+                        setHealthIdNumberExists(response);
+                        props?.setHealthNumberAlreadyExists(response);
+                    }
+                }
             }
             else {
                 if (matchingPatientId.Error !== undefined) {
@@ -49,9 +66,10 @@ const CheckIdentifierExists = (props) => {
 
     return (
         <div>
-            {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
+            {matchingPatientFound && healthIdNumberExists && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                 Matching record with {props.id} found
             </div>}
+            {matchingPatientFound && !healthIdNumberExists && <div className="matched-patient-info">Matching record with {props.id} found. Please proceed to update the record</div>}
             {healthIdIsVoided && <div className="id-deactivated">
                 {props.id} is deactivated
             </div>}

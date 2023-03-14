@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {fetchPatientDetailsFromBahmni, saveDemographics} from '../../api/hipServiceApi';
+import {fetchPatientDetailsFromBahmni, saveDemographics, fetchPatientFromBahmniWithUuid} from '../../api/hipServiceApi';
 import './patientDetails.scss';
 import {Address, FhirPatient, Identifier, Name, Telecom, Type} from "../../FhirPatient";
 import ConfirmPopup from "./confirmPopup";
@@ -13,8 +13,21 @@ const PatientDetails = (props) => {
     const ndhmDetails = props.ndhmDetails;
 
     useEffect(() => {
-        fetchBahmniDetails();
+        if(ndhmDetails?.uuid != undefined) {
+            fetchPatientDetailsFromBahmniWithUuid();
+        } else {
+            fetchBahmniDetails();
+        }
     }, []);
+
+    async function fetchPatientDetailsFromBahmniWithUuid() {
+        const response = []
+        response.push(await fetchPatientFromBahmniWithUuid(ndhmDetails.uuid));
+        if (response.error === undefined && response.length > 0) {
+            const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
+            setPatients(parsedPatients);
+        }
+    }
 
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
@@ -103,17 +116,24 @@ const PatientDetails = (props) => {
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
                     {patients.length === 0 && <b>No Bahmni Record Found</b>}
-                    {patients.length > 0 &&
+                    {patients.length > 0 && ndhmDetails.uuid == undefined &&
                     <div>
                         <b>Following Matched Bahmni Record Found:</b>
-                        <div className="note">
+                        <div className="matched-record-note">
                             <p>Select the appropriate <b>matched</b> Bahmni record to update the data for that patient in the system, or click on <b>Create New Record</b>, if you want to create a fresh patient record</p>
                         </div>
                         {prepareMatchingPatientsList()}
                     </div>}
+                    {patients.length > 0 && ndhmDetails.uuid != undefined &&
+                    <div>
+                    <div className="matched-record-note">
+                        <p>Click the Bahmni record to update the data along with ABHA number for that patient in the system</p>
+                    </div>
+                        {prepareMatchingPatientsList()}
+                    </div>}
                     <div className="create-confirm-btns">
                         {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
-                        <button onClick={updateRecord}> Create New Record </button>
+                        {ndhmDetails.uuid == undefined && <button onClick={updateRecord}> Create New Record </button>}
                     </div>
                 </div>
                 {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
