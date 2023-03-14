@@ -27,7 +27,7 @@ const ConfirmPopup = (props) => {
                 <div className='popup-content'>
                     <AiFillWarning size={20} color="red" />
                     <span className='warning'>
-                            Name, Gender, Age will be updated in Bahmni. This action cannot be undone</span>
+                        Patient details will be updated with ABDM record. This action cannot be undone</span>
                     <p><PatientInfo patient={props.selectedPatient}/></p>
                     <button type='submit' onClick={props.onConfirm}> Confirm Selection</button>
                 </div>

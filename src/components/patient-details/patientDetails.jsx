@@ -127,7 +127,7 @@ const PatientDetails = (props) => {
                     {patients.length > 0 && ndhmDetails.uuid != undefined &&
                     <div>
                     <div className="matched-record-note">
-                        <p>Click the Bahmni record to update the data along with ABHA number for that patient in the system</p>
+                        <p>The Bahmni record below will be updated with the ABDM details above. Please click on the record to proceed.</p>
                     </div>
                         {prepareMatchingPatientsList()}
                     </div>}
