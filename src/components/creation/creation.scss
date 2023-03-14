@@ -224,6 +224,10 @@ img {
     width: auto;
     height: auto;
   }
+  input[type = text]:focus:invalid {
+      outline: 2px solid red;
+      border-radius: 1px;
+    }
 }
 
 .consent-screen::-webkit-scrollbar {
