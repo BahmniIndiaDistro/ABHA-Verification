@@ -13,10 +13,10 @@ const PatientDetails = (props) => {
     const ndhmDetails = props.ndhmDetails;
 
     useEffect(() => {
-        if(ndhmDetails?.uuid != undefined) {
-            fetchPatientDetailsFromBahmniWithUuid();
-        } else {
+        if(ndhmDetails?.uuid === undefined || ndhmDetails?.uuid === "") {
             fetchBahmniDetails();
+        } else {
+            fetchPatientDetailsFromBahmniWithUuid();
         }
     }, []);
 
@@ -131,9 +131,9 @@ const PatientDetails = (props) => {
                     </div>
                         {prepareMatchingPatientsList()}
                     </div>}
-                    <div className="create-confirm-btns">
+                    <div className="create-confirm-btns">{console.log("ndhmDetails.uuid ", ndhmDetails.uuid)}
                         {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
-                        {ndhmDetails.uuid == undefined && <button onClick={updateRecord}> Create New Record </button>}
+                        {(ndhmDetails.uuid == undefined || ndhmDetails.uuid == "") && <button onClick={updateRecord}> Create New Record </button>}
                     </div>
                 </div>
                 {checkIfNotNull(selectedPatient) && <ConfirmPopup selectedPatient={selectedPatient} close={() => setSelectedPatient({})} onConfirm={confirmSelection}/>}
