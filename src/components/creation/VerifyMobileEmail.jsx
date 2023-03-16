@@ -22,6 +22,7 @@ const VerifyMobileEmail = (props) => {
     const [link, goToLink] = useState(false);
     const [ABHAChosen, setABHAChosen ] = useState(false);
     const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
+    const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
     const [healthNumberAlreadyExists, setHealthNumberAlreadyExists] = useState(false);
 
@@ -191,13 +192,13 @@ const VerifyMobileEmail = (props) => {
                             {abhaAddressList}
                         </div>
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyExists={setHealthNumberAlreadyExists}/>
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyExists={setHealthNumberAlreadyExists}/>
                     {error !== '' && <h6 className="error">{error}</h6>}
                     {loader && <Spinner />}
                 </div>
                 <Footer setBack={goToLink}/>
-                {!ABHAAlreadyExists && <Footer setProceed={setABHAChosen}/>}
-                {ABHAAlreadyExists && !healthNumberAlreadyExists && <Footer setProceed={setABHAChosen}/>}
+                {!ABHAAlreadyExists && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
+                {ABHAAlreadyExists && !healthNumberAlreadyExists && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
             </div>
             }
             {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} mappedPatient={props.mappedPatient} setBack={setBack}/>}
