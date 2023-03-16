@@ -17,14 +17,14 @@ const CheckIdentifierExists = (props) => {
             setMatchingPatientFound(false);
             setMatchingPatientUuid('');
             const matchingPatientId = await fetchPatientFromBahmniWithHealthId(id);
-            if (matchingPatientId.Error === undefined && matchingPatientId.error === undefined) {
-                const healthIdStatus = await getHealthIdStatus(matchingPatientId);
+            if (matchingPatientId.Error === undefined && matchingPatientId.validPatient === true) {
+                const healthIdStatus = await getHealthIdStatus(matchingPatientId.patientUuid);
                 if (healthIdStatus) {
                     setHealthIdIsVoided(healthIdStatus);
                 }
                 else {
                     setMatchingPatientFound(true);
-                    setMatchingPatientUuid(matchingPatientId);
+                    setMatchingPatientUuid(matchingPatientId.patientUuid);
                 }
                 if(props.setABHAAlreadyExists !== undefined)
                     props?.setABHAAlreadyExists(true);

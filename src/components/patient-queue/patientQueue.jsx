@@ -28,8 +28,8 @@ const PatientQueue = (props) => {
 
     async function getMatchingPatient(patient) {
         const matchingPatientId = await fetchPatientFromBahmniWithHealthId(patient.healthId);
-        if (matchingPatientId.Error === undefined && matchingPatientId.error === undefined){
-           setMatchFound(matchingPatientId);
+        if (matchingPatientId.Error === undefined && matchingPatientId.validPatientId === true){
+           setMatchFound(matchingPatientId.patientUuid);
         }
         const ndhm = {
             id:  patient.healthId,
