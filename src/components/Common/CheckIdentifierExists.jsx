@@ -17,8 +17,8 @@ const CheckIdentifierExists = (props) => {
             props?.setHealthIdIsVoided(false);
         if(props.setMatchingPatientUuid !== undefined)
             props?.setMatchingPatientUuid('');
-        if(props.setHealthNumberAlreadyExists !== undefined)
-            props?.setHealthNumberAlreadyExists(false);
+        if(props.setHealthNumberAlreadyLinked !== undefined)
+            props?.setHealthNumberAlreadyLinked(false);
         else
             setHealthIdNumberExists(true);
 
@@ -42,11 +42,11 @@ const CheckIdentifierExists = (props) => {
                     props?.setABHAAlreadyExists(true);
                 if(props.setMatchingPatientUuid !== undefined)
                     props?.setMatchingPatientUuid(matchingPatientId);
-                if(props.setHealthNumberAlreadyExists !== undefined) {
+                if(props.setHealthNumberAlreadyLinked !== undefined) {
                     const response = await checkIfHealthNumberExists(matchingPatientId);
                     if(response.error === undefined) {
                         setHealthIdNumberExists(response);
-                        props?.setHealthNumberAlreadyExists(response);
+                        props?.setHealthNumberAlreadyLinked(response);
                     }
                 }
             }

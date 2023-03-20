@@ -19,7 +19,7 @@ const LinkABHAAddress = (props) => {
     const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
-    const [healthNumberAlreadyExists, setHealthNumberAlreadyExists] = useState(false);
+    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
 
     function onProceed() {
         mapPatient();
@@ -83,9 +83,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyExists={setHealthNumberAlreadyExists}/>
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>
                     {abhaAddress !== '' && <div className="center">
-                        <button type="button" disabled={(ABHAAlreadyExists && !healthNumberAlreadyExists && !healthIdIsVoided) ? false : (ABHAAlreadyExists || healthIdIsVoided ? true : false)} className="proceed" onClick={onProceed}>Proceed</button>
+                        <button type="button" disabled={(ABHAAlreadyExists && !healthNumberAlreadyLinked && !healthIdIsVoided) ? false : (ABHAAlreadyExists || healthIdIsVoided ? true : false)} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 <div className="left-button">
