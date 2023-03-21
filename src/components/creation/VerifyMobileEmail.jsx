@@ -22,6 +22,9 @@ const VerifyMobileEmail = (props) => {
     const [link, goToLink] = useState(false);
     const [ABHAChosen, setABHAChosen ] = useState(false);
     const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
+    const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
+    const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
+    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
 
 
     function OnChangeHandler(e) {
@@ -136,7 +139,6 @@ const VerifyMobileEmail = (props) => {
         }
     },[otp,back,link]);
 
-
     useEffect(() => {
         if(ABHAChosen){
             authenticate();
@@ -149,7 +151,9 @@ const VerifyMobileEmail = (props) => {
         setABHAAddress(abha);
     }
 
-
+    useEffect(() => {
+        props.mappedPatient.uuid = matchingPatientUuid;
+    },[matchingPatientUuid])
 
     let abhaAddressList = mappedPhrAddress.length > 0 && mappedPhrAddress.map((item, i) => {
         return (
@@ -188,12 +192,13 @@ const VerifyMobileEmail = (props) => {
                             {abhaAddressList}
                         </div>
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists}/>
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>
                     {error !== '' && <h6 className="error">{error}</h6>}
                     {loader && <Spinner />}
                 </div>
                 <Footer setBack={goToLink}/>
-                {!ABHAAlreadyExists && <Footer setProceed={setABHAChosen}/>}
+                {!ABHAAlreadyExists && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
+                {ABHAAlreadyExists && !healthNumberAlreadyLinked && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
             </div>
             }
             {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} mappedPatient={props.mappedPatient} setBack={setBack}/>}
