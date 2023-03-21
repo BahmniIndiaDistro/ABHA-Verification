@@ -23,9 +23,9 @@ const PatientDetails = (props) => {
     async function fetchPatientDetailsFromBahmniWithUuid() {
         const response = []
         const existingPatient = await fetchPatientFromBahmniWithUuid(ndhmDetails.uuid)
-        if (existingPatient.Error && existingPatient !== null) {
+        if (existingPatient.Error === undefined && existingPatient !== null) {
             response.push(existingPatient);
-            const parsedPatients = response.forEach(patient => {parsePatient(patient); return patient});
+            const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
         }
     }
