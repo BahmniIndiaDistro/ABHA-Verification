@@ -18,7 +18,7 @@ function App() {
       );
     case "createABHA":
       return (
-          <VerifyAadhaar patientUuid={params['patientUuid']}/>
+          <VerifyAadhaar />
       );
     default:
       return (

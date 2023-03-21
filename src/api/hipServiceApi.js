@@ -392,9 +392,18 @@ export const checkIfABHAAddressExists = async (phrAddress) => {
     }
 }
 
-export const checkABHAAddressForPatient = async (patientUuid) => {
+export const fetchPatientFromBahmniWithUuid = async (patientUuid) => {
     try {
-        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + Constants.abhaAddressCheckUrl + "/" + patientUuid, Constants.headers);
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientWithUuid + "/" + patientUuid, Constants.headers);
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
+    }
+}
+
+export const checkIfHealthNumberExists = async (patientUuid) => {
+    try {
+        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/checkHealthNumber/" + patientUuid, Constants.headers);
         return response.data;
     } catch (error) {
         return Constants.openMrsDown;

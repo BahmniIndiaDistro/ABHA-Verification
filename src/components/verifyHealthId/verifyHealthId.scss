@@ -9,6 +9,15 @@
     cursor: pointer;
 }
 
+.matched-patient-info {
+    display: flex;
+    width: 100%;
+    max-width: 350px;
+    margin: 30px auto;
+    font-weight: 500;
+    font-style: italic;
+}
+
 #cam-icon{
     vertical-align: middle;
 }
