@@ -34,13 +34,13 @@ const VerifyHealthId = () => {
         setLoader(true);
         setShowError(false);
         const matchingPatientId = await fetchPatientFromBahmniWithHealthId(id);
-        const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
+        const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId.patientUuid) : false;
         if (matchingPatientId.Error === undefined) {
             if(healthIdStatus === true)
                 setHealthIdIsVoided(true);
-            else if (matchingPatientId.error === undefined) {
+            else if (matchingPatientId.validPatient === true) {
                 setMatchingPatientFound(true);
-                setMatchingPatientUuid(matchingPatientId);
+                setMatchingPatientUuid(matchingPatientId.patientUuid);
             } else {
                 setMatchingPatientFound(false);
                 const response = await getAuthModes(id);
@@ -96,13 +96,13 @@ const VerifyHealthId = () => {
             var ndhmDetails = mapToNdhmDetails(scannedData)
             setScanningStatus(false);
             const matchingPatientId = await fetchPatientFromBahmniWithHealthId(ndhmDetails.id);
-            const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId) : false;
+            const healthIdStatus = matchingPatientId.Error !== undefined ? await getHealthIdStatus(matchingPatientId.patientUuid) : false;
             if (matchingPatientId.Error === undefined) {
                 if (healthIdStatus === true)
                     setHealthIdIsVoided(true);
-                else if (matchingPatientId.error === undefined) {
+                else if (matchingPatientId.validPatient === true) {
                     setMatchingPatientFound(true);
-                    setMatchingPatientUuid(matchingPatientId);
+                    setMatchingPatientUuid(matchingPatientId.patientUuid);
                 } else {
                     setMatchingPatientFound(false);
                     setId(ndhmDetails.id);

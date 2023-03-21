@@ -22,16 +22,17 @@ const PatientDetails = (props) => {
 
     async function fetchPatientDetailsFromBahmniWithUuid() {
         const response = []
-        response.push(await fetchPatientFromBahmniWithUuid(ndhmDetails.uuid));
-        if (response.error === undefined && response.length > 0) {
-            const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
+        const existingPatient = await fetchPatientFromBahmniWithUuid(ndhmDetails.uuid)
+        if (existingPatient.Error && existingPatient !== null) {
+            response.push(existingPatient);
+            const parsedPatients = response.forEach(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
         }
     }
 
     async function fetchBahmniDetails() {
         const response = await fetchPatientDetailsFromBahmni(ndhmDetails);
-        if (response.error === undefined && response.length > 0) {
+        if (response.Error === undefined && response.length > 0) {
             const parsedPatients = response.map(patient => {parsePatient(patient); return patient});
             setPatients(parsedPatients);
         }
