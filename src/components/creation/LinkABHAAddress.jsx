@@ -17,6 +17,9 @@ const LinkABHAAddress = (props) => {
     const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
     const [back, setBack] = useState(false);
     const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
+    const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
+    const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
+    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
 
     function onProceed() {
         mapPatient();
@@ -59,6 +62,9 @@ const LinkABHAAddress = (props) => {
         }
     },[abhaAddressCreated, back])
 
+    useEffect(() => {
+        props.mappedPatient.uuid = matchingPatientUuid;
+    },[matchingPatientUuid])
 
     return (
         <div>
@@ -77,9 +83,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} />
+                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>
                     {abhaAddress !== '' && <div className="center">
-                        <button type="button" disabled={ABHAAlreadyExists} className="proceed" onClick={onProceed}>Proceed</button>
+                        <button type="button" disabled={(ABHAAlreadyExists && !healthNumberAlreadyLinked && !healthIdIsVoided) ? false : (ABHAAlreadyExists || healthIdIsVoided ? true : false)} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 <div className="left-button">

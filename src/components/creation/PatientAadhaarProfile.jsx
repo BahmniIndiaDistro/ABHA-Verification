@@ -7,13 +7,11 @@ import VerifyMobile from "./VerifyMobile";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 import PatientDetails from "../patient-details/patientDetails";
 import {getDate} from "../Common/DateUtil";
-import {checkABHAAddressForPatient} from "../../api/hipServiceApi";
 
 const PatientAadhaarProfile = (props) => {
     const [proceedToLinking, setProceedToLinking] = useState(false);
     const [linkABHAAddress, setLinkAbhaAdress] = useState(false);
     const patient = props.patient;
-    const patientUuid = props.patientUuid;
     const imgSrc = "data:image/jpg;base64," + patient.photo;
     const [back, setBack] = useState(false);
     const [isNewABHA, setIsNewABHA]= useState(false);
@@ -21,7 +19,6 @@ const PatientAadhaarProfile = (props) => {
     const [proceed, setProceed] = useState(false);
     const [mappedPatient,setMappedPatient] = useState({});
     const [isPatientMapped,setIsPatientMapped] = useState(false);
-    const [healthIdExists, setHealthIdExists] = useState(false);
 
     function getAddressLine(){
         return [[patient?.house, patient?.street, patient?.landmark].join(' ').trim(), patient?.locality];
@@ -42,12 +39,6 @@ const PatientAadhaarProfile = (props) => {
         }
     },[proceedToLinking, back])
 
-    useEffect(async () => {
-        if(patientUuid != "null" && patientUuid != "undefined") {
-            setHealthIdExists(await checkABHAAddressForPatient(patientUuid));
-        }
-    },[patientUuid])
-
     function getAddress() {
         var address = [...getAddressLine(),patient?.district,patient?.state,patient?.pincode]
             .filter(e => e !== null && e !== undefined && e !== "");
@@ -65,14 +56,7 @@ const PatientAadhaarProfile = (props) => {
             state: patient?.state,
             pincode: patient?.pincode
         };
-        let ndhm = {};
-        if (healthIdExists) {
-            ndhm = {
-                healthIdNumber: patient?.healthIdNumber,
-                patientUuid: patientUuid
-            }
-        } else {
-            ndhm = {
+        const ndhm = {
                 healthIdNumber: patient?.healthIdNumber,
                 id: patient?.healthId,
                 gender: patient.gender,
@@ -82,7 +66,6 @@ const PatientAadhaarProfile = (props) => {
                 address: address,
                 identifiers: identifier
             };
-        }
         setMappedPatient(ndhm);
     }
 
@@ -91,7 +74,7 @@ const PatientAadhaarProfile = (props) => {
             mapPatient();
             if(patient.healthIdNumber === undefined)
                 setIsNewABHA(true);
-            else if(patient.healthId === undefined && !healthIdExists)
+            else if(patient.healthId === undefined)
                 setLinkAbhaAdress(true);
             else
                 setIsPatientMapped(true);
@@ -116,7 +99,7 @@ const PatientAadhaarProfile = (props) => {
                     {patient.healthIdNumber !== undefined && <p>
                         <strong>ABHA Number:</strong>    {patient.healthIdNumber}
                     </p>}
-                    {patient.healthId !== undefined && !healthIdExists &&
+                    {patient.healthId !== undefined &&
                     <div>
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
@@ -130,7 +113,7 @@ const PatientAadhaarProfile = (props) => {
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />
                         <div className="linkButton">
-                            {!healthIdExists && patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
+                            {patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
                         </div>
                         {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
                     </div>
