@@ -7,6 +7,7 @@ import VerifyAadhaar from "./components/creation/verifyAadhaar";
 
 
 function App() {
+  console.log('first', process.env.REACT_APP_CM_SUFFIX)
   const params = Object.fromEntries(
     new URLSearchParams(window.location.search)
   );
