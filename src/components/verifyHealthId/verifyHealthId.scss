@@ -30,11 +30,11 @@
 }
 
 .id-deactivated {
-    display: flex;
+    display: block;
     width: 100%;
     max-width: 350px;
     margin: 30px auto;
-    color: rgb(72, 72, 197);
+    color: rgb(243 10 10);
     font-weight: 500;
-    cursor: pointer;
+    text-align: center;
 }
