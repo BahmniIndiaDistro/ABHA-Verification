@@ -4,8 +4,9 @@ import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
 import {getDate} from "../Common/DateUtil";
-import {cmSuffix} from "../../api/constants";
+import {cmSuffixProperty} from "../../api/constants";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
+import { fetchGlobalProperty } from "../../api/hipServiceApi";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -21,6 +22,8 @@ const LinkABHAAddress = (props) => {
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
     const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
 
+    const cmSuffix = localStorage.getItem(cmSuffixProperty)
+    
     function onProceed() {
         mapPatient();
         setProceed(true);

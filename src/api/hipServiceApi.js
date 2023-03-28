@@ -409,3 +409,12 @@ export const checkIfHealthNumberExists = async (patientUuid) => {
         return Constants.openMrsDown;
     }
 }
+
+export const fetchGlobalProperty = async (property) => {
+    try {
+        const response = await axios.get(`${Constants.globalPropertyUrl}?property=${property}`)
+        return response.data;
+    } catch (error) {
+        return Constants.openMrsDown;
+    }
+}

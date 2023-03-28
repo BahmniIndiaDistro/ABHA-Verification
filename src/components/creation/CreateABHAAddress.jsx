@@ -3,14 +3,14 @@ import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {checkIfABHAAddressExists, createABHAAddress} from "../../api/hipServiceApi";
 import Footer from "./Footer";
-import {cmSuffix} from "../../api/constants";
+import { cmSuffixProperty } from "../../api/constants";
 
 const CreateABHAAddress = (props) => {
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState('');
     const [newAbhaAddress, setNewAbhaAddress] = [props.newAbhaAddress,props.setNewAbhaAddress];
     const [isPreferred, setIsPreferred]= useState(false);
-
+    const cmSuffix = localStorage.getItem(cmSuffixProperty)
 
     function OnChangeHandler(e) {
         setNewAbhaAddress(e.target.value);

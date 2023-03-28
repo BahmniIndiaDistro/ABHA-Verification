@@ -29,7 +29,8 @@ export const transaction = "/v1/phr/login/init/transaction";
 export const createABHAAddress = "/v2/account/phr-linked";
 export const checkIfABHAAddressExists = "/v1/phr/search/isExist"
 export const openmrsSession = "/openmrs/ws/rest/v1/session"
-export const cmSuffix = "@sbx";
+export const globalPropertyUrl = "/openmrs/ws/rest/v1/bahmnicore/sql/globalproperty"
+export const cmSuffixProperty = 'bahmniHip.CM_SUFFIX'
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"
