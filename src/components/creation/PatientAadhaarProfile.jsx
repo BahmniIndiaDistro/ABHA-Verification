@@ -15,7 +15,6 @@ const PatientAadhaarProfile = (props) => {
     const imgSrc = "data:image/jpg;base64," + patient.photo;
     const [back, setBack] = useState(false);
     const [isNewABHA, setIsNewABHA]= useState(false);
-    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
     const [proceed, setProceed] = useState(false);
     const [mappedPatient,setMappedPatient] = useState({});
     const [isPatientMapped,setIsPatientMapped] = useState(false);
@@ -25,7 +24,7 @@ const PatientAadhaarProfile = (props) => {
     }
 
     useEffect(() => {
-        if(proceedToLinking) {
+        if(proceed) {
             mapPatient()
             setLinkAbhaAdress(true);
         }
@@ -37,7 +36,7 @@ const PatientAadhaarProfile = (props) => {
             setIsPatientMapped(false);
             setProceed(false);
         }
-    },[proceedToLinking, back])
+    },[proceed, back])
 
     function getAddress() {
         var address = [...getAddressLine(),patient?.district,patient?.state,patient?.pincode]
@@ -64,25 +63,10 @@ const PatientAadhaarProfile = (props) => {
                 isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
                 dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
                 address: address,
-                identifiers: identifier
+                identifiers: identifier,
+                uuid: patient?.uuid
             };
         setMappedPatient(ndhm);
-    }
-
-    useEffect(() => {
-        if(proceed){
-            mapPatient();
-            if(patient.healthIdNumber === undefined)
-                setIsNewABHA(true);
-            else if(patient.healthId === undefined)
-                setLinkAbhaAdress(true);
-            else
-                setIsPatientMapped(true);
-        }
-    },[proceed])
-
-    function gotoLink(){
-       setProceedToLinking(true)
     }
 
     return (
@@ -103,19 +87,14 @@ const PatientAadhaarProfile = (props) => {
                     <div>
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
-                        <CheckIdentifierExists id={patient.healthId} setABHAAlreadyExists={setABHAAlreadyExists}/>
                     </div>}
                     {patient.healthIdNumber !== undefined &&
                     <div>
-                        <CheckIdentifierExists id={patient.healthIdNumber} setABHAAlreadyExists={setABHAAlreadyExists}/>
                         <ABHACard patient={patient}/>
                     </div>}
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />
-                        <div className="linkButton">
-                            {patient.healthId !== undefined && !ABHAAlreadyExists && <button type="button" className="proceed" onClick={gotoLink}>Link different ABHA Address</button>}
-                        </div>
-                        {!ABHAAlreadyExists && <Footer setProceed={setProceed} />}
+                        <Footer setProceed={setProceed} />
                     </div>
                 </div>
             </div>}

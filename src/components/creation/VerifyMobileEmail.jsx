@@ -21,10 +21,8 @@ const VerifyMobileEmail = (props) => {
     const [back, setBack] = useState(false);
     const [link, goToLink] = useState(false);
     const [ABHAChosen, setABHAChosen ] = useState(false);
-    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
-    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
 
 
     function OnChangeHandler(e) {
@@ -186,19 +184,18 @@ const VerifyMobileEmail = (props) => {
                 <div>
                     <div className="choose-abha-address">
                         <div className="abha-list-label">
-                            <label htmlFor="abha-address">Choose a ABHA Address to link</label>
+                            <label htmlFor="abha-address">Choose from existing ABHA Addresses linked to Mobile/Email.</label>
                         </div>
                         <div>
                             {abhaAddressList}
                         </div>
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>
+                    <CheckIdentifierExists id={abhaAddress} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid}/>
                     {error !== '' && <h6 className="error">{error}</h6>}
                     {loader && <Spinner />}
                 </div>
                 <Footer setBack={goToLink}/>
-                {!ABHAAlreadyExists && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
-                {ABHAAlreadyExists && !healthNumberAlreadyLinked && !healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
+                {!healthIdIsVoided && <Footer setProceed={setABHAChosen}/>}
             </div>
             }
             {proceed && <LinkExistingABHAAddress patient={props.patient} healthId={abhaAddress} mappedPatient={props.mappedPatient} setBack={setBack}/>}

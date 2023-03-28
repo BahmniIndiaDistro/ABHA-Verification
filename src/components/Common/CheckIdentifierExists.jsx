@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchPatientFromBahmniWithHealthId, getHealthIdStatus, checkIfHealthNumberExists} from '../../api/hipServiceApi';
+import {fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
 import '../verifyHealthId/verifyHealthId.scss';
 
 const CheckIdentifierExists = (props) => {
@@ -8,19 +8,12 @@ const CheckIdentifierExists = (props) => {
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
-    const [healthIdNumberExists, setHealthIdNumberExists] = useState(false);
 
     async function checkIfAlreadyExistingIdentifier(id) {
-        if(props.setABHAAlreadyExists !== undefined)
-            props?.setABHAAlreadyExists(false);
         if(props.setHealthIdIsVoided !== undefined)
             props?.setHealthIdIsVoided(false);
         if(props.setMatchingPatientUuid !== undefined)
             props?.setMatchingPatientUuid('');
-        if(props.setHealthNumberAlreadyLinked !== undefined)
-            props?.setHealthNumberAlreadyLinked(false);
-        else
-            setHealthIdNumberExists(true);
 
         if (id !== '') {
             setHealthIdIsVoided(false);
@@ -38,17 +31,8 @@ const CheckIdentifierExists = (props) => {
                     setMatchingPatientFound(true);
                     setMatchingPatientUuid(matchingPatientId.patientUuid);
                 }
-                if(props.setABHAAlreadyExists !== undefined)
-                    props?.setABHAAlreadyExists(true);
                 if(props.setMatchingPatientUuid !== undefined)
                     props?.setMatchingPatientUuid(matchingPatientId.patientUuid);
-                if(props.setHealthNumberAlreadyLinked !== undefined) {
-                    const response = await checkIfHealthNumberExists(matchingPatientId.patientUuid);
-                    if(response.Error === undefined) {
-                        setHealthIdNumberExists(response);
-                        props?.setHealthNumberAlreadyLinked(response);
-                    }
-                }
             }
             else {
                 if (matchingPatientId.Error !== undefined) {
@@ -63,17 +47,9 @@ const CheckIdentifierExists = (props) => {
         await checkIfAlreadyExistingIdentifier(props.id);
     },[props.id])
 
-    function redirectToPatientDashboard() {
-        window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
-    }
-
-
     return (
         <div>
-            {matchingPatientFound && healthIdNumberExists && <div className="patient-existed" onClick={redirectToPatientDashboard}>
-                Matching record with {props.id} found
-            </div>}
-            {matchingPatientFound && !healthIdNumberExists && <div className="matched-patient-info">Matching record with {props.id} found. Please proceed to update the record</div>}
+            {matchingPatientFound && <div className="matched-patient-info">Matching record with {props.id} found. Please proceed to update the record</div>}
             {healthIdIsVoided && <div className="id-deactivated">
                 {props.id} is deactivated
             </div>}

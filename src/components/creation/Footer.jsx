@@ -13,7 +13,7 @@ const Footer = (props) => {
         setBack(true);
     }
     return (
-        <div className="footer">
+        <div className={props.setProceed !== undefined ? 'footer no-right-margin' : 'footer no-left-margin'}>
             {props.setBack !== undefined && <div className="left-button">
                 <button type="button" className="back" onClick={goBack}>Back</button>
             </div>}

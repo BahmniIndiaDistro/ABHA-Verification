@@ -400,12 +400,3 @@ export const fetchPatientFromBahmniWithUuid = async (patientUuid) => {
         return Constants.openMrsDown;
     }
 }
-
-export const checkIfHealthNumberExists = async (patientUuid) => {
-    try {
-        const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientUrl + "/checkHealthNumber/" + patientUuid, Constants.headers);
-        return response.data;
-    } catch (error) {
-        return Constants.openMrsDown;
-    }
-}
