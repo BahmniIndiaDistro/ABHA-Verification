@@ -135,6 +135,16 @@ img {
   margin-left: 40%;
 }
 
+.no-right-margin{
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.no-left-margin{
+  margin-left: 0;
+  margin-right: auto;
+}
+
 .abha-creation .abha-address input {
   width: 85%;
 }

@@ -3,7 +3,7 @@ import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {checkIfABHAAddressExists, createABHAAddress} from "../../api/hipServiceApi";
 import Footer from "./Footer";
-import { cmSuffixProperty } from "../../api/constants";
+import {cmSuffixProperty} from "../../api/constants";
 
 const CreateABHAAddress = (props) => {
     const [loader, setLoader] = useState(false);

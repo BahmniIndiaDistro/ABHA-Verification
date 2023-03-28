@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import './creation.scss';
 import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
-import {getDate} from "../Common/DateUtil";
 import {cmSuffixProperty} from "../../api/constants";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
-import { fetchGlobalProperty } from "../../api/hipServiceApi";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -17,10 +15,10 @@ const LinkABHAAddress = (props) => {
     const [newAbhaAddress, setNewAbhaAddress] = useState('');
     const [abhaAddressCreated, setABHAAddressCreated]= useState(false);
     const [back, setBack] = useState(false);
-    const [ABHAAlreadyExists, setABHAAlreadyExists] = useState(false);
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
-    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
+    const [isAbhaSelected, setIsAbhaSelected] = useState(false);
+    const refEls = useRef({});
 
     const cmSuffix = localStorage.getItem(cmSuffixProperty)
     
@@ -29,10 +27,26 @@ const LinkABHAAddress = (props) => {
         setProceed(true);
     }
 
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutside, false);
+        return () => {
+          document.removeEventListener("click", handleClickOutside, false);
+        };
+      }, []);
+    
+      const handleClickOutside = event => {
+        if (refEls.current && !Object.values(Object.values(refEls.current)).includes(event.target)) {
+            setIsAbhaSelected(false);
+            setAbhaAddress('');
+        } else {
+            setIsAbhaSelected(true);
+        }
+      };
+
     let phrAddressList = patient.phrAddress !== undefined && patient.phrAddress.length > 0 && patient.phrAddress.map((item, i) => {
         return (
             <div>
-                <button onClick={() => setAbhaAddress(patient.phrAddress[i])} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
+                <button ref={(element) => refEls.current[i] = element} onClick={() => {setAbhaAddress(patient.phrAddress[i]); setIsAbhaSelected(true);}} className={abhaAddress === item ? "active" : "abha-list"}>{item}</button>
             </div>
         )
     });
@@ -82,21 +96,21 @@ const LinkABHAAddress = (props) => {
                 <div>
                     <div className="choose-abha-address">
                         <div className="abha-list-label">
-                            <label htmlFor="abha-address">Choose from existing ABHA Addresses</label>
+                            <label htmlFor="abha-address">Choose from existing ABHA Addresses linked to ABHA Number.</label>
                         </div>
                             {phrAddressList}
                     </div>
-                    <CheckIdentifierExists id={abhaAddress} setABHAAlreadyExists={setABHAAlreadyExists} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>
+                    {isAbhaSelected && <CheckIdentifierExists id={abhaAddress} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid}/>}
                     {abhaAddress !== '' && <div className="center">
-                        <button type="button" disabled={(ABHAAlreadyExists && !healthNumberAlreadyLinked && !healthIdIsVoided) ? false : (ABHAAlreadyExists || healthIdIsVoided ? true : false)} className="proceed" onClick={onProceed}>Proceed</button>
+                        <button type="button" disabled={healthIdIsVoided || !isAbhaSelected? true : false} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 <div className="left-button">
-                    <button type="button" className="proceed" onClick={gotoLink}>Link ABHA Address</button>
+                    <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Link exisiting ABHA Address linked to Mobile/Email" onClick={gotoLink}>Link ABHA Address</button>
                 </div>
 
                 <div className="right-button">
-                    <button type="button" className="proceed" onClick={gotoCreate}>Create ABHA Address</button>
+                    <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Create new ABHA Address" onClick={gotoCreate}>Create ABHA Address</button>
                 </div>
             </div>}
             {!proceed && createNewABHA &&
