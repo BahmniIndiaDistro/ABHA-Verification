@@ -28,7 +28,6 @@ const DirectAuth = (props) => {
     }
 
     function parseNdhmDetails(patient) {
-        console.log(patient);
         const ndhm = {
             id: patient.id,
             gender: patient.gender,
@@ -38,7 +37,6 @@ const DirectAuth = (props) => {
             address: patient.address,
             identifiers: patient.identifiers
         };
-        console.log("ndhm " + ndhm);
         return ndhm;
     }
 
