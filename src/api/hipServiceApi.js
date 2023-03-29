@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as Constants from './constants';
+import {getPatientForDirectAuthUrl} from "./constants";
 export const getAuthModes = async (healthId) => {
     let error = isValidHealthId(healthId);
     if (error) {
@@ -84,6 +85,19 @@ export const authConfirm = async (healthId, otp) => {
             return Constants.serviceUnavailableError;
     }
 }
+
+export const checkAndGetPatientDetails = async (healthId) => {
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getPatientForDirectAuthUrl + "?healthId=" + healthId ,Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
 
 export const fetchPatientDetailsFromBahmni = async (patient) => {
     const params = {
