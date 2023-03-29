@@ -17,7 +17,6 @@ const PatientAadhaarProfile = (props) => {
     const [isNewABHA, setIsNewABHA]= useState(false);
     const [proceed, setProceed] = useState(false);
     const [mappedPatient,setMappedPatient] = useState({});
-    const [isPatientMapped,setIsPatientMapped] = useState(false);
 
     function getAddressLine(){
         return [[patient?.house, patient?.street, patient?.landmark].join(' ').trim(), patient?.locality];
@@ -26,14 +25,16 @@ const PatientAadhaarProfile = (props) => {
     useEffect(() => {
         if(proceed) {
             mapPatient()
-            setLinkAbhaAdress(true);
+            if(patient.healthIdNumber === undefined)
+                setIsNewABHA(true);
+            else
+                setLinkAbhaAdress(true);
         }
         if(back) {
             setLinkAbhaAdress(false);
             setIsNewABHA(false);
             setProceedToLinking(false);
             setBack(false);
-            setIsPatientMapped(false);
             setProceed(false);
         }
     },[proceed, back])
@@ -71,7 +72,7 @@ const PatientAadhaarProfile = (props) => {
 
     return (
         <div>
-            {!linkABHAAddress && !isNewABHA && !isPatientMapped &&
+            {!linkABHAAddress && !isNewABHA &&
             <div>
                 <div className="patient-profile">
                     <h3>Profile Details As Per Aadhaar</h3>
@@ -100,7 +101,6 @@ const PatientAadhaarProfile = (props) => {
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
             {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient}/>}
-            {isPatientMapped && <PatientDetails ndhmDetails={mappedPatient} setBack={setBack} />}
         </div>
     );
 }
