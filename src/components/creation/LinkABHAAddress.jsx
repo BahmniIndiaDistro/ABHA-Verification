@@ -3,8 +3,7 @@ import './creation.scss';
 import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
-import {getDate} from "../Common/DateUtil";
-import {cmSuffix} from "../../api/constants";
+import {cmSuffixProperty} from "../../api/constants";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 
 const LinkABHAAddress = (props) => {
@@ -21,6 +20,8 @@ const LinkABHAAddress = (props) => {
     const [isAbhaSelected, setIsAbhaSelected] = useState(false);
     const refEls = useRef({});
 
+    const cmSuffix = localStorage.getItem(cmSuffixProperty)
+    
     function onProceed() {
         mapPatient();
         setProceed(true);

@@ -132,7 +132,7 @@ const PatientDetails = (props) => {
                     </div>
                         {prepareMatchingPatientsList()}
                     </div>}
-                    <div className="create-confirm-btns">{console.log("ndhmDetails.uuid ", ndhmDetails.uuid)}
+                    <div className="create-confirm-btns">
                         {props.setBack !== undefined && <button onClick={() => props.setBack(true)}>back</button>}
                         {(ndhmDetails.uuid == undefined || ndhmDetails.uuid == "") && <button onClick={updateRecord}> Create New Record </button>}
                     </div>
