@@ -9,6 +9,7 @@ export const hipServiceUrl ="/hiprovider";
 export const authModesUrl = "/v0.5/hip/fetch-modes";
 export const authInitUrl = "/v0.5/hip/auth/init";
 export const authConfirmUrl = "/v0.5/hip/auth/confirm";
+export const getPatientForDirectAuthUrl = "/v0.5/hip/auth/direct";
 export const existingPatientUrl = "/existingPatients";
 export const existingPatientWithUuid = "/existingPatientWithUuid";
 export const ndhmDemographics = "/v0.5/hip/ndhm-demographics";

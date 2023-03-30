@@ -2,7 +2,7 @@ button {
     margin: 2px;
     padding: 3px 10px;
 }
-.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text{
+.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth{
     display: flex;
     width: 100%;
     margin-top: 20px;
@@ -20,6 +20,10 @@ button {
         text-align: center;
     }
 
+    .fetch-patient {
+        margin-left: 35%;
+    }
+
     .verify-health-id-input, .auth-modes-select , .otp-verify-input{
         input, select {
             padding: 2px;
@@ -31,4 +35,9 @@ button {
         width: 100%;
         color: red;
     }
+
+    .direct-auth-note {
+        margin-left: -60%;
+    }
+
 }

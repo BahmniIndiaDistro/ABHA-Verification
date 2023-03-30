@@ -3,6 +3,7 @@ import { authInit } from '../../api/hipServiceApi';
 import OtpVerification from '../otp-verification/otpVerification';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
+import DirectAuth from "../direct-auth/directAuth";
 
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
@@ -11,6 +12,7 @@ const AuthModes = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
+    const [isDirectAuth, setIsDirectAuth] = useState(false);
 
     const id = props.id;
     const authModes = props.authModes;
@@ -34,6 +36,7 @@ const AuthModes = (props) => {
                 setErrorHealthId(response.error.message);
             }
             else {
+                setIsDirectAuth(selectedAuthMode === "DIRECT");
                 setShowOtpField(true);
             }
         } else {
@@ -55,12 +58,13 @@ const AuthModes = (props) => {
                             {authModesList}
                         </select>
                     </div>
-                    <button type="button" disabled={showOtpField} onClick={authenticate}>Authenticate</button>
+                    <button type="button" disabled={showOtpField || isDirectAuth} onClick={authenticate}>Authenticate</button>
                     {showError && <h6 className="error">{errorHealthId}</h6>}
                 </div>
             </div>}
             {loader && <Spinner />}
-            {showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
+            {isDirectAuth && <DirectAuth healthId={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
+            {!isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
         </div>
     );
 }
