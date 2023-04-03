@@ -1,5 +1,6 @@
 import React from "react";
 import {GENDER} from "../../FhirPatient";
+import {getHealthNumber} from "./patientDetails";
 
 const PatientInfo = (props) => {
 
@@ -73,6 +74,7 @@ const PatientInfo = (props) => {
     }
 
     const address = getCustomAddress(patient);
+    const healthIdNumber = getHealthNumber(patient);
     return (
         <p>
             <strong>{patient?.name?.replace(null,"")} </strong>
@@ -82,7 +84,7 @@ const PatientInfo = (props) => {
             Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
             {patient?.id != undefined && <span><br/>ABHA Address: {patient?.id}</span>}
             {patient?.healthId != undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
-            {patient?.healthIdNumber != undefined && <span><br/>ABHA Number: {patient?.healthIdNumber}</span>}
+            {healthIdNumber != undefined && <span><br/>ABHA Number: {healthIdNumber}</span>}
         </p>
     )
 }

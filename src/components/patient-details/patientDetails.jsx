@@ -61,18 +61,6 @@ const PatientDetails = (props) => {
         return null;
     }
 
-    function getHealthNumber() {
-        if(ndhmDetails?.healthIdNumber)
-            return ndhmDetails?.healthIdNumber;
-        let healthNumber;
-        ndhmDetails?.identifiers.forEach(id => {
-            if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
-                healthNumber = id.value;
-            }
-        })
-        return healthNumber;
-    }
-
     function save(isConfirmSelected) {
         var healthNumber = new Identifier(new Type("ABHA Number"),getHealthNumber())
         var healthId = new Identifier(new Type("ABHA Address"),ndhmDetails?.id || '-')
@@ -142,3 +130,16 @@ const PatientDetails = (props) => {
     );
 };
 export default PatientDetails;
+
+export const getHealthNumber = (ndhmDetails) => {
+    if(ndhmDetails?.healthIdNumber)
+        return ndhmDetails?.healthIdNumber;
+    let healthNumber;
+    console.log(ndhmDetails, ndhmDetails?.identifiers)
+    ndhmDetails?.identifiers.forEach(id => {
+        if (id.type.localeCompare("HEALTH_NUMBER") === 0) {
+            healthNumber = id.value;
+        }
+    })
+    return healthNumber;
+}
