@@ -4,6 +4,7 @@ import OtpVerification from '../otp-verification/otpVerification';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import DirectAuth from "../direct-auth/directAuth";
+import DemoAuth from "../demo-auth/demoAuth";
 
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
@@ -13,6 +14,7 @@ const AuthModes = (props) => {
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
     const [isDirectAuth, setIsDirectAuth] = useState(false);
+    const [isDemoAuth, setIsDemoAuth] = useState(false);
 
     const id = props.id;
     const authModes = props.authModes;
@@ -28,7 +30,7 @@ const AuthModes = (props) => {
 
     async function authenticate() {
         setLoader(true);
-        if (selectedAuthMode !== "DEMOGRAPHICS" && selectedAuthMode !== 'PASSWORD') {
+        if (selectedAuthMode !== 'PASSWORD') {
             setShowError(false)
             const response = await authInit(id, selectedAuthMode);
             if (response.error !== undefined) {
@@ -37,6 +39,7 @@ const AuthModes = (props) => {
             }
             else {
                 setIsDirectAuth(selectedAuthMode === "DIRECT");
+                setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
                 setShowOtpField(true);
             }
         } else {
@@ -64,7 +67,8 @@ const AuthModes = (props) => {
             </div>}
             {loader && <Spinner />}
             {isDirectAuth && <DirectAuth healthId={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
-            {!isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
+            {!isDemoAuth && !isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
+            {isDemoAuth && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
         </div>
     );
 }
