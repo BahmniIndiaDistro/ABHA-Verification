@@ -65,6 +65,12 @@ const DemoAuth = (props) => {
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
+        if(name === "mobile"){
+            const regEx = /^[0-9\b]+$/
+            if (!regEx.test(value)) {
+               return;
+            }
+        }
         setDemograhics((prevProps) => ({
             ...prevProps,
             [name]: value
