@@ -15,7 +15,6 @@ const AuthModes = (props) => {
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
     const [isDirectAuth, setIsDirectAuth] = useState(false);
-    const [isDemoAuth, setIsDemoAuth] = useState(false);
     let isDemoAuthEnabled = false;
 
     const id = props.id;
@@ -45,7 +44,7 @@ const AuthModes = (props) => {
             }
             else {
                 setIsDirectAuth(selectedAuthMode === "DIRECT");
-                setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
+                props.setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
                 setShowOtpField(true);
             }
         } else {
@@ -81,8 +80,7 @@ const AuthModes = (props) => {
             </div>}
             {loader && <Spinner />}
             {isDirectAuth && <DirectAuth healthId={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
-            {!isDemoAuth && !isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
-            {isDemoAuth && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
+            {!isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
         </div>
     );
 }

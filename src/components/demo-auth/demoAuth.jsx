@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {authConfirm, checkAndGetPatientDetails} from '../../api/hipServiceApi';
 import Spinner from '../spinner/spinner';
 import {getDate} from "../Common/DateUtil";
+import Footer from "../creation/Footer";
 
 const DemoAuth = (props) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -97,7 +98,8 @@ const DemoAuth = (props) => {
                <input type="text" name="mobile" value={demograhics.mobile} onChange={handleInputChange} placeholder="Mobile" required/>
            </div>
             <div className="fetch-abdm-record">
-            <button type="button" disabled={!isValid} onClick={confirmAuth}>Fetch ABDM Data</button>
+                <Footer setBack={props.setBack} />
+                <button type="button" disabled={!isValid} onClick={confirmAuth}>Fetch ABDM Data</button>
             </div>
             {loader && <Spinner />}
             {showError && <h6 className="error">{errorMessage}</h6>}
