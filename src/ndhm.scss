@@ -46,6 +46,12 @@ button {
     input, select {
         padding: 2px;
     }
+
+    .label:after {
+        content:" *";
+        color: red;
+    }
+
     margin-bottom: 10px;
 }
 
