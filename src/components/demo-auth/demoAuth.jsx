@@ -9,7 +9,7 @@ const DemoAuth = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
-    const [demograhics, setDemograhics] = useState({
+    const [demographics, setDemographics] = useState({
         name: '',
         gender: '',
         dateOfBirth: '',
@@ -18,21 +18,13 @@ const DemoAuth = (props) => {
     });
     const [isValid, setIsValid] = useState(false);
 
-    function ToIdentifier(type,value) {
-        let identifier = {
-            type : type,
-            value: value
-        }
-        demograhics.identifier = identifier;
-    }
-
     async function confirmAuth() {
         setLoader(true);
         setShowError(false);
-        ToIdentifier("MOBILE", demograhics.mobile);
-        const response = await authConfirm(props.id, null, demograhics);
+        demographics.identifier = { type : "MOBILE", value: demographics.mobile }
+        const response = await authConfirm(props.id, null, demographics);
         if (response.error !== undefined || response.Error !== undefined) {
-            setShowError(true)
+            setShowError(true);
             setErrorMessage((response.Error && response.Error.Message) || response.error.message);
         }
         else {
@@ -56,22 +48,23 @@ const DemoAuth = (props) => {
 
 
     useEffect(() => {
-        if(demograhics.name === '' || demograhics.gender === '' || demograhics.dateOfBirth === '' || demograhics.mobile === ''){
+        if(demographics.name === '' || demographics.gender === '' || demographics.dateOfBirth === '' || demographics.mobile === ''){
             setIsValid(false);
         }
-        else
-            setIsValid(true)
-    }, [demograhics])
+        else {
+            setIsValid(true);
+        }
+    }, [demographics])
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         if(name === "mobile"){
-            const regEx = /^[0-9\b]+$/
+            const regEx = /^[0-9\b]+$/;
             if (!regEx.test(value)) {
                return;
             }
         }
-        setDemograhics((prevProps) => ({
+        setDemographics((prevProps) => ({
             ...prevProps,
             [name]: value
         }));
@@ -82,7 +75,7 @@ const DemoAuth = (props) => {
             <p className="note">Please provide your demographic details</p>
            <div className="demo-auth-form-field">
                <label htmlFor="name" className="label">Enter Name: </label>
-               <input type="text" name="name" value={demograhics.name} onChange={handleInputChange} placeholder="Name" required/>
+               <input type="text" name="name" value={demographics.name} onChange={handleInputChange} placeholder="Name" required/>
            </div>
            <div className="demo-auth-form-field">
                <label htmlFor="gender" className="label">Choose Gender: </label>
@@ -96,12 +89,12 @@ const DemoAuth = (props) => {
            </div>
            <div className="demo-auth-form-field">
                <label htmlFor="dateOfBirth" className="label">Enter Date of Birth: </label>
-               <input type="date"  name="dateOfBirth" value={demograhics.dateOfBirth} onChange={handleInputChange}
+               <input type="date"  name="dateOfBirth" value={demographics.dateOfBirth} onChange={handleInputChange}
                       max={new Date().toISOString().split('T')[0]} placeholder="Date of Birth" required/>
            </div>
            <div className="demo-auth-form-field">
                <label htmlFor="mobile" className="label">Enter Mobile Number: </label>
-               <input type="text" name="mobile" value={demograhics.mobile} onChange={handleInputChange} placeholder="Mobile" required/>
+               <input type="text" name="mobile" value={demographics.mobile} onChange={handleInputChange} placeholder="Mobile" required/>
            </div>
             <div className="fetch-abdm-record">
                 <Footer setBack={props.setBack} />

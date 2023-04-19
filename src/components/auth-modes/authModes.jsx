@@ -4,7 +4,6 @@ import OtpVerification from '../otp-verification/otpVerification';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import DirectAuth from "../direct-auth/directAuth";
-import DemoAuth from "../demo-auth/demoAuth";
 import {enableDemographics} from "../../api/constants";
 
 const AuthModes = (props) => {
@@ -33,7 +32,7 @@ const AuthModes = (props) => {
         const response = await fetchGlobalProperty(enableDemographics);
         setLoader(true);
         if(response.Error === undefined && response !== ""){
-           isDemoAuthEnabled = response
+           isDemoAuthEnabled = response;
         }
         if (checkIfAuthModeSupported()) {
             setShowError(false)
@@ -55,10 +54,9 @@ const AuthModes = (props) => {
     }
 
     function checkIfAuthModeSupported(){
-        if(selectedAuthMode === 'DEMOGRAPHICS' && !isDemoAuthEnabled)
-            return false
-        if(selectedAuthMode === 'PASSWORD')
+        if((selectedAuthMode === 'DEMOGRAPHICS' && !isDemoAuthEnabled) || selectedAuthMode === 'PASSWORD') {
             return false;
+        }
         return true;
     }
 
