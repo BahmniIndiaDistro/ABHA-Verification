@@ -32,6 +32,7 @@ export const checkIfABHAAddressExists = "/v1/phr/search/isExist"
 export const openmrsSession = "/openmrs/ws/rest/v1/session"
 export const globalPropertyUrl = "/openmrs/ws/rest/v1/bahmnicore/sql/globalproperty"
 export const cmSuffixProperty = 'bahmniHip.CM_SUFFIX'
+export const enableDemographics = 'bahmniHip.EnableDemographics'
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"

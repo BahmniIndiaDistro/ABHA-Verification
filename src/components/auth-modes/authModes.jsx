@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { authInit } from '../../api/hipServiceApi';
+import {authInit, fetchGlobalProperty} from '../../api/hipServiceApi';
 import OtpVerification from '../otp-verification/otpVerification';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import DirectAuth from "../direct-auth/directAuth";
+import {enableDemographics} from "../../api/constants";
 
 const AuthModes = (props) => {
     const [selectedAuthMode, setSelectedAuthMode] = useState('');
@@ -13,6 +14,7 @@ const AuthModes = (props) => {
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
     const [isDirectAuth, setIsDirectAuth] = useState(false);
+    let isDemoAuthEnabled = false;
 
     const id = props.id;
     const authModes = props.authModes;
@@ -27,8 +29,12 @@ const AuthModes = (props) => {
     }
 
     async function authenticate() {
+        const response = await fetchGlobalProperty(enableDemographics);
         setLoader(true);
-        if (selectedAuthMode !== "DEMOGRAPHICS" && selectedAuthMode !== 'PASSWORD') {
+        if(response.Error === undefined && response !== ""){
+           isDemoAuthEnabled = response;
+        }
+        if (checkIfAuthModeSupported()) {
             setShowError(false)
             const response = await authInit(id, selectedAuthMode);
             if (response.error !== undefined) {
@@ -37,6 +43,7 @@ const AuthModes = (props) => {
             }
             else {
                 setIsDirectAuth(selectedAuthMode === "DIRECT");
+                props.setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
                 setShowOtpField(true);
             }
         } else {
@@ -44,6 +51,13 @@ const AuthModes = (props) => {
             setShowError(true);
         }
         setLoader(false);
+    }
+
+    function checkIfAuthModeSupported(){
+        if((selectedAuthMode === 'DEMOGRAPHICS' && !isDemoAuthEnabled) || selectedAuthMode === 'PASSWORD') {
+            return false;
+        }
+        return true;
     }
 
 

@@ -65,14 +65,15 @@ export const authInit = async (healthId, authMode) => {
     }
 };
 
-export const authConfirm = async (healthId, otp) => {
-    let error = isValidOTP(otp);
+export const authConfirm = async (healthId, otp, demographics) => {
+    let error = otp != null ? isValidOTP(otp) : null;
     if (error) {
         return error;
     }
     const data = {
-        "authCode": btoa(otp),
-        "healthId": healthId
+        "authCode": otp != null ? btoa(otp) : null,
+        "healthId": healthId,
+        "demographic": demographics
     };
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.authConfirmUrl, data, Constants.headers);

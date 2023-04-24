@@ -2,7 +2,7 @@ button {
     margin: 2px;
     padding: 3px 10px;
 }
-.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth{
+.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth, .demo-auth-form-field{
     display: flex;
     width: 100%;
     margin-top: 20px;
@@ -40,4 +40,25 @@ button {
         margin-left: -60%;
     }
 
+}
+
+.demo-auth-form-field {
+    input, select {
+        padding: 2px;
+    }
+
+    .label:after {
+        content:" *";
+        color: red;
+    }
+
+    margin-bottom: 10px;
+}
+
+.fetch-abdm-record {
+    margin-top: 5%;
+    margin-left: 35%;
+    button {
+        height: 30px;
+    }
 }
