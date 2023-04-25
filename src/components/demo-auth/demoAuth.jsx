@@ -99,9 +99,9 @@ const DemoAuth = (props) => {
             <div className="fetch-abdm-record">
                 <Footer setBack={props.setBack} />
                 <button type="button" disabled={!isValid} onClick={confirmAuth}>Fetch ABDM Data</button>
+                {showError && <h6 className="error">{errorMessage}</h6>}
             </div>
             {loader && <Spinner />}
-            {showError && <h6 className="error">{errorMessage}</h6>}
         </div>
     );
 }
