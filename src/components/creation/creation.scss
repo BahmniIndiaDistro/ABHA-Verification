@@ -6,6 +6,11 @@
   {
     display: flex;
   }
+
+  .abha-creation-otp-verify {
+    display: flex;
+    padding-top: 30px;
+  }
   .select-option {
     padding-top: 20px;
     margin-bottom: 1%;
@@ -14,10 +19,6 @@
   .radio-btn {
     padding-top: 20px;
     margin-bottom: 1%;
-  }
-
-  .otp-verify{
-    margin-left: 0px;
   }
 
   label{
@@ -95,9 +96,11 @@ button:disabled {
 }
 
 .left-button {
+  margin-top: 20px;
   float: left
 }
 .right-button {
+  margin-top: 20px;
   float: right;
 }
 
@@ -113,22 +116,9 @@ img {
   text-align: center;
 }
 
-.buttons{
-  margin-left: 5%;
-  display: flex;
-}
-
-.button {
-  margin-left: 5%;
-}
-
-.downloadButton, .linkButton {
+.downloadButton {
   text-align: center;
   width: 100%;
-}
-
-.linkButton{
-  margin-top: 5%;
 }
 
 .center{
@@ -165,6 +155,7 @@ img {
 }
 
 .abha-list{
+  margin-top: 10px;
   margin-left: 10%;
   width: 80%;
   height: 10%;
