@@ -25,7 +25,12 @@ const DemoAuth = (props) => {
         const response = await authConfirm(props.id, null, demographics);
         if (response.error !== undefined || response.Error !== undefined) {
             setShowError(true);
-            setErrorMessage((response.Error && response.Error.Message) || response.error.message);
+            if(response.error.code === 1441) {
+                setErrorMessage("The authentication was unsuccessful. Please check the details you entered.");
+            }
+            else {
+                setErrorMessage((response.Error && response.Error.Message) || response.error.message);
+            }
         }
         else {
             setNdhmDetails(parseNdhmDetails(response));
