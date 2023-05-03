@@ -75,16 +75,17 @@ const PatientInfo = (props) => {
 
     const address = getCustomAddress(patient);
     const healthIdNumber = getHealthNumber(patient);
+    const age = calculateAge(getBirthDate(patient)).years;
     return (
         <p>
             <strong>{patient?.name?.replace(null,"")} </strong>
-            (Age:<strong> {calculateAge(getBirthDate(patient)).years || '-'} </strong>,
+            (Age:<strong> {!isNaN(age) ? age : '-'} </strong>,
             Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
-            {address.length != 0 && <span>{address}<br/></span>}
+            {address.length !== 0 && <span>{address}<br/></span>}
             Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
-            {patient?.id != undefined && <span><br/>ABHA Address: {patient?.id}</span>}
-            {patient?.healthId != undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
-            {healthIdNumber != undefined && <span><br/>ABHA Number: {healthIdNumber}</span>}
+            {patient?.id !== undefined && <span><br/>ABHA Address: {patient?.id}</span>}
+            {patient?.healthId !== undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
+            {healthIdNumber !== undefined && <span><br/>ABHA Number: {healthIdNumber}</span>}
         </p>
     )
 }
