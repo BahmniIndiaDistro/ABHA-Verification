@@ -10,9 +10,7 @@ const OtpVerification = (props) => {
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
-    const [isHealthIdNull, setIsHealthIdNull] = useState(false);
 
-    const id = props.id;
 
     async function confirmAuth() {
         setLoader(true);
@@ -28,9 +26,6 @@ const OtpVerification = (props) => {
         const response = await healthIdConfirmOtp(otp,props.selectedAuthMode);
         if(response.data !== undefined) {
             mapPatient(response.data);
-            if (response.data.healthId === undefined || response.data.healthId === null) {
-                setIsHealthIdNull(true);
-            }
         }
         else {
             setShowError(true);

@@ -12,6 +12,7 @@ import PatientDetails from '../patient-details/patientDetails';
 import { FcWebcam } from 'react-icons/fc';
 import './verifyHealthId.scss';
 import DemoAuth from "../demo-auth/demoAuth";
+import CreateHealthId from "../otp-verification/create-healthId";
 
 const VerifyHealthId = () => {
     const [id, setId] = useState('');
@@ -29,6 +30,7 @@ const VerifyHealthId = () => {
     const [ndhmDetails, setNdhmDetails] = useState({});
     const [back, setBack] = useState(false);
     const [isDemoAuth, setIsDemoAuth] = useState(false);
+    const [isHealthIdCreated, setIsHealthIdCreated] = useState(false);
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -207,7 +209,8 @@ const VerifyHealthId = () => {
                 {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsDemoAuth={setIsDemoAuth}/>}
             </div>}
             {isDemoAuth && !checkIfNotNull(ndhmDetails) && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>}
-            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} />}
+            {checkIfNotNull(ndhmDetails) && !isHealthIdCreated && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
+            {!matchingPatientFound && !healthIdIsVoided && isHealthIdCreated && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} />}
         </div>
     );
 }

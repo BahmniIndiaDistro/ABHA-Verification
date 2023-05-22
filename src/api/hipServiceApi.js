@@ -457,6 +457,32 @@ export const healthIdConfirmOtp = async (otp, authMode) => {
     }
 };
 
+export const createDefaultHealthId = async () => {
+    try {
+        const response = await axios.get(Constants.hipServiceUrl + Constants.createDefaultHealthId, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
+export const updateHealthId = async (healthId) => {
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.updateHealthId +"?healthId=" + healthId, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
 export const fetchPatientFromBahmniWithUuid = async (patientUuid) => {
     try {
         const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientWithUuid + "/" + patientUuid, Constants.headers);
