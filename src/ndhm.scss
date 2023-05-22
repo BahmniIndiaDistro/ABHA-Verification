@@ -2,7 +2,7 @@ button {
     margin: 2px;
     padding: 3px 10px;
 }
-.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth, .demo-auth-form-field{
+.verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth, .demo-auth-form-field, .verify-year{
     display: flex;
     width: 100%;
     margin-top: 20px;
@@ -12,7 +12,7 @@ button {
         width: 50%;
     }
 
-    .verify-health-id-input-btn, .auth-modes-select-btn ,  .otp-verify-input-btn{
+    .verify-health-id-input-btn, .auth-modes-select-btn ,  .otp-verify-input-btn, .verify-year-input-btn{
         width: 50%;
     }
 
@@ -24,7 +24,7 @@ button {
         margin-left: 35%;
     }
 
-    .verify-health-id-input, .auth-modes-select , .otp-verify-input{
+    .verify-health-id-input, .auth-modes-select , .otp-verify-input, .verify-year-input{
         input, select {
             padding: 2px;
         }

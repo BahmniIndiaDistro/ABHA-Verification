@@ -3,7 +3,7 @@ import {
     getAuthModes,
     fetchPatientFromBahmniWithHealthId,
     getHealthIdStatus,
-    saveTokenOnQRScan
+    saveTokenOnQRScan, searchHealthId
 } from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 import Spinner from '../spinner/spinner';
@@ -15,7 +15,9 @@ import DemoAuth from "../demo-auth/demoAuth";
 
 const VerifyHealthId = () => {
     const [id, setId] = useState('');
+    const [year, setYear] = useState('');
     const [authModes, setAuthModes] = useState([]);
+    const healthIdAuthModes = ["MOBILE_OTP", "AADHAAR_OTP"];
     const [showAuthModes, setShowAuthModes] = useState(false);
     const [matchingPatientFound, setMatchingPatientFound] = useState(false);
     const [matchingpatientUuid, setMatchingPatientUuid] = useState('');
@@ -32,6 +34,10 @@ const VerifyHealthId = () => {
         setId(e.target.value);
     }
 
+    function yearOnChangeHandler(e) {
+        setYear(e.target.value);
+    }
+
     async function verifyHealthId() {
         setLoader(true);
         setShowError(false);
@@ -45,21 +51,34 @@ const VerifyHealthId = () => {
                 setMatchingPatientUuid(matchingPatientId.patientUuid);
             } else {
                 setMatchingPatientFound(false);
-                const response = await getAuthModes(id);
-                if (response.error !== undefined) {
-                    setShowError(true)
-                    setErrorHealthId(response.error.message);
-                }
-                else {
-                    setShowAuthModes(true);
-                    setAuthModes(response.authModes);
-                }
+                await searchByHealthId();
+                // const response = await getAuthModes(id);
+                // if (response.error !== undefined) {
+                //     setShowError(true)
+                //     setErrorHealthId(response.error.message);
+                // }
+                // else {
+                //     setShowAuthModes(true);
+                //     setAuthModes(response.authModes);
+                // }
             }
         } else {
             setShowError(true)
             setErrorHealthId(matchingPatientId.Error.message);
         }
         setLoader(false);
+    }
+
+    async function searchByHealthId() {
+        const response = await searchHealthId(id, year);
+        if(response.data !== undefined){
+            setShowAuthModes(true);
+            setAuthModes(healthIdAuthModes);
+        }
+        else {
+            setShowError(true)
+            setErrorHealthId(response.details[0].message || response.message);
+        }
     }
 
     function getIfVaild(str){
@@ -154,6 +173,14 @@ const VerifyHealthId = () => {
                     <div className="verify-health-id-input-btn">
                         <div className="verify-health-id-input">
                             <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
+                        </div>
+                    </div>
+                </div>
+                <div className="verify-year">
+                    <label htmlFor="yearOfBirth" className="label">Enter Year of Birth: </label>
+                    <div className="verify-year-input-btn">
+                        <div className="verify-year-input">
+                            <input type="text" id="healthId" name="healthId" value={year} onChange={yearOnChangeHandler} />
                         </div>
                         <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Verify</button>
                         {showError && <h6 className="error">{errorHealthId}</h6>}
