@@ -6,6 +6,7 @@ import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import PatientInfo from "./patientInfo";
 import ABHACard from "../creation/ABHACard";
+import {enableHealthIdVerification} from "../../api/constants";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -105,9 +106,9 @@ const PatientDetails = (props) => {
                 <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
-                    <div className="abha-card">
+                    {!props.isVerifyABHAThroughFetchModes && <div className="abha-card">
                         <ABHACard  healthIdNumber={ndhmDetails?.healthIdNumber}/>
-                    </div>
+                    </div>}
                     {patients.length === 0 && <b>No Bahmni Record Found</b>}
                     {patients.length > 0 && ndhmDetails.uuid == undefined &&
                     <div>

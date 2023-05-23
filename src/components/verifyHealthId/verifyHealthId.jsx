@@ -3,7 +3,7 @@ import {
     getAuthModes,
     fetchPatientFromBahmniWithHealthId,
     getHealthIdStatus,
-    saveTokenOnQRScan, searchHealthId
+    saveTokenOnQRScan, searchHealthId, IsValidPHRAddress, fetchGlobalProperty
 } from '../../api/hipServiceApi';
 import AuthModes from '../auth-modes/authModes';
 import Spinner from '../spinner/spinner';
@@ -13,6 +13,7 @@ import { FcWebcam } from 'react-icons/fc';
 import './verifyHealthId.scss';
 import DemoAuth from "../demo-auth/demoAuth";
 import CreateHealthId from "../otp-verification/create-healthId";
+import {enableHealthIdVerification} from "../../api/constants";
 
 const VerifyHealthId = () => {
     const [id, setId] = useState('');
@@ -31,6 +32,10 @@ const VerifyHealthId = () => {
     const [back, setBack] = useState(false);
     const [isDemoAuth, setIsDemoAuth] = useState(false);
     const [isHealthIdCreated, setIsHealthIdCreated] = useState(false);
+    let enableHealthIdVerify;
+    const [isHealthNumberNotLinked, setIsHealthNumberNotLinked] = useState(false);
+    const [error, setError] = useState('');
+    const [isVerifyABHAThroughFetchModes, setIsVerifyABHAThroughFetchModes] = useState(false);
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -41,6 +46,7 @@ const VerifyHealthId = () => {
     }
 
     async function verifyHealthId() {
+        setError('');
         setLoader(true);
         setShowError(false);
         const matchingPatientId = await fetchPatientFromBahmniWithHealthId(id);
@@ -54,15 +60,6 @@ const VerifyHealthId = () => {
             } else {
                 setMatchingPatientFound(false);
                 await searchByHealthId();
-                // const response = await getAuthModes(id);
-                // if (response.error !== undefined) {
-                //     setShowError(true)
-                //     setErrorHealthId(response.error.message);
-                // }
-                // else {
-                //     setShowAuthModes(true);
-                //     setAuthModes(response.authModes);
-                // }
             }
         } else {
             setShowError(true)
@@ -78,9 +75,35 @@ const VerifyHealthId = () => {
             setAuthModes(healthIdAuthModes);
         }
         else {
-            setShowError(true)
-            setErrorHealthId(response.details[0].message || response.message);
+            if(enableHealthIdVerify == null) {
+                var resp = await fetchGlobalProperty(enableHealthIdVerification)
+                if (resp.Error === undefined) {
+                    enableHealthIdVerify = resp;
+                }
+            }
+            if(enableHealthIdVerify && IsValidPHRAddress(id) && response.details[0].code === "HIS-1008"){
+                setIsHealthNumberNotLinked(true)
+            }
+            else {
+                setShowError(true)
+                setErrorHealthId(response.details[0].message || response.message);
+            }
         }
+    }
+
+    async function verify() {
+        setError('');
+        setLoader(true);
+        const response = await getAuthModes(id);
+        if (response.error !== undefined) {
+            setError(response.error.message);
+        }
+        else {
+            setShowAuthModes(true);
+            setAuthModes(response.authModes);
+            setIsVerifyABHAThroughFetchModes(true);
+        }
+        setLoader(false);
     }
 
     function getIfVaild(str){
@@ -162,6 +185,7 @@ const VerifyHealthId = () => {
             setLoader(false);
             setBack(false);
             setIsDemoAuth(false);
+            setError('');
         }
 
     },[back])
@@ -205,12 +229,23 @@ const VerifyHealthId = () => {
                 {healthIdIsVoided && <div className="id-deactivated">
                     Health ID is deactivated
                 </div>}
+                {!showAuthModes && isHealthNumberNotLinked && <div>
+                    <div className="note health-id">
+                        Health Id doesn't have health Number linked.
+                        Click on proceed to authenticate with only healthId or you can create new ABHA Number
+                    </div>
+                    <div className="proceed-button">
+                        <button name="proceed-btn" type="button" onClick={verify}>Proceed </button>
+                    </div>
+                    {error !== '' && <h6 className="error">{error}</h6>}
+                </div> }
                 {loader && <Spinner />}
-                {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsDemoAuth={setIsDemoAuth}/>}
+                {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsDemoAuth={setIsDemoAuth} isHealthNumberNotLinked={isHealthNumberNotLinked}/>}
             </div>}
             {isDemoAuth && !checkIfNotNull(ndhmDetails) && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>}
-            {checkIfNotNull(ndhmDetails) && !isHealthIdCreated && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
-            {!matchingPatientFound && !healthIdIsVoided && isHealthIdCreated && checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} />}
+            {!isVerifyABHAThroughFetchModes && checkIfNotNull(ndhmDetails) && !isHealthIdCreated && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
+            {!matchingPatientFound && !healthIdIsVoided && (isHealthIdCreated || isVerifyABHAThroughFetchModes) &&
+            checkIfNotNull(ndhmDetails) && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} isVerifyABHAThroughFetchModes={isVerifyABHAThroughFetchModes}/>}
         </div>
     );
 }

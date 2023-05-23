@@ -15,22 +15,28 @@ const OtpVerification = (props) => {
     async function confirmAuth() {
         setLoader(true);
         setShowError(false);
-        // const response = await authConfirm(id, otp);
-        // if (response.error !== undefined || response.Error !== undefined) {
-        //     setShowError(true)
-        //     setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
-        // }
-        // else {
-        //     setNdhmDetails(parseNdhmDetails(response));
-        // }
-        const response = await healthIdConfirmOtp(otp,props.selectedAuthMode);
-        if(response.data !== undefined) {
-            mapPatient(response.data);
+        if(!props.isHealthNumberNotLinked){
+            const response = await healthIdConfirmOtp(otp,props.selectedAuthMode);
+            if(response.data !== undefined) {
+                mapPatient(response.data);
+            }
+            else {
+                setShowError(true);
+                setErrorHealthId(response.details[0].message || response.message);
+            }
         }
         else {
-            setShowError(true);
-            setErrorHealthId(response.details[0].message || response.message);
+            const response = await authConfirm(props.id, otp);
+            if (response.error !== undefined || response.Error !== undefined) {
+                setShowError(true)
+                setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
+            }
+            else {
+                setNdhmDetails(parseNdhmDetails(response));
+            }
         }
+
+
         setLoader(false);
     }
 

@@ -150,12 +150,12 @@ export const getHealthIdStatus = async (patientUuid) => {
         return Constants.openMrsDown;
     }
 }
-const IsValidPHRAddress = (healthId) => {
+export const IsValidPHRAddress = (healthId) => {
     let pattern = "^[a-zA-Z]+(([a-zA-Z.0-9]+){2})[a-zA-Z0-9]+@[a-zA-Z]+$";
     return healthId.match(pattern);
 }
 
-const IsValidHealthId = (healthId) => {
+export const IsValidHealthId = (healthId) => {
     let pattern = "^([0-9]{14})$|^[0-9]{2}[-][0-9]{4}[-][0-9]{4}[-][0-9]{4}$";
     return healthId.match(pattern);
 }

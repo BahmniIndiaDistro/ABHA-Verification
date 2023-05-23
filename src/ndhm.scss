@@ -16,7 +16,7 @@ button {
         width: 50%;
     }
 
-    .qr-code-scanner, .create-default-healthId{
+    .qr-code-scanner, .create-default-healthId, .proceed-button{
         text-align: center;
     }
 
@@ -65,4 +65,8 @@ button {
     .demo-fetch-button {
         margin-top: 22px;
     }
+}
+
+.health-id {
+    padding: 10px;
 }

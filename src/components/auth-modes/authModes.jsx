@@ -30,37 +30,41 @@ const AuthModes = (props) => {
 
     async function authenticate() {
         setLoader(true);
-        setShowError(false);
-        const response = await healthIdAuthInit(id, selectedAuthMode);
-        if (response.data !== undefined) {
-            setShowOtpField(true);
+        if(!props.isHealthNumberNotLinked){
+            setShowError(false);
+            const response = await healthIdAuthInit(id, selectedAuthMode);
+            if (response.data !== undefined) {
+                setShowOtpField(true);
+            }
+            else {
+                setShowError(true)
+                setErrorHealthId(response.details[0].message || response.message);
+            }
         }
         else {
-            setShowError(true)
-            setErrorHealthId(response.details[0].message || response.message);
+            const response = await fetchGlobalProperty(enableDemographics);
+            setLoader(true);
+            if(response.Error === undefined && response !== ""){
+               isDemoAuthEnabled = response;
+            }
+            if (checkIfAuthModeSupported()) {
+                setShowError(false)
+                const response = await authInit(id, selectedAuthMode);
+                if (response.error !== undefined) {
+                    setShowError(true)
+                    setErrorHealthId(response.error.message);
+                }
+                else {
+                    setIsDirectAuth(selectedAuthMode === "DIRECT");
+                    props.setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
+                    setShowOtpField(true);
+                }
+            } else {
+                setErrorHealthId("The selected Authentication Mode is currently not supported!");
+                setShowError(true);
+            }
         }
-        setLoader(false);
-        // const response = await fetchGlobalProperty(enableDemographics);
-        // setLoader(true);
-        // if(response.Error === undefined && response !== ""){
-        //    isDemoAuthEnabled = response;
-        // }
-        // if (checkIfAuthModeSupported()) {
-        //     setShowError(false)
-        //     const response = await authInit(id, selectedAuthMode);
-        //     if (response.error !== undefined) {
-        //         setShowError(true)
-        //         setErrorHealthId(response.error.message);
-        //     }
-        //     else {
-        //         setIsDirectAuth(selectedAuthMode === "DIRECT");
-        //         props.setIsDemoAuth(selectedAuthMode === "DEMOGRAPHICS")
-        //         setShowOtpField(true);
-        //     }
-        // } else {
-        //     setErrorHealthId("The selected Authentication Mode is currently not supported!");
-        //     setShowError(true);
-        // }
+
         setLoader(false);
     }
 
@@ -89,7 +93,7 @@ const AuthModes = (props) => {
             </div>}
             {loader && <Spinner />}
             {isDirectAuth && <DirectAuth healthId={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails}/>}
-            {!isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} />}
+            {!isDirectAuth && showOtpField && <OtpVerification id={id} selectedAuthMode={selectedAuthMode} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} isHealthNumberNotLinked={props.isHealthNumberNotLinked}/>}
         </div>
     );
 }
