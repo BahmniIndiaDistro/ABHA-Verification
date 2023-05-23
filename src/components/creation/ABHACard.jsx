@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {getCard} from "../../api/hipServiceApi";
@@ -6,7 +6,7 @@ import {GoVerified} from "react-icons/all";
 
 
 const ABHACard = (props) => {
-    const patient = props.patient
+    const healthIdNumber = props.healthIdNumber;
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState('');
     const [isCardDownloaded, setIsCardDownloaded] = useState(false);
@@ -44,7 +44,7 @@ const ABHACard = (props) => {
             document.body.appendChild(a);
             a.style = "display: none";
             a.href = imgUrl;
-            a.download = patient.healthIdNumber + ".png";
+            a.download = healthIdNumber + ".png";
             a.click();
             window.URL.revokeObjectURL(imgUrl);
             setIsCardDownloaded(true);

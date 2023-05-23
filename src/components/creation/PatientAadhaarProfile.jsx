@@ -91,7 +91,7 @@ const PatientAadhaarProfile = (props) => {
                     </div>}
                     {patient.healthIdNumber !== undefined &&
                     <div>
-                        <ABHACard patient={patient}/>
+                        <ABHACard  healthIdNumber={patient?.healthIdNumber}/>
                     </div>}
                     <div className="ButtonGroup">
                         <Footer setBack={props.setBack} />

@@ -5,6 +5,7 @@ import {Address, FhirPatient, Identifier, Name, Telecom, Type} from "../../FhirP
 import ConfirmPopup from "./confirmPopup";
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import PatientInfo from "./patientInfo";
+import ABHACard from "../creation/ABHACard";
 
 const PatientDetails = (props) => {
     const [selectedPatient, setSelectedPatient] = useState({});
@@ -104,6 +105,9 @@ const PatientDetails = (props) => {
                 <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
+                    <div className="abha-card">
+                        <ABHACard  healthIdNumber={ndhmDetails?.healthIdNumber}/>
+                    </div>
                     {patients.length === 0 && <b>No Bahmni Record Found</b>}
                     {patients.length > 0 && ndhmDetails.uuid == undefined &&
                     <div>

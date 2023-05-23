@@ -33,7 +33,7 @@ const ABHACreationSuccess = (props) => {
             <div>
                  <p className="note success"> <GoVerified /> <strong>ABHA Created Successfully</strong></p>
                  <p className="note"><strong>ABHA Number: </strong> {patient.healthIdNumber}</p>
-                 <ABHACard patient={patient} />
+                 <ABHACard healthIdNumber={patient?.healthIdNumber} />
                  <Footer setProceed={setProceed}/>
             </div>}
             {link && <LinkABHAAddress patient={patient} mappedPatient={props.mappedPatient}/>}
