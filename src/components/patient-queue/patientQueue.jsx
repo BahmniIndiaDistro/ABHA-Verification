@@ -79,7 +79,7 @@ const PatientQueue = (props) => {
 
                 </tbody>
             </table>}
-            {!matchFound && checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient} setBack={setBack}></PatientDetails>}
+            {!matchFound && checkIfNotNull(selectedPatient) && <PatientDetails ndhmDetails={selectedPatient} setBack={setBack} isVerifyABHAThroughFetchModes={true}/>}
             {matchFound && <div>
                 <b>ABDM Record: </b>
                 <PatientInfo patient={selectedPatient}/><br/>

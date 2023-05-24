@@ -255,7 +255,7 @@ const VerifyHealthId = () => {
             </div>}
             {isDemoAuth && !checkIfNotNull(ndhmDetails) && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>}
             {isVerifyThroughABHASerice && checkIfNotNull(ndhmDetails) && ndhmDetails.id === undefined  && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
-            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && (isHealthIdCreated || isVerifyABHAThroughFetchModes)
+            {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && (ndhmDetails.id !== undefined || isHealthIdCreated || isVerifyABHAThroughFetchModes)
              && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} isVerifyABHAThroughFetchModes={isVerifyABHAThroughFetchModes}/>}
         </div>
     );
