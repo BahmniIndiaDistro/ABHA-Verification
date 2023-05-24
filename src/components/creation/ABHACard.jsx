@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {getCard} from "../../api/hipServiceApi";
@@ -51,32 +51,29 @@ const ABHACard = (props) => {
         }
     }
 
-    async function view() {
+    useEffect(async () => {
         setLoader(true);
         await getPngCard();
         if (imgUrl !== null) {
-           setLoader(false);
-           setView(true);
-           setImgSrc(imgUrl);
+            setLoader(false);
+            setView(true);
+            setImgSrc(imgUrl);
         }
-    }
+    },[])
 
 
 
     return (
         <div>
-            {!loader && !cardView && <div className="downloadButton">
-                <button type="button" className="proceed" onClick={view}>View ABHA Card</button>
-            </div>}
             {loader && <Spinner />}
-            {cardView && <img src={imgSrc} width="500" height="300" />}
-            {!downloadLoader &&
-             <div className="downloadButton">
-                  <button type="button" className="proceed" onClick={download}>
-                      Download ABHA Card
-                  </button>
-             </div>}
-            {downloadLoader && <Spinner />}
+            <div className="abha-card">
+                 {cardView && <img src={imgSrc} width="500" height="300" />}
+                 {!downloadLoader &&
+                     <button type="button" className="proceed" onClick={download}>
+                          Download ABHA Card
+                      </button>}
+                 {downloadLoader && <Spinner />}
+             </div>
             {error !== '' && <h6 className="error">{error}</h6>}
             {isCardDownloaded && <p className="note success"><GoVerified /> Downloaded Successfully </p>}
         </div>
