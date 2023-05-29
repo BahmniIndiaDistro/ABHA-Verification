@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { authConfirm } from '../../api/hipServiceApi';
+import {authConfirm, healthIdConfirmOtp} from '../../api/hipServiceApi';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import {getDate} from "../Common/DateUtil";
@@ -11,20 +11,58 @@ const OtpVerification = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
 
-    const id = props.id;
 
     async function confirmAuth() {
         setLoader(true);
         setShowError(false);
-        const response = await authConfirm(id, otp);
-        if (response.error !== undefined || response.Error !== undefined) {
-            setShowError(true)
-            setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
+        if(!props.isHealthNumberNotLinked){
+            const response = await healthIdConfirmOtp(otp,props.selectedAuthMode);
+            if(response.data !== undefined) {
+                mapPatient(response.data);
+            }
+            else {
+                setShowError(true);
+                setErrorHealthId(response.details[0].message || response.message);
+            }
         }
         else {
-            setNdhmDetails(parseNdhmDetails(response));
+            const response = await authConfirm(props.id, otp);
+            if (response.error !== undefined || response.Error !== undefined) {
+                setShowError(true)
+                setErrorHealthId((response.Error && response.Error.Message) || response.error.message);
+            }
+            else {
+                setNdhmDetails(parseNdhmDetails(response));
+            }
         }
+
+
         setLoader(false);
+    }
+
+    function mapPatient(patient){
+        var identifier = patient?.mobile !== undefined ? [{
+            value: patient.mobile
+        }] : undefined;
+        var address =  {
+            line: patient?.address,
+            city: patient?.townName,
+            district: patient?.districtName,
+            state: patient?.stateName,
+            pincode: patient?.pincode
+        };
+        const ndhm = {
+            healthIdNumber: patient?.healthIdNumber,
+            id: patient?.healthId,
+            gender: patient.gender,
+            name: patient.name,
+            isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
+            dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
+            address: address,
+            identifiers: identifier,
+            uuid: patient?.uuid
+        };
+        setNdhmDetails(ndhm);
     }
 
     function otpOnChangeHandler(e) {

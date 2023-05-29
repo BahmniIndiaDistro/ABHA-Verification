@@ -6,7 +6,7 @@ import {GoVerified} from "react-icons/all";
 
 
 const ABHACard = (props) => {
-    const patient = props.patient
+    const healthIdNumber = props.healthIdNumber;
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState('');
     const [isCardDownloaded, setIsCardDownloaded] = useState(false);
@@ -44,39 +44,38 @@ const ABHACard = (props) => {
             document.body.appendChild(a);
             a.style = "display: none";
             a.href = imgUrl;
-            a.download = patient.healthIdNumber + ".png";
+            a.download = healthIdNumber + ".png";
             a.click();
             window.URL.revokeObjectURL(imgUrl);
             setIsCardDownloaded(true);
         }
     }
 
-    async function view() {
+    useEffect(async () => {
         setLoader(true);
         await getPngCard();
         if (imgUrl !== null) {
-           setLoader(false);
-           setView(true);
-           setImgSrc(imgUrl);
+            setLoader(false);
+            setView(true);
+            setImgSrc(imgUrl);
         }
-    }
+    },[])
 
 
 
     return (
         <div>
-            {!loader && !cardView && <div className="downloadButton">
-                <button type="button" className="proceed" onClick={view}>View ABHA Card</button>
-            </div>}
             {loader && <Spinner />}
-            {cardView && <img src={imgSrc} width="500" height="300" />}
-            {!downloadLoader &&
-             <div className="downloadButton">
-                  <button type="button" className="proceed" onClick={download}>
-                      Download ABHA Card
-                  </button>
-             </div>}
-            {downloadLoader && <Spinner />}
+            <div className="abha-card">
+                 {cardView && <img src={imgSrc} width="500" height="300" />}
+            </div>
+            <div className="downloadButton">
+                {!downloadLoader &&
+                <button type="button" className="proceed" onClick={download}>
+                    Download ABHA Card
+                </button>}
+                {downloadLoader && <Spinner />}
+            </div>
             {error !== '' && <h6 className="error">{error}</h6>}
             {isCardDownloaded && <p className="note success"><GoVerified /> Downloaded Successfully </p>}
         </div>

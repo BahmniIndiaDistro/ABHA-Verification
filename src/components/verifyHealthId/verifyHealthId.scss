@@ -22,11 +22,15 @@
     vertical-align: middle;
 }
 
-.qr-code-scanner, .alternative-text{
+.qr-code-scanner, .alternative-text {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 60%;
+}
+
+.proceed-button{
+    text-align: center;
 }
 
 .id-deactivated {

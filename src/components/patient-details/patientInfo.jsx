@@ -85,7 +85,7 @@ const PatientInfo = (props) => {
             Mobile: {patient?.phoneNumber || (patient?.identifiers != null ? patient?.identifiers[0]?.value : '-')}
             {patient?.id !== undefined && <span><br/>ABHA Address: {patient?.id}</span>}
             {patient?.healthId !== undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
-            {healthIdNumber !== undefined && <span><br/>ABHA Number: {healthIdNumber}</span>}
+            {healthIdNumber !== undefined && healthIdNumber !== null && <span><br/>ABHA Number: {healthIdNumber}</span>}
         </p>
     )
 }
