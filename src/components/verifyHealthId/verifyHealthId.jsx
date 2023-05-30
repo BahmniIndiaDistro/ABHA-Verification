@@ -121,13 +121,14 @@ const VerifyHealthId = () => {
     }
 
     function mapToNdhmDetails(scannedData) {
-        var patient = JSON.parse(scannedData.text)
+        var patient = JSON.parse(scannedData.text);
+        var dob = patient['dob'].split(/[-/]+/).reverse().map(e => e !== "" ? e : "1");
         return {
-            id: patient['phr'],
+            id: patient['phr'] || patient['hid'],
             gender: patient['gender'],
             name: patient['name'],
-            dateOfBirth: patient['dob'].split('-').reverse().map(e => e !== "" ? e : "1").join('-'),
-            isBirthDateEstimated: true,
+            dateOfBirth: dob.join('-'),
+            isBirthDateEstimated: dob.length !== 3,
             address: {
                 line: getIfVaild(patient['address']),
                 district: getIfVaild(patient['dist name']),
@@ -206,7 +207,7 @@ const VerifyHealthId = () => {
         {!isDemoAuth && !checkIfNotNull(ndhmDetails) &&
             <div>
                 <div className="verify-health-id">
-                    <label htmlFor="healthId" className="label">Enter ABHA/ABHA Address: </label>
+                    <label htmlFor="healthId" className="label">Enter ABHA Number/ABHA Address: </label>
                     <div className="verify-health-id-input-btn">
                         <div className="verify-health-id-input">
                             <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
