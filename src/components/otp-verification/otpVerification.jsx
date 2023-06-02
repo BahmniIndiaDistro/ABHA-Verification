@@ -45,7 +45,7 @@ const OtpVerification = (props) => {
             value: patient.mobile
         }] : undefined;
         var address =  {
-            line: patient?.address,
+            line: [patient?.address],
             city: patient?.townName,
             district: patient?.districtName,
             state: patient?.stateName,
