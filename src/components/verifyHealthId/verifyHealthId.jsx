@@ -131,7 +131,7 @@ const VerifyHealthId = () => {
             isBirthDateEstimated: dob.length !== 3,
             address: {
                 line: [getIfVaild(patient['address'])],
-                district: getIfVaild(patient['dist name']),
+                district: getIfVaild(patient['dist name'] || patient['district_name']),
                 state: getIfVaild(patient['state name']),
                 pincode: getIfVaild(patient['pincode'])
             },
