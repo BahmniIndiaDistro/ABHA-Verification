@@ -406,10 +406,9 @@ export const checkIfABHAAddressExists = async (phrAddress) => {
     }
 }
 
-export const searchHealthId = async (healthId, yearOfBirth) => {
+export const searchHealthId = async (healthId) => {
     const data = {
-        "healthId": healthId,
-        "yearOfBirth": yearOfBirth
+        "healthId": healthId
     };
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.searchHealthId,data, Constants.headers);
