@@ -17,7 +17,6 @@ import {enableHealthIdVerification} from "../../api/constants";
 
 const VerifyHealthId = () => {
     const [id, setId] = useState('');
-    const [year, setYear] = useState('');
     const [authModes, setAuthModes] = useState([]);
     const supportedHealthIdAuthModes = ["MOBILE_OTP", "AADHAAR_OTP"];
     const [showAuthModes, setShowAuthModes] = useState(false);
@@ -40,10 +39,6 @@ const VerifyHealthId = () => {
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
-    }
-
-    function yearOnChangeHandler(e) {
-        setYear(e.target.value);
     }
 
     async function verifyHealthId() {
@@ -70,7 +65,7 @@ const VerifyHealthId = () => {
     }
 
     async function searchByHealthId() {
-        const response = await searchHealthId(id, year);
+        const response = await searchHealthId(id);
         if(response.data !== undefined){
             setIsVerifyThroughABHASerice(true);
             if(response.data.status === "ACTIVE") {
@@ -211,14 +206,6 @@ const VerifyHealthId = () => {
                     <div className="verify-health-id-input-btn">
                         <div className="verify-health-id-input">
                             <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
-                        </div>
-                    </div>
-                </div>
-                <div className="verify-year">
-                    <label htmlFor="yearOfBirth" className="label">Enter Year of Birth: </label>
-                    <div className="verify-year-input-btn">
-                        <div className="verify-year-input">
-                            <input type="text" id="healthId" name="healthId" value={year} onChange={yearOnChangeHandler} />
                         </div>
                         <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Verify</button>
                         {showError && <h6 className="error">{errorHealthId}</h6>}
