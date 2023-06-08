@@ -18,7 +18,7 @@ const VerifyAadhaar = props => {
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
     const [back, setBack] = useState(false);
     const [isConsentGranted, setConsentGrated] = useState(false);
-    const [aadhaarError, setAadhaarError] = useState(false);
+    const [aadhaarError, setAadhaarError] = useState('');
 
 
     function idOnChangeHandler(e) {
