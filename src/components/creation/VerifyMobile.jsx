@@ -9,6 +9,7 @@ import LinkABHAAddress from "./LinkABHAAddress";
 
 const VerifyMobile = (props) => {
     const [mobile, setMobile] = useState('');
+    const [isMobileNumberChanged, setIsMobileNumberChanged] = useState(false);
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [error, setError] = useState('');
@@ -23,6 +24,10 @@ const VerifyMobile = (props) => {
     function OnChangeHandler(e) {
         setMobile(e.target.value);
         resetToDefault()
+    }
+
+    function OnClick() {
+        setIsMobileNumberChanged(true);
     }
 
     function resetToDefault(){
@@ -110,6 +115,13 @@ const VerifyMobile = (props) => {
         }
     }
 
+    function getEncodedMobileNumber(){
+        if(props.aadhaarMobileNumber !== undefined){
+            return props.aadhaarMobileNumber.replace(/.(?=.{4})/g, 'x');
+        }
+        return mobile;
+    }
+
 
     return (
         <div>
@@ -120,13 +132,13 @@ const VerifyMobile = (props) => {
                             <label htmlFor="mobile" className="label">Enter Mobile Number</label>
                             <div className="verify-mobile-input-btn">
                                 <div className="verify-mobile-input">
-                                    <input type="text" id="mobile" name="mobile" value={mobile} onChange={OnChangeHandler} disabled={abhaCreated}/>
+                                    <input type="text" id="mobile" name="mobile" value={isMobileNumberChanged ? mobile : getEncodedMobileNumber()} onChange={OnChangeHandler} disabled={abhaCreated} onFocus={OnClick}/>
                                 </div>
                                 <button name="verify-btn" type="submit" onClick={onVerify} disabled={abhaCreated}>Verify</button>
                             </div>
                         </div>
-                        <div className="message">This number will be used to authenticate your ABHA Number.
-                            It is recommended to use your AADHAAR linked mobile number
+                        <div className="message">The above field is pre-filled with AADHAAR linked mobile number.
+                            Click to edit the mobile number. This number will be used to authenticate your ABHA Number.
                         </div>
                     </div>
                     {error !== '' && <h6 className="error">{error}</h6>}
