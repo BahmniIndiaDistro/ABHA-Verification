@@ -116,8 +116,8 @@ const VerifyMobile = (props) => {
     }
 
     function getEncodedMobileNumber(){
-        if(props.aadhaarMobileNumber !== undefined){
-            return props.aadhaarMobileNumber.replace(/.(?=.{4})/g, 'x');
+        if(props.patient.phone !== undefined){
+            return props.patient.phone.replace(/.(?=.{4})/g, 'x');
         }
         return mobile;
     }
