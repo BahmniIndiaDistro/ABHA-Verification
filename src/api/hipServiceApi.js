@@ -425,7 +425,7 @@ export const searchHealthId = async (healthId) => {
 export const healthIdAuthInit = async (healthId, authMode) => {
     const data = {
         "healthId": healthId,
-        "authMode": authMode,
+        "authMethod": authMode,
     };
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.healthIdAuthInit, data, Constants.headers);
@@ -442,7 +442,7 @@ export const healthIdAuthInit = async (healthId, authMode) => {
 export const healthIdConfirmOtp = async (otp, authMode) => {
     const data = {
         "otp": otp,
-        "authMode": authMode,
+        "authMethod": authMode,
     };
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.healthIdConfirmOtp, data, Constants.headers);
