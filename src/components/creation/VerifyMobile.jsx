@@ -81,6 +81,7 @@ const VerifyMobile = (props) => {
 
 
     useEffect(() => {
+        setError('');
         if(otp !== '')
             verifyOtp();
         },[otp]);
@@ -99,10 +100,10 @@ const VerifyMobile = (props) => {
             }
             else {
                 setPatient(response.data);
-                props.mappedPatient.healthIdNumber = patient.healthIdNumber;
+                props.mappedPatient.healthIdNumber = response.data.healthIdNumber;
                 if (props.mappedPatient.identifiers === undefined) {
-                    props.mappedPatient.identifiers = patient?.mobile !== undefined ? [{
-                        value: patient.mobile
+                    props.mappedPatient.identifiers = response.data?.mobile !== undefined ? [{
+                        value:  response.data?.mobile
                     }] : undefined
                 }
                 setABHACreated(true);
@@ -129,8 +130,8 @@ const VerifyMobile = (props) => {
                             It is recommended to use your AADHAAR linked mobile number
                         </div>
                     </div>
-                    {error !== '' && <h6 className="error">{error}</h6>}
                     {showOtpInput && <VerifyOTP setOtp={setOtp} disabled={otpVerified || mobileLinked}/>}
+                    {error !== '' && <h6 className="error">{error}</h6>}
                     {showSuccessMsg && <div>
                         {otpVerified && <p className="note success"><GoVerified/> <strong>OTP Verfied Successfully</strong></p>}
                         {mobileLinked && <p className="note success"><GoVerified/> <strong>mobile already Linked </strong></p>}
