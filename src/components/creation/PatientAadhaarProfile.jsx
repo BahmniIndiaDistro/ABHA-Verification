@@ -87,7 +87,7 @@ const PatientAadhaarProfile = (props) => {
                         <strong>ABHA Address:</strong>    {patient.healthId}
                         <p className="note">This is a default ABHA Address</p>
                     </div>}
-                    {patient.healthIdNumber !== undefined &&
+                    {patient.healthIdNumber !== undefined && patient.healthId !== undefined &&
                     <div>
                         <ABHACard  healthIdNumber={patient?.healthIdNumber}/>
                     </div>}
@@ -98,7 +98,7 @@ const PatientAadhaarProfile = (props) => {
                 </div>
             </div>}
             {linkABHAAddress && <LinkABHAAddress patient={patient} mappedPatient={mappedPatient}/>}
-            {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient}/>}
+            {isNewABHA && <VerifyMobile patient={patient} setBack={setBack} mappedPatient={mappedPatient} />}
         </div>
     );
 }

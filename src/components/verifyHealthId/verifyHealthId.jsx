@@ -169,12 +169,6 @@ const VerifyHealthId = () => {
         }
     }
 
-    function getYear(dob) {
-        var datearray = dob.split("/");
-        var newdate = datearray[1] + '/' + datearray[0] + '/' + datearray[2];
-        return new Date(newdate).getFullYear();
-    }
-
 
     function redirectToPatientDashboard() {
         window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
@@ -244,7 +238,7 @@ const VerifyHealthId = () => {
             {isDemoAuth && !checkIfNotNull(ndhmDetails) && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>}
             {isVerifyThroughABHASerice && checkIfNotNull(ndhmDetails) && ndhmDetails.id === undefined  && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
             {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && (ndhmDetails.id !== undefined || isHealthIdCreated || isVerifyABHAThroughFetchModes)
-             && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} isVerifyABHAThroughFetchModes={isVerifyABHAThroughFetchModes}/>}
+             && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} isVerifyABHAThroughFetchModes={isVerifyABHAThroughFetchModes || !isHealthIdCreated}/>}
         </div>
     );
 }

@@ -74,6 +74,7 @@ button:disabled {
   margin-left: 40%;
   font-size: medium;
   font-style: italic;
+  margin-top: 10px;
 }
 
 .note {
@@ -119,6 +120,12 @@ img {
 .downloadButton {
   text-align: center;
   width: 100%;
+}
+
+.create-btn {
+  text-align: center;
+  width: 100%;
+  margin-top: 20px;
 }
 
 .abha-card {

@@ -1,12 +1,13 @@
-button {
-    margin: 2px;
-    padding: 3px 10px;
-}
 .verify-health-id, .auth-modes, .otp-verify, .patient-details, .qr-code-scanner, .alternative-text, .direct-auth, .demo-auth-form-field, .create-healthId{
     display: flex;
     width: 100%;
     margin-top: 20px;
     margin-left: 25px;
+
+    button {
+        margin: 2px;
+        padding: 3px 10px;
+    }
 
     label {
         width: 50%;
