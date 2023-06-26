@@ -29,7 +29,7 @@ const LinkABHAAddress = (props) => {
         setProceed(true);
     }
 
-    function fetchLinkAddressGlobalPropery(){
+    function fetchLinkAddressGlobalProperty(){
         fetchGlobalProperty(enableLinkABHAAddress).then(response => {
             isLinkingEnabled = response === "true";
         });
@@ -37,7 +37,7 @@ const LinkABHAAddress = (props) => {
 
     useEffect(() => {
         if (isLinkingEnabled === undefined) {
-            fetchLinkAddressGlobalPropery()
+            fetchLinkAddressGlobalProperty()
         }
         document.addEventListener("click", handleClickOutside, false);
         return () => {
