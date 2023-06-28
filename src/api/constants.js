@@ -38,7 +38,8 @@ export const openmrsSession = "/openmrs/ws/rest/v1/session"
 export const globalPropertyUrl = "/openmrs/ws/rest/v1/bahmnicore/sql/globalproperty"
 export const cmSuffixProperty = 'bahmniHip.CM_SUFFIX'
 export const enableHealthIdVerification = 'bahmniHip.enableHealthIdVerification'
-export const enableDemographics = 'bahmniHip.EnableDemographics'
+export const enableDemographics = 'bahmniHip.enableDemographics'
+export const enableLinkABHAAddress = 'bahmniHip.enableLinkABHAAddress'
 export const serviceUnavailableError = {
     "error": {
         "message": "Service Unavailable. Please try again later"

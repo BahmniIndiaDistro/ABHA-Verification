@@ -3,8 +3,9 @@ import './creation.scss';
 import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
-import {cmSuffixProperty} from "../../api/constants";
+import {cmSuffixProperty, enableLinkABHAAddress} from "../../api/constants";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
+import {fetchGlobalProperty} from "../../api/hipServiceApi";
 
 const LinkABHAAddress = (props) => {
     const patient = props.patient;
@@ -18,6 +19,7 @@ const LinkABHAAddress = (props) => {
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
     const [isAbhaSelected, setIsAbhaSelected] = useState(false);
+    let isLinkingEnabled;
     const refEls = useRef({});
 
     const cmSuffix = localStorage.getItem(cmSuffixProperty)
@@ -27,7 +29,16 @@ const LinkABHAAddress = (props) => {
         setProceed(true);
     }
 
+    function fetchLinkAddressGlobalProperty(){
+        fetchGlobalProperty(enableLinkABHAAddress).then(response => {
+            isLinkingEnabled = response === "true";
+        });
+    }
+
     useEffect(() => {
+        if (isLinkingEnabled === undefined) {
+            fetchLinkAddressGlobalProperty()
+        }
         document.addEventListener("click", handleClickOutside, false);
         return () => {
           document.removeEventListener("click", handleClickOutside, false);
@@ -90,7 +101,9 @@ const LinkABHAAddress = (props) => {
                 {patient.phrAddress === undefined &&
                 <div className="no-abha-address">
                  <p className="note">No ABHA address found linked to the ABHA number</p>
-                 <p className="note">Please proceed with linking the ABHA address that is already mapped to the mobile number or email, or create a new ABHA address.</p>
+                 <p className="note">
+                     {isLinkingEnabled && <> Please proceed with linking the ABHA address that is already mapped to the mobile number or email, or </>}
+                 create a new ABHA address</p>
                 </div>}
                 {patient.phrAddress !== undefined &&
                 <div>
@@ -105,11 +118,11 @@ const LinkABHAAddress = (props) => {
                         <button type="button" disabled={healthIdIsVoided || !isAbhaSelected? true : false} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
-                <div className="left-button">
+                {isLinkingEnabled && <div className="left-button">
                     <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Link exisiting ABHA Address linked to Mobile/Email" onClick={gotoLink}>Link ABHA Address</button>
-                </div>
+                </div>}
 
-                <div className="right-button">
+                <div className={isLinkingEnabled ? "right-button" :"create-new-abhaAddress"}>
                     <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Create new ABHA Address" onClick={gotoCreate}>Create ABHA Address</button>
                 </div>
             </div>}
