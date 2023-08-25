@@ -482,6 +482,55 @@ export const updateHealthId = async (healthId) => {
     }
 };
 
+export const mobileGenerateOtp = async (mobileNumber) => {
+    const data = {
+        "mobile": mobileNumber
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.generateMobileOtp, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
+
+export const mobileVerifyOtp = async (otp) => {
+    const data = {
+        "otp": otp
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.verifyMobileOtp, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
+export const getPatientProfile = async (healthId) => {
+    const data = {
+        "healthId": healthId
+    };
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.getPatientProfileInfo, data, Constants.headers);
+        return response;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+};
+
 export const fetchPatientFromBahmniWithUuid = async (patientUuid) => {
     try {
         const response = await axios.get(Constants.bahmniUrl + Constants.existingPatientWithUuid + "/" + patientUuid, Constants.headers);
