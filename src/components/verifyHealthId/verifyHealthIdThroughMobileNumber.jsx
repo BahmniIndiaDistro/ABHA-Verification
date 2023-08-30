@@ -8,7 +8,7 @@ import {
 import Spinner from '../spinner/spinner';
 import './verifyHealthId.scss';
 import {checkIfNotNull} from "./verifyHealthId";
-import {mapPatient} from "../Common/Util";
+import {mapPatient} from "../Common/patientMapper";
 
 const VerifyHealthIdThroughMobileNumber = (props) => {
     const [mobileNumber, setMobileNumber] = useState('');
@@ -180,7 +180,7 @@ const VerifyHealthIdThroughMobileNumber = (props) => {
                 </div>}
                 {linkedABHANumber.length > 0 &&
                 <div>
-                    <h3>Multiple ABHA numbers found for the given mobile number. Please select one of the following</h3>
+                    <h3>ABHA numbers found for the given mobile number. Please select one of the following</h3>
                     {prepareMatchingPatientsList()}
                     {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                         Matching record with Health ID/PHR Address found

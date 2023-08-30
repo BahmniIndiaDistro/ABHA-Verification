@@ -11,17 +11,15 @@ export function mapPatient(patient){
         state: patient?.stateName,
         pincode: patient?.pincode
     };
-    const ndhm = {
+    return {
         healthIdNumber: patient?.healthIdNumber,
         id: patient?.healthId,
         gender: patient.gender,
         name: patient.name,
         isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
-        dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
+        dateOfBirth: patient?.birthdate === undefined ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
         address: address,
         identifiers: identifier,
         uuid: patient?.uuid
     };
-    console.log(ndhm);
-    return ndhm;
 }

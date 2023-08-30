@@ -3,7 +3,7 @@ import {authConfirm, healthIdConfirmOtp} from '../../api/hipServiceApi';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import {getDate} from "../Common/DateUtil";
-import {mapPatient} from "../Common/Util";
+import {mapPatient} from "../Common/patientMapper";
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
