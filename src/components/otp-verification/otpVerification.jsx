@@ -3,6 +3,7 @@ import {authConfirm, healthIdConfirmOtp} from '../../api/hipServiceApi';
 import Spinner from '../spinner/spinner';
 import {checkIfNotNull} from "../verifyHealthId/verifyHealthId";
 import {getDate} from "../Common/DateUtil";
+import {mapPatient} from "../Common/patientMapper";
 
 const OtpVerification = (props) => {
     const [otp, setOtp] = useState('');
@@ -18,7 +19,7 @@ const OtpVerification = (props) => {
         if(!props.isHealthNumberNotLinked){
             const response = await healthIdConfirmOtp(otp,props.selectedAuthMode);
             if(response.data !== undefined) {
-                mapPatient(response.data);
+                setNdhmDetails(mapPatient(response.data));
             }
             else {
                 setShowError(true);
@@ -40,31 +41,6 @@ const OtpVerification = (props) => {
         setLoader(false);
     }
 
-    function mapPatient(patient){
-        var identifier = patient?.mobile !== undefined ? [{
-            value: patient.mobile
-        }] : undefined;
-        var address =  {
-            line: [patient?.address],
-            city: patient?.townName,
-            district: patient?.districtName,
-            state: patient?.stateName,
-            pincode: patient?.pincode
-        };
-        const ndhm = {
-            healthIdNumber: patient?.healthIdNumber,
-            id: patient?.healthId,
-            gender: patient.gender,
-            name: patient.name,
-            isBirthDateEstimated: patient?.birthdate !== undefined ? false : (patient?.monthOfBirth == null || patient?.dayOfBirth == null),
-            dateOfBirth:  patient?.birthdate === undefined  ? getDate(patient) : patient?.birthdate.split('-').reverse().join('-'),
-            address: address,
-            identifiers: identifier,
-            uuid: patient?.uuid
-        };
-        setNdhmDetails(ndhm);
-    }
-
     function otpOnChangeHandler(e) {
         setOtp(e.target.value);
     }
@@ -80,14 +56,6 @@ const OtpVerification = (props) => {
             identifiers: patient.identifiers
         };
         return ndhm;
-    }
-
-    function addressAsString(address) {
-        var addressString = "";
-        for (var key in address) {
-            addressString += address[key] + ", ";
-        }
-        return addressString;
     }
 
 

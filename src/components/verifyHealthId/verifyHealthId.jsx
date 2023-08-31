@@ -13,7 +13,8 @@ import { FcWebcam } from 'react-icons/fc';
 import './verifyHealthId.scss';
 import DemoAuth from "../demo-auth/demoAuth";
 import CreateHealthId from "../otp-verification/create-healthId";
-import {enableHealthIdVerification} from "../../api/constants";
+import {enableHealthIdVerification, enableHealthIdVerificationThroughMobileNumber} from "../../api/constants";
+import VerifyHealthIdThroughMobileNumber from "./verifyHealthIdThroughMobileNumber";
 
 const VerifyHealthId = () => {
     const [id, setId] = useState('');
@@ -36,6 +37,9 @@ const VerifyHealthId = () => {
     const [error, setError] = useState('');
     const [isVerifyABHAThroughFetchModes, setIsVerifyABHAThroughFetchModes] = useState(false);
     const [isVerifyThroughABHASerice, setIsVerifyThroughABHASerice] = useState(false);
+    const [isVerifyThroughMobileNumberEnabled, setIsVerifyThroughMobileNumberEnabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [isMobileOtpVerified, setIsMobileOtpVerified] = useState(false);
 
     function idOnChangeHandler(e) {
         setId(e.target.value);
@@ -187,35 +191,54 @@ const VerifyHealthId = () => {
             setBack(false);
             setIsDemoAuth(false);
             setError('');
+            setIsMobileOtpVerified(false);
         }
 
     },[back])
+
+    useEffect(async () => {
+        var resp = await fetchGlobalProperty(enableHealthIdVerificationThroughMobileNumber)
+        if (resp.Error === undefined) {
+            setIsVerifyThroughMobileNumberEnabled(resp);
+        }
+    },[])
 
     return (
         <div>
         {!isDemoAuth && !checkIfNotNull(ndhmDetails) &&
             <div>
-                <div className="verify-health-id">
-                    <label htmlFor="healthId" className="label">Enter ABHA Number/ABHA Address: </label>
-                    <div className="verify-health-id-input-btn">
-                        <div className="verify-health-id-input">
-                            <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
+                {!isMobileOtpVerified &&
+                <div>
+                    <div className="verify-health-id">
+                        <label htmlFor="healthId" className="label">Enter ABHA Number/ABHA Address: </label>
+                        <div className="verify-health-id-input-btn">
+                            <div className="verify-health-id-input">
+                                <input type="text" id="healthId" name="healthId" value={id} onChange={idOnChangeHandler} />
+                            </div>
+                            <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails) || isDisabled}>Verify</button>
+                            {showError && <h6 className="error">{errorHealthId}</h6>}
                         </div>
-                        <button name="verify-btn" type="button" onClick={verifyHealthId} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Verify</button>
-                        {showError && <h6 className="error">{errorHealthId}</h6>}
                     </div>
-                </div>
-                <div className="alternative-text">
-                    OR
-                </div>
-                <div className="qr-code-scanner">
-                    <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || checkIfNotNull(ndhmDetails)}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
-                    {scanningStatus && <QrReader
-                        delay={10}
-                        onScan={handleScan}
-                        style={{ width: '60%', margin: '50px' }}
-                    />}
-                </div>
+                    <div className="alternative-text">
+                        OR
+                    </div>
+                    <div className="qr-code-scanner">
+                        <button name="scan-btn" type="button" onClick={()=> setScanningStatus(!scanningStatus)} disabled={showAuthModes || checkIfNotNull(ndhmDetails) || isDisabled}>Scan Patient's QR code <span id="cam-icon"><FcWebcam /></span></button>
+                        {scanningStatus && <QrReader
+                            delay={10}
+                            onScan={handleScan}
+                            style={{ width: '60%', margin: '50px' }}
+                        />}
+                    </div>
+                </div>}
+                {isVerifyThroughMobileNumberEnabled &&
+                <div>
+                    {!isMobileOtpVerified && <div className="alternative-text">
+                        OR
+                    </div>}
+                    <VerifyHealthIdThroughMobileNumber isDisabled={showAuthModes} setIsDisabled={setIsDisabled} setIsMobileOtpVerified={setIsMobileOtpVerified}
+                                                       ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>
+                </div>}
                 {matchingPatientFound && <div className="patient-existed" onClick={redirectToPatientDashboard}>
                     Matching record with Health ID/PHR Address found
                 </div>}
@@ -236,7 +259,7 @@ const VerifyHealthId = () => {
                 {showAuthModes && <AuthModes id={id} authModes={authModes} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsDemoAuth={setIsDemoAuth} isHealthNumberNotLinked={isHealthNumberNotLinked}/>}
             </div>}
             {isDemoAuth && !checkIfNotNull(ndhmDetails) && <DemoAuth id={id} ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setBack={setBack}/>}
-            {isVerifyThroughABHASerice && checkIfNotNull(ndhmDetails) && ndhmDetails.id === undefined  && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
+            {(isVerifyThroughABHASerice || isVerifyThroughMobileNumberEnabled) && checkIfNotNull(ndhmDetails) && ndhmDetails.id === undefined  && <CreateHealthId ndhmDetails={ndhmDetails} setNdhmDetails={setNdhmDetails} setIsHealthIdCreated={setIsHealthIdCreated} />}
             {!matchingPatientFound && !healthIdIsVoided && checkIfNotNull(ndhmDetails) && (ndhmDetails.id !== undefined || isHealthIdCreated || isVerifyABHAThroughFetchModes)
              && <PatientDetails ndhmDetails={ndhmDetails} id={id} setBack={setBack} isVerifyABHAThroughFetchModes={isVerifyABHAThroughFetchModes || !isHealthIdCreated}/>}
         </div>
