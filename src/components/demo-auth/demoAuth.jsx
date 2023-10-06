@@ -9,12 +9,15 @@ const DemoAuth = (props) => {
     const [showError, setShowError] = useState(false);
     const [loader, setLoader] = useState(false);
     const [ndhmDetails, setNdhmDetails] = [props.ndhmDetails,props.setNdhmDetails];
+    const isAadhaarDemoAuth = props.isAadhaarDemoAuth;
     const [demographics, setDemographics] = useState({
         name: '',
         gender: '',
         dateOfBirth: '',
         mobile: '',
-        identifier: null
+        identifier: null,
+        state: '',
+        district: ''
     });
     const [isValid, setIsValid] = useState(false);
 
@@ -79,11 +82,11 @@ const DemoAuth = (props) => {
         <div>
             <p className="note">Please provide your demographic details</p>
            <div className="demo-auth-form-field">
-               <label htmlFor="name" className="label">Enter Name: </label>
+               <label htmlFor="name" className="required-label">Enter Name: </label>
                <input type="text" name="name" value={demographics.name} onChange={handleInputChange} placeholder="Name" required/>
            </div>
            <div className="demo-auth-form-field">
-               <label htmlFor="gender" className="label">Choose Gender: </label>
+               <label htmlFor="gender" className="required-label">Choose Gender: </label>
                <select name="gender" onChange={handleInputChange} required>
                    <option value=''>Select gender..</option>
                    <option value="M">Male</option>
@@ -93,17 +96,28 @@ const DemoAuth = (props) => {
                </select>
            </div>
            <div className="demo-auth-form-field">
-               <label htmlFor="dateOfBirth" className="label">Enter Date of Birth: </label>
+               <label htmlFor="dateOfBirth" className="required-label">Enter Date of Birth: </label>
                <input type="date"  name="dateOfBirth" value={demographics.dateOfBirth} onChange={handleInputChange}
                       max={new Date().toISOString().split('T')[0]} placeholder="Date of Birth" required/>
            </div>
            <div className="demo-auth-form-field">
-               <label htmlFor="mobile" className="label">Enter Mobile Number: </label>
-               <input type="text" name="mobile" value={demographics.mobile} onChange={handleInputChange} placeholder="Mobile" required/>
+               <label htmlFor="mobile" className={isAadhaarDemoAuth ? "label": "required-label"}>Enter Mobile Number: </label>
+               <input type="text" name="mobile" value={demographics.mobile} onChange={handleInputChange} placeholder="Mobile" required={!isAadhaarDemoAuth}/>
            </div>
+            {isAadhaarDemoAuth && <div>
+                <div className="demo-auth-form-field">
+                    <label htmlFor="district" className="required-label">Enter District: </label>
+                    <input type="text" name="mobile" value={demographics.district} onChange={handleInputChange} placeholder="District" required/>
+                </div>
+                <div className="demo-auth-form-field">
+                    <label htmlFor="state" className="required-label">Enter State: </label>
+                    <input type="text" name="mobile" value={demographics.state} onChange={handleInputChange} placeholder="State" required/>
+                </div>
+            </div>}
             <div className="fetch-abdm-record">
                 <Footer setBack={props.setBack} />
-                <button className="demo-fetch-button" type="button" disabled={!isValid} onClick={confirmAuth}>Fetch ABDM Data</button>
+                <button className="demo-fetch-button" type="button" disabled={!isValid} onClick={confirmAuth}>
+                    {isAadhaarDemoAuth ? 'Create ABHA' : 'Fetch ABDM Data'}</button>
                 {showError && <h6 className="error">{errorMessage}</h6>}
             </div>
             {loader && <Spinner />}
