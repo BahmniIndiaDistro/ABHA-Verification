@@ -54,7 +54,10 @@ const PatientDetails = (props) => {
     }
 
     function getPhoneNumber() {
-        if(ndhmDetails?.identifiers !== undefined && ndhmDetails?.identifiers.length > 0){
+        if(ndhmDetails.phoneNumber){
+            return ndhmDetails.phoneNumber;
+        }
+        else if(ndhmDetails?.identifiers !== undefined && ndhmDetails?.identifiers.length > 0){
             var phoneNumber = ndhmDetails?.identifiers[0].value;
             var len = phoneNumber.length;
             return "+91".concat(phoneNumber.substring(len-10,len));
@@ -105,7 +108,7 @@ const PatientDetails = (props) => {
                 <div className={checkIfNotNull(selectedPatient) ? 'greyed-out' : ''}>
                     <b>ABDM Record: </b>
                     <PatientInfo patient={ndhmDetails}/><br/>
-                    {!props.isVerifyABHAThroughFetchModes &&
+                    {!props.isVerifyABHAThroughFetchModes && props.isVerifyABHAThroughFetchModes !== undefined &&
                     <div className="abha-card">
                         <ABHACard  healthIdNumber={ndhmDetails?.healthIdNumber}/>
                     </div>}

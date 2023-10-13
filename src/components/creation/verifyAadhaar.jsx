@@ -136,7 +136,7 @@ const VerifyAadhaar = props => {
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
-           {showDemographics && <DemoAuth isAadhaarDemoAuth={true}/>}
+           {showDemographics && <DemoAuth aadhaar={aadhaar} isAadhaarDemoAuth={true} />}
            {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} />}
         </div>
 

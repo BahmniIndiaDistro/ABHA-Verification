@@ -5,6 +5,7 @@ export const headers = {
 export const purpose = "KYC_AND_LINK";
 export const bahmniUrl = "/openmrs/ws/rest/v1/hip";
 export const hipServiceUrl ="/hiprovider";
+export const hipAadhaarDemographicsUrl = "/v1/hid/benefit/createHealthId/demo/auth";
 
 export const authModesUrl = "/v0.5/hip/fetch-modes";
 export const authInitUrl = "/v0.5/hip/auth/init";
