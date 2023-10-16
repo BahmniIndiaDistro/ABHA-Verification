@@ -5,6 +5,8 @@ import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
 import AadhaarConsent from "./AadhaarConsent";
+import AuthModes from "./AuthModes";
+import DemoAuth from "../demo-auth/demoAuth";
 
 const VerifyAadhaar = props => {
 
@@ -19,6 +21,9 @@ const VerifyAadhaar = props => {
     const [back, setBack] = useState(false);
     const [isConsentGranted, setConsentGrated] = useState(false);
     const [aadhaarError, setAadhaarError] = useState('');
+    const [showAuthMode, setShowAuthMode] = useState(false);
+    const [showDemographics, setShowDemographics] = useState(false);
+    const [selectedAuthMode, setSelectedAuthMode] = useState('');
 
 
     function idOnChangeHandler(e) {
@@ -30,26 +35,31 @@ const VerifyAadhaar = props => {
         setShowOtpInput(false);
     }
 
-    async function onVerify() {
+    async function getAuthModes(){
         setAadhaarError('');
-        setShowOtpInput(false);
         if (aadhaar === '') {
             setAadhaarError("Aadhaar number cannot be empty")
-        } else {
-            setLoader(true);
-            var response = await generateAadhaarOtp(aadhaar);
-            if(response){
-                setLoader(false);
-                if(response.data === undefined){
-                    if(response.details !== undefined && response.details.length > 0)
-                       setAadhaarError(response.details[0].message)
-                    else
-                        setAadhaarError("An error occurred while processing your request")
-                }
-                else {
-                    setShowOtpInput(true);
-                    setOtpReceivingNumber(response.data.mobileNumber);
-                }
+        }
+        else {
+            setShowAuthMode(true);
+        }
+    }
+
+    async function onVerify() {
+        setShowOtpInput(false);
+        setLoader(true);
+        var response = await generateAadhaarOtp(aadhaar);
+        if(response){
+            setLoader(false);
+            if(response.data === undefined){
+                if(response.details !== undefined && response.details.length > 0)
+                   setError(response.details[0].message)
+                else
+                    setError("An error occurred while processing your request")
+            }
+            else {
+                setShowOtpInput(true);
+                setOtpReceivingNumber(response.data.mobileNumber);
             }
         }
     }
@@ -94,9 +104,18 @@ const VerifyAadhaar = props => {
         }
     },[back]);
 
+    useEffect(async () => {
+        if(selectedAuthMode === "AADHAAR OTP") {
+            await onVerify();
+        }
+        if(selectedAuthMode === "AADHAAR DEMOGRAHICS") {
+            setShowDemographics(true);
+        }
+    }, [selectedAuthMode])
+
     return (
        <div className="abha-creation">
-           {!otpVerified && <div>
+           {!showDemographics && !otpVerified && <div>
            <div className="aadhaar">
                 <label htmlFor="aadhaar" className="label">Enter AADHAAR Number</label>
                 <div className="verify-aadhaar-input-btn">
@@ -106,14 +125,18 @@ const VerifyAadhaar = props => {
                 </div>
             </div>
             {aadhaarError !== '' && <h6 className="error">{aadhaarError}</h6>}
-            {!showOtpInput && <AadhaarConsent setConsentGrated={setConsentGrated}/>}
-           {!showOtpInput && !loader && <div className="center">
-                <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={onVerify}>Accept & Proceed</button>
+            {!showAuthMode && <AadhaarConsent setConsentGrated={setConsentGrated}/>}
+            {!showAuthMode && !loader && <div className="center">
+                <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={getAuthModes}>Accept & Proceed</button>
             </div>}
+            {showAuthMode &&
+                <AuthModes showOtpInput={showOtpInput} setSelectedAuthMode={setSelectedAuthMode}/>
+            }
             {showOtpInput && <VerifyOTP setOtp={setOtp} mobile={otpReceivingNumber}/>}
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
+           {showDemographics && <DemoAuth aadhaar={aadhaar} isAadhaarDemoAuth={true} />}
            {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} />}
         </div>
 

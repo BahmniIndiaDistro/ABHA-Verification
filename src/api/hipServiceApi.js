@@ -86,6 +86,19 @@ export const authConfirm = async (healthId, otp, demographics) => {
     }
 }
 
+export const aadhaarDemographicsAuth = async (demographics) => {
+    try {
+        const response = await axios.post(Constants.hipServiceUrl + Constants.hipAadhaarDemographicsUrl, demographics, Constants.headers);
+        return response.data;
+    }
+    catch (error) {
+        if (error.response !== undefined)
+            return error.response.data;
+        else
+            return Constants.serviceUnavailableError;
+    }
+}
+
 export const checkAndGetPatientDetails = async (healthId) => {
     try {
         const response = await axios.post(Constants.hipServiceUrl + Constants.getPatientForDirectAuthUrl + "?healthId=" + healthId ,Constants.headers);

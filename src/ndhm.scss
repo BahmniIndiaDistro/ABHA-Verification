@@ -41,9 +41,10 @@
 .demo-auth-form-field {
     input, select {
         padding: 2px;
+        margin-right: 4%;
     }
 
-    .label:after {
+    .required-label:after {
         content:" *";
         color: red;
     }

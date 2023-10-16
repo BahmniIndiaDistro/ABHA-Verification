@@ -1,0 +1,18 @@
+.react-datepicker__input-container input {
+    width: 283%;
+}
+
+.demo-auth-form-date-field {
+    label {
+        width: 50%;
+    }
+
+    .required-label:after {
+        content:" *";
+        color: red;
+        margin-right: 9%;
+    }
+    margin-left: 3.55%;
+    padding: 2px;
+    width: auto; 
+}
