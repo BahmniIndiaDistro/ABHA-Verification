@@ -64,17 +64,26 @@ const DemoAuth = (props) => {
 				demographics.identifier = { type: "MOBILE", value: demographics.mobileNumber };
 				response = await authConfirm(props.id, null, demographics);
 			}
-			if (("error" in response && response.error !== undefined) || ("Error" in response && response.Error !== undefined)) {
-				setShowError(true);
-				if (response.error.code === 1441) {
-					setErrorMessage("The authentication was unsuccessful. Please check the details you entered.");
-				} else {
-					setErrorMessage((response.Error && response.Error.Message) || response.error.message);
-				}
-			} else {
-				isAadhaarDemoAuth ? setAadhaarDemographicsResponse(parseDemographicsNdhmDetails(response)) : setNdhmDetails(parseNdhmDetails(response));
-			}
-			setLoader(false);
+			if(response) {
+			    setLoader(false);
+                if (response.name !== undefined) {
+                    isAadhaarDemoAuth ? setAadhaarDemographicsResponse(parseDemographicsNdhmDetails(response)) : setNdhmDetails(parseNdhmDetails(response));
+                }
+                else {
+                    setShowError(true);
+                    if (response.error !== undefined || response.Error !== undefined) {
+                        console.log("inside if error", response);
+                        if (response.error.code === 1441) {
+                            setErrorMessage("The authentication was unsuccessful. Please check the details you entered.");
+                        } else {
+                            setErrorMessage((response.Error && response.Error.Message) || response.error.message);
+                        }
+                    }
+                    else {
+                        setErrorMessage(response.message || "An error occurred while processing your request");
+                    }
+                }
+            }
 		}
 
     function parseNdhmDetails(patient) {
@@ -181,8 +190,8 @@ const DemoAuth = (props) => {
                  <Footer setBack={props.setBack} />
                  <button className="demo-fetch-button" type="button" disabled={isDisabled} onClick={confirmAuth}>
                      {isAadhaarDemoAuth ? 'Create ABHA' : 'Fetch ABDM Data'}</button>
-                 {showError && <h6 className="error">{errorMessage}</h6>}
              </div>
+             {showError && <h6 className="error-msg">{errorMessage}</h6>}
             </>
             } 
             {loader && <Spinner />}
