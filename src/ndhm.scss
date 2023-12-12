@@ -39,6 +39,15 @@
 }
 
 .demo-auth-form-field {
+    .date-picker {
+        width: 100%;
+    }
+
+    .dob-label {
+        width: 30%;
+        margin-right: 2%;
+    }
+
     input, select {
         padding: 2px;
         margin-right: 4%;

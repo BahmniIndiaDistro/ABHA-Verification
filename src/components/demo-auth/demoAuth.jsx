@@ -153,7 +153,7 @@ const DemoAuth = (props) => {
             </div>
             <FormGroup>
                  <FormControlLabel
-                     style={{marginLeft: "2.7%"}}
+                     style={{marginLeft: "2.7%", width: "100%"}}
                      control={<Switch checked={checked} onChange={handleChange} />}
                      label={
                          <Typography style={{ fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif', fontSize: '12px' }}>
@@ -162,9 +162,10 @@ const DemoAuth = (props) => {
                      }
                  />
              </FormGroup>
-            <div className="demo-auth-form-date-field">
-                <label htmlFor="dateOfBirth" className="required-label">{checked ? "Enter Year of Birth:" : "Enter Date of Birth:" } </label>
-                 <DatePicker
+             <div className="demo-auth-form-field">
+                <label htmlFor="dateOfBirth" className="dob-label required-label">{checked ? "Enter Year of Birth:" : "Enter Date of Birth:" } </label>
+                <DatePicker
+                     className="date-picker"
                      selected={selectedDate}
                      onChange={handleDateOfBirthChange}
                      showYearPicker={checked}
