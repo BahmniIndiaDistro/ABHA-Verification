@@ -3,7 +3,7 @@ import './creation.scss';
 import PatientDetails from "../patient-details/patientDetails";
 import VerifyMobileEmail from "./VerifyMobileEmail";
 import CreateABHAAddress from "./CreateABHAAddress";
-import {cmSuffixProperty, enableLinkABHAAddress} from "../../api/constants";
+import {enableLinkABHAAddress} from "../../api/constants";
 import CheckIdentifierExists from "../Common/CheckIdentifierExists";
 import {fetchGlobalProperty} from "../../api/hipServiceApi";
 
@@ -22,8 +22,6 @@ const LinkABHAAddress = (props) => {
     const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
     let isLinkingEnabled;
     const refEls = useRef({});
-
-    const cmSuffix = localStorage.getItem(cmSuffixProperty)
     
     function onProceed() {
         mapPatient();
@@ -65,7 +63,7 @@ const LinkABHAAddress = (props) => {
 
 
     function mapPatient(){
-        props.mappedPatient.id = abhaAddressCreated ? newAbhaAddress.concat(cmSuffix) : abhaAddress;
+        props.mappedPatient.id = abhaAddressCreated ? newAbhaAddress : abhaAddress;
     }
 
     function gotoLink(){
