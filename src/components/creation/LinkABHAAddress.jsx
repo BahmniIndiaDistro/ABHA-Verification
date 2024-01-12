@@ -99,10 +99,13 @@ const LinkABHAAddress = (props) => {
             <div>
                 {patient.phrAddress === undefined &&
                 <div className="no-abha-address">
-                 <p className="note">No ABHA address found linked to the ABHA number</p>
+                 <p className="note">You don't have ABHA Address/ Health Id linked to your ABHA Number</p>
                  <p className="note">
                      {isLinkingEnabled && <> Please proceed with linking the ABHA address that is already mapped to the mobile number or email, or </>}
                  create a new ABHA address</p>
+                    {!isLinkingEnabled &&
+                        <CreateABHAAddress setBack={setBack} newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} showCreateDefaultOption={true}/>
+                    }
                 </div>}
                 {patient.phrAddress !== undefined &&
                 <div>
@@ -116,7 +119,7 @@ const LinkABHAAddress = (props) => {
                     {abhaAddress !== '' && <div className="center">
                         <button type="button" disabled={healthNumberAlreadyLinked || healthIdIsVoided || !isAbhaSelected? true : false} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
-                </div>}
+
                 {isLinkingEnabled && <div className="left-button">
                     <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Link exisiting ABHA Address linked to Mobile/Email" onClick={gotoLink}>Link ABHA Address</button>
                 </div>}
@@ -124,6 +127,7 @@ const LinkABHAAddress = (props) => {
                 <div className={isLinkingEnabled ? "right-button" :"create-new-abhaAddress"}>
                     <button type="button" disabled={isAbhaSelected ? true : false} className="proceed" title="Create new ABHA Address" onClick={gotoCreate}>Create ABHA Address</button>
                 </div>
+                </div>}
             </div>}
             {!proceed && createNewABHA &&
              <CreateABHAAddress setBack={setBack} newAbhaAddress={newAbhaAddress} setNewAbhaAddress={setNewAbhaAddress} setABHAAddressCreated={setABHAAddressCreated} />

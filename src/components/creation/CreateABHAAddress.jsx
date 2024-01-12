@@ -96,12 +96,15 @@ const CreateABHAAddress = (props) => {
             <div className="center">
                 <button type="button" className="proceed" onClick={onCreate}>Create</button>
             </div>
-            <div className="alternative-text">
-                OR
-            </div>
-            <div className="create-default-healthId">
-                <button name="default-healthId-btn" type="button" onClick={createDefault}>Create Default ABHA Address</button>
-            </div>
+            {props?.showCreateDefaultOption !== undefined && props?.showCreateDefaultOption &&
+                <div>
+                    <div className="alternative-text">
+                        OR
+                    </div>
+                    <div className="create-default-healthId">
+                        <button name="default-healthId-btn" type="button" onClick={createDefault}>Create Default ABHA Address</button>
+                    </div>
+                </div>}
             {loader && <Spinner />}
             {error !== '' && <h6 className="error">{error}</h6>}
             <Footer setBack={props.setBack} />
