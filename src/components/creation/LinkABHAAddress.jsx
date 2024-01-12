@@ -19,6 +19,7 @@ const LinkABHAAddress = (props) => {
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [matchingPatientUuid, setMatchingPatientUuid] = useState(undefined);
     const [isAbhaSelected, setIsAbhaSelected] = useState(false);
+    const [healthNumberAlreadyLinked, setHealthNumberAlreadyLinked] = useState(false);
     let isLinkingEnabled;
     const refEls = useRef({});
 
@@ -113,9 +114,9 @@ const LinkABHAAddress = (props) => {
                         </div>
                             {phrAddressList}
                     </div>
-                    {isAbhaSelected && <CheckIdentifierExists id={abhaAddress} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid}/>}
+                    {isAbhaSelected && <CheckIdentifierExists id={abhaAddress} setHealthIdIsVoided={setHealthIdIsVoided} setMatchingPatientUuid={setMatchingPatientUuid} setHealthNumberAlreadyLinked={setHealthNumberAlreadyLinked}/>}
                     {abhaAddress !== '' && <div className="center">
-                        <button type="button" disabled={healthIdIsVoided || !isAbhaSelected? true : false} className="proceed" onClick={onProceed}>Proceed</button>
+                        <button type="button" disabled={healthNumberAlreadyLinked || healthIdIsVoided || !isAbhaSelected? true : false} className="proceed" onClick={onProceed}>Proceed</button>
                     </div>}
                 </div>}
                 {isLinkingEnabled && <div className="left-button">

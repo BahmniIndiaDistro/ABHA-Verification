@@ -1,5 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {fetchPatientFromBahmniWithHealthId, getHealthIdStatus} from '../../api/hipServiceApi';
+import {
+    checkIfHealthNumberExists,
+    fetchPatientFromBahmniWithHealthId,
+    getHealthIdStatus
+} from '../../api/hipServiceApi';
 import '../verifyHealthId/verifyHealthId.scss';
 
 const CheckIdentifierExists = (props) => {
@@ -8,6 +12,7 @@ const CheckIdentifierExists = (props) => {
     const [healthIdIsVoided, setHealthIdIsVoided] = useState(false);
     const [errorHealthId, setErrorHealthId] = useState('');
     const [showError, setShowError] = useState(false);
+    const [matchingPatientHasHealthIdNumberLinked, setMatchingPatientHasHealthIdNumberLinked] = useState(false);
 
     async function checkIfAlreadyExistingIdentifier(id) {
         if(props.setHealthIdIsVoided !== undefined)
@@ -30,6 +35,11 @@ const CheckIdentifierExists = (props) => {
                 else {
                     setMatchingPatientFound(true);
                     setMatchingPatientUuid(matchingPatientId.patientUuid);
+                    const response = await checkIfHealthNumberExists(matchingPatientId.patientUuid);
+                    if (response.Error === undefined && response !== "") {
+                        props?.setHealthNumberAlreadyLinked(response);
+                        setMatchingPatientHasHealthIdNumberLinked(response);
+                    }
                 }
                 if(props.setMatchingPatientUuid !== undefined)
                     props?.setMatchingPatientUuid(matchingPatientId.patientUuid);
@@ -47,9 +57,16 @@ const CheckIdentifierExists = (props) => {
         await checkIfAlreadyExistingIdentifier(props.id);
     },[props.id])
 
+    function redirectToPatientDashboard() {
+        window.parent.postMessage({"patientUuid" : matchingpatientUuid}, "*");
+    }
+
     return (
         <div>
-            {matchingPatientFound && <div className="matched-patient-info">Matching record with {props.id} found. Please proceed to update the record</div>}
+            {matchingPatientFound && !matchingPatientHasHealthIdNumberLinked && <div className="matched-patient-info">Matching record with {props.id} found. Please proceed to update the record with ABHA Number</div>}
+            {matchingPatientFound && matchingPatientHasHealthIdNumberLinked && <div className="patient-existed" onClick={redirectToPatientDashboard}>
+                Matching record with {props.id} found
+            </div>}
             {healthIdIsVoided && <div className="id-deactivated">
                 {props.id} is deactivated
             </div>}
