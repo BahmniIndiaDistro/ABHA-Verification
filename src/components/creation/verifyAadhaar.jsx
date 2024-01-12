@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import {generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
+import {fetchGlobalProperty, generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
 import AadhaarConsent from "./AadhaarConsent";
 import AuthModes from "./AuthModes";
 import DemoAuth from "../demo-auth/demoAuth";
+import {enableDemographics} from "../../api/constants";
 
 const VerifyAadhaar = props => {
 
@@ -105,13 +106,25 @@ const VerifyAadhaar = props => {
     },[back]);
 
     useEffect(async () => {
+        setError('');
         if(selectedAuthMode === "AADHAAR OTP") {
             await onVerify();
         }
         if(selectedAuthMode === "AADHAAR DEMOGRAHICS") {
-            setShowDemographics(true);
+            await checkIfAuthModeSupported();
         }
     }, [selectedAuthMode])
+
+    async function checkIfAuthModeSupported(){
+        setLoader(true);
+        const response = await fetchGlobalProperty(enableDemographics);
+        if (response.Error === undefined && response !== '' && response) {
+            setShowDemographics(true);
+        } else {
+            setError("The selected Authentication Mode is currently not supported!");
+        }
+        setLoader(false);
+    }
 
     return (
        <div className="abha-creation">
