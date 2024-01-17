@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import './creation.scss';
 import Spinner from "../spinner/spinner";
-import {checkIfABHAAddressExists, createABHAAddress} from "../../api/hipServiceApi";
+import {checkIfABHAAddressExists, createABHAAddress, createDefaultHealthId} from "../../api/hipServiceApi";
 import Footer from "./Footer";
 import {cmSuffixProperty} from "../../api/constants";
 
@@ -35,6 +35,7 @@ const CreateABHAAddress = (props) => {
                             if (response.data === undefined) {
                                 processingError(response);
                             } else {
+                                setNewAbhaAddress(newAbhaAddress.concat(cmSuffix));
                                 props.setABHAAddressCreated(true);
                             }
                         }
@@ -51,6 +52,20 @@ const CreateABHAAddress = (props) => {
         }
     }
 
+    async function createDefault() {
+        setLoader(true);
+        setError('');
+        const response = await createDefaultHealthId();
+        if (response.data !== undefined) {
+            setNewAbhaAddress(response.data.healthId);
+            props.setABHAAddressCreated(true);
+        }
+        else {
+            setError(response.details[0].message || response.message)
+        }
+        setLoader(false);
+    }
+
     function processingError(response){
         if (response.details !== undefined && response.details.length > 0)
             setError(response.details[0].message)
@@ -64,28 +79,35 @@ const CreateABHAAddress = (props) => {
 
     return (
         <div>
-            <div>
-                <div className="abha-address" >
-                    <label htmlFor="abhaAdddress">Enter new ABHA ADDRESS </label>
-                    <div className="abha-adddress-input" >
-                        <div className="new-abha-address-input">
-                            <input type="text" id="abhaAdddress" name="abhaAdddress" value={newAbhaAddress} onChange={OnChangeHandler} />
-                            <span className="abha-address-suffix">{cmSuffix}</span>
-                        </div>
+            <div className="abha-address" >
+                <label htmlFor="abhaAdddress">Enter new ABHA ADDRESS </label>
+                <div className="abha-adddress-input" >
+                    <div className="new-abha-address-input">
+                        <input type="text" id="abhaAdddress" name="abhaAdddress" value={newAbhaAddress} onChange={OnChangeHandler} />
+                        <span className="abha-address-suffix">{cmSuffix}</span>
                     </div>
                 </div>
-                <div className="center" >
-                    <input type="checkbox" id="preferred" checked={isPreferred} className="checkbox" onChange={OnClick}/>
-                    <span className="preferred"> Preferred </span>
-                </div>
-                <p className="message">Click on the check box to make the above abha-address as a default</p>
-                {error !== '' && <h6 className="error">{error}</h6>}
-                {loader && <Spinner />}
-                <div className="center">
-                    <button type="button" className="proceed" onClick={onCreate}>Create</button>
-                </div>
-                <Footer setBack={props.setBack} />
             </div>
+            <div className="center" >
+                <input type="checkbox" id="preferred" checked={isPreferred} className="checkbox" onChange={OnClick}/>
+                <span className="preferred"> Preferred </span>
+            </div>
+            <p className="message">Click on the check box to make the above abha-address as a default</p>
+            <div className="center">
+                <button type="button" className="proceed" onClick={onCreate}>Create</button>
+            </div>
+            {props?.showCreateDefaultOption !== undefined && props?.showCreateDefaultOption &&
+                <div>
+                    <div className="alternative-text">
+                        OR
+                    </div>
+                    <div className="create-default-healthId">
+                        <button name="default-healthId-btn" type="button" onClick={createDefault}>Create Default ABHA Address</button>
+                    </div>
+                </div>}
+            {loader && <Spinner />}
+            {error !== '' && <h6 className="error">{error}</h6>}
+            <Footer setBack={props.setBack} />
         </div>
     );
 }
