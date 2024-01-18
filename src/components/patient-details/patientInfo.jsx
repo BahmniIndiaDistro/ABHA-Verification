@@ -73,6 +73,16 @@ const PatientInfo = (props) => {
         return  new Date(patient.yearOfBirth,(patient?.monthOfBirth ?? 1) - 1,patient?.dayOfBirth ?? 1)
     }
 
+    function getPhoneNumber(){
+        if(patient?.phoneNumber !== undefined)
+            return patient.phoneNumber;
+        for (var identifier in patient.identifiers){
+            if(identifier.type === "MOBILE")
+                return identifier.value;
+        }
+        return '-';
+    }
+
     const address = getCustomAddress(patient);
     const healthIdNumber = getHealthNumber(patient);
     const age = calculateAge(getBirthDate(patient)).years;
@@ -82,7 +92,7 @@ const PatientInfo = (props) => {
             (Age:<strong> {!isNaN(age) ? age : '-'} </strong>,
             Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
             {address.length !== 0 && <span>Address: {address}<br/></span>}
-            Mobile: {patient?.phoneNumber || (patient?.identifiers != null && patient?.identifiers[0]?.type === "MOBILE" ? patient?.identifiers[0]?.value : '-')}
+            Mobile: {getPhoneNumber()}
             {patient?.id !== undefined && <span><br/>ABHA Address: {patient?.id}</span>}
             {patient?.healthId !== undefined && <span><br/>ABHA Address: {patient?.healthId}</span>}
             {healthIdNumber !== undefined && healthIdNumber !== null && <span><br/>ABHA Number: {healthIdNumber}</span>}
