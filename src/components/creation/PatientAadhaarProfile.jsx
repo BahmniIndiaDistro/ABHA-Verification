@@ -45,6 +45,7 @@ const PatientAadhaarProfile = (props) => {
 
     function mapPatient(){
         var identifier = patient?.phone !== undefined ? [{
+            type: "MOBILE",
             value: patient.phone
         }] : undefined;
         var address =  {
