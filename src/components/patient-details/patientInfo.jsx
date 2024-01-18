@@ -76,11 +76,11 @@ const PatientInfo = (props) => {
     function getPhoneNumber(){
         if(patient?.phoneNumber !== undefined)
             return patient.phoneNumber;
-        for (var identifier in patient.identifiers){
-            if(identifier.type === "MOBILE")
-                return identifier.value;
-        }
-        return '-';
+        const mobileIdentifier = patient.identifiers.find(identifier => {
+            return identifier.type === 'MOBILE';
+        });
+
+        return mobileIdentifier ? mobileIdentifier.value : '-';
     }
 
     const address = getCustomAddress(patient);
