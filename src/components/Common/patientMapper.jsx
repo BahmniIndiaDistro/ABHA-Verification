@@ -2,6 +2,7 @@ import {getDate} from "./DateUtil";
 
 export function mapPatient(patient){
     var identifier = patient?.mobile !== undefined ? [{
+        type: "MOBILE",
         value: patient.mobile
     }] : undefined;
     var address =  {
