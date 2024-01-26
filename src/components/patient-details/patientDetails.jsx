@@ -72,9 +72,9 @@ const PatientDetails = (props) => {
         var names = null;
         if(ndhmDetails.name) {
             const name = ndhmDetails?.name?.split(" ", 3);
-            var familyName = name?.length === 3 ? name[2] : (name?.length > 1 ? name[1] : '')
-            var middleName = name?.length === 3 ? name[1] : ''
-            var firstName= name?.length > 0 ? name[0]: '';
+            var familyName = name?.length === 3 ? name[2] : (name?.length > 1 ? name[1] : null)
+            var middleName = name?.length === 3 ? name[1] : null
+            var firstName= name?.length > 0 ? name[0]: null;
             names = new Name(familyName,[firstName,middleName]);
         }
         
