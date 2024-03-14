@@ -98,7 +98,7 @@ const PatientDetails = (props) => {
     function prepareMatchingPatientsList() {
         return patients.map((patient, i) => {
             return (
-                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'><PatientInfo patient={patient}/></button>
+                <button onClick={() => setSelectedPatient(patients[i])} disabled={checkIfNotNull(selectedPatient)} className='matching-patient'><PatientInfo patient={patient} showExistingPatient={true}/></button>
             );
         });
     }

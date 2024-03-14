@@ -89,8 +89,9 @@ const PatientInfo = (props) => {
     return (
         <p>
             <strong>{patient?.name?.replace(null,"")} </strong>
-            (Age:<strong> {!isNaN(age) ? age : '-'} </strong>,
-            Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>)<br/>
+            ({props.showExistingPatient && (<span><strong>{patient.patientId}</strong>) ,</span>)} Age:<strong> {!isNaN(age) ? age : '-'} </strong>,
+            Gender:<strong> {getPatientGender(patient?.gender) || '-'}</strong>
+            {!props.showExistingPatient && <span> ) </span>}<br/>
             {address.length !== 0 && <span>Address: {address}<br/></span>}
             Mobile: {getPhoneNumber()}
             {patient?.id !== undefined && <span><br/>ABHA Address: {patient?.id}</span>}
