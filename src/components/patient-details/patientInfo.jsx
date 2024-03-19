@@ -77,7 +77,7 @@ const PatientInfo = (props) => {
         if(patient?.phoneNumber !== undefined)
             return patient.phoneNumber;
         const mobileIdentifier = patient.identifiers.find(identifier => {
-            return identifier.type === 'MOBILE';
+            return identifier.type === 'MOBILE' || identifier.type === 'MR';
         });
 
         return mobileIdentifier ? mobileIdentifier.value : '-';
