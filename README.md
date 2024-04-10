@@ -5,6 +5,15 @@ This repo contains code for ABDM health Id verification feature.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Prerequisites
+Ensure that your Node version is 16 or lower.
+
+To install node 16,
+```
+nvm install 16
+nvm use 16
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
