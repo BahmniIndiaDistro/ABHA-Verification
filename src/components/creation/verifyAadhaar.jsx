@@ -60,7 +60,8 @@ const VerifyAadhaar = props => {
             }
             else {
                 setShowOtpInput(true);
-                setOtpReceivingNumber(response.data.mobileNumber);
+                let mobileNumber=response.data.message.split(" ").at(-1); 
+                setOtpReceivingNumber(mobileNumber);
             }
         }
     }
