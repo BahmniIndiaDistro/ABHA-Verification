@@ -111,20 +111,10 @@ const VerifyAadhaar = props => {
             await onVerify();
         }
         if(selectedAuthMode === "AADHAAR DEMOGRAHICS") {
-            await checkIfAuthModeSupported();
+            setShowDemographics(true);
         }
     }, [selectedAuthMode])
 
-    async function checkIfAuthModeSupported(){
-        setLoader(true);
-        const response = await fetchGlobalProperty(enableDemographics);
-        if (response.Error === undefined && response !== '' && response) {
-            setShowDemographics(true);
-        } else {
-            setError("The selected Authentication Mode is currently not supported!");
-        }
-        setLoader(false);
-    }
 
     return (
        <div className="abha-creation">
