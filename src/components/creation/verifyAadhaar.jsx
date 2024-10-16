@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import './creation.scss';
 import Spinner from "../spinner/spinner";
 import {generateAadhaarOtp} from "../../api/hipServiceApi";
-import PatientAadhaarProfile from "./PatientAadhaarProfile";
 import AadhaarConsent from "./AadhaarConsent";
 import AuthModes from "./AuthModes";
 import DemoAuth from "../demo-auth/demoAuth";
