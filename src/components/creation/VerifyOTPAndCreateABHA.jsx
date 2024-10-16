@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./creation.scss";
 import Spinner from "../spinner/spinner";
 import { verifyAadhaarOtpAndCreateABHA } from "../../api/hipServiceApi";
+import VerifyMobile from "./VerifyMobile";
 
 const VerifyOTPAndCreateABHA = (props) => {
 	const [otp, setOtp] = useState("");
 	const [mobile, setMobile] = useState("");
 	const [confirmDisabled, setConfirmDisabled] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState("");
+	const [isMobileVerification, setIsMobileVerification] = useState(false);
 
 	function otpOnChangeHandler(e) {
 		setOtp(e.target.value);
@@ -27,9 +30,18 @@ const VerifyOTPAndCreateABHA = (props) => {
 
 	async function verifyOTP() {
 		setIsLoading(true);
-        var response = await verifyAadhaarOtpAndCreateABHA(otp, mobile);
-        setIsLoading(false);
-        console.log(response);
+		var response = await verifyAadhaarOtpAndCreateABHA(otp, mobile);
+		setIsLoading(false);
+		if (response.error) {
+			setError(response.error.message);
+		} else {
+			let abhaProfile = response.data.abhaProfile;
+			if (!abhaProfile.mobile) {
+				setIsMobileVerification(true);
+			} else {
+                setIsMobileVerification(true);
+			}
+		}
 	}
 
 	return (
@@ -71,7 +83,9 @@ const VerifyOTPAndCreateABHA = (props) => {
 					Confirm
 				</button>
 			</div>
+			{error !== "" && <h6 className="error">{error}</h6>}
 			{isLoading && <Spinner />}
+			{isMobileVerification && <VerifyMobile mobile={mobile} />}
 		</div>
 	);
 };

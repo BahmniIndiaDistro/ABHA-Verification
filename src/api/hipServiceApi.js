@@ -241,7 +241,7 @@ export const generateMobileOtp = async (mobile) => {
         "mobile": mobile
     };
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.checkAndGenerateMobileOtp,data, Constants.headers);
+        const response = await axios.post(Constants.hipServiceUrl + Constants.generateABHAMobileOTP,data, Constants.headers);
         return response;
     }
     catch (error) {
