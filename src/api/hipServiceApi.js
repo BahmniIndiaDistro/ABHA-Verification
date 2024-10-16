@@ -219,12 +219,13 @@ export const generateAadhaarOtp = async (aadhaar) => {
     }
 }
 
-export const verifyAadhaarOtp = async (otp) => {
+export const verifyAadhaarOtpAndCreateABHA = async (otp,mobile) => {
     const data = {
-        "otp": otp
+        "otp": otp,
+        "mobile": mobile
     };
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.verifyAadhaarOtp,data, Constants.headers);
+        const response = await axios.post(Constants.hipServiceUrl + Constants.verifyAadhaarOtpAndCreateABHA,data, Constants.headers);
         return response;
     }
     catch (error) {

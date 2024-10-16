@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
 import './creation.scss';
-import VerifyOTP from "./verifyOtp";
 import Spinner from "../spinner/spinner";
-import {fetchGlobalProperty, generateAadhaarOtp, verifyAadhaarOtp} from "../../api/hipServiceApi";
+import {generateAadhaarOtp} from "../../api/hipServiceApi";
 import PatientAadhaarProfile from "./PatientAadhaarProfile";
 import AadhaarConsent from "./AadhaarConsent";
 import AuthModes from "./AuthModes";
 import DemoAuth from "../demo-auth/demoAuth";
-import {enableDemographics} from "../../api/constants";
+import VerifyOTPAndCreateABHA from "./VerifyOTPAndCreateABHA";
 
 const VerifyAadhaar = props => {
 
@@ -15,9 +14,6 @@ const VerifyAadhaar = props => {
     const [loader, setLoader] = useState(false);
     const [showOtpInput, setShowOtpInput] = useState(false);
     const [error, setError] = useState('');
-    const [otpVerified, setOtpVerified] = useState(false);
-    const [patient, setPatient] = useState({});
-    const [otp, setOtp] = useState('');
     const [otpReceivingNumber, setOtpReceivingNumber] = useState(false);
     const [back, setBack] = useState(false);
     const [isConsentGranted, setConsentGrated] = useState(false);
@@ -66,42 +62,13 @@ const VerifyAadhaar = props => {
         }
     }
 
-    async function verifyOtp() {
-        setError('');
-        if (otp === '') {
-            setError("otp cannot be empty")
-        } else {
-            setLoader(true);
-            var response = await verifyAadhaarOtp(otp);
-            if(response){
-                setLoader(false);
-                if(response.data === undefined){
-                    if(response.details !== undefined && response.details.length > 0)
-                        setError(response.details[0].message)
-                    else
-                        setError("An error occurred while processing your request")
-                }
-                else {
-                    setPatient(response.data);
-                    setOtpVerified(true);
-                }
-            }
-        }
-    }
-
-    useEffect(() => {
-        if(otp !== '')
-            verifyOtp();
-    },[otp]);
 
     useEffect (() => {
         if (back) {
             setAadhaar('');
             setShowOtpInput(false);
-            setOtp('');
             setError('');
             setLoader(false);
-            setOtpVerified(false);
             setBack(false);
         }
     },[back]);
@@ -119,7 +86,7 @@ const VerifyAadhaar = props => {
 
     return (
        <div className="abha-creation">
-           {!showDemographics && !otpVerified && <div>
+           {!showDemographics && <div>
            <div className="aadhaar">
                 <label htmlFor="aadhaar" className="label">Enter AADHAAR Number</label>
                 <div className="verify-aadhaar-input-btn">
@@ -136,12 +103,11 @@ const VerifyAadhaar = props => {
             {showAuthMode &&
                 <AuthModes showOtpInput={showOtpInput} setSelectedAuthMode={setSelectedAuthMode}/>
             }
-            {showOtpInput && <VerifyOTP setOtp={setOtp} mobile={otpReceivingNumber}/>}
+            {showOtpInput && <VerifyOTPAndCreateABHA mobile={otpReceivingNumber}/>}
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
            {showDemographics && <DemoAuth aadhaar={aadhaar} isAadhaarDemoAuth={true} />}
-           {otpVerified && <PatientAadhaarProfile patient={patient} setBack={setBack} />}
         </div>
 
     );
