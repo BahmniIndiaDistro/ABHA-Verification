@@ -23,7 +23,6 @@ const AuthModes = (props) => {
         if (response.Error === undefined && response !== "" && response) {
             setAuthModes([...authModes, 'AADHAAR DEMOGRAPHICS']);
         }
-        console.log(authModes);
         setLoader(false);
         setIsInitialised(true);
     }
