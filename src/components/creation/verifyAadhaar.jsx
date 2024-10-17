@@ -19,7 +19,6 @@ const VerifyAadhaar = props => {
     const [aadhaarError, setAadhaarError] = useState('');
     const [showAuthMode, setShowAuthMode] = useState(false);
     const [showDemographics, setShowDemographics] = useState(false);
-    const [selectedAuthMode, setSelectedAuthMode] = useState('');
 
 
     function idOnChangeHandler(e) {
@@ -72,15 +71,15 @@ const VerifyAadhaar = props => {
         }
     },[back]);
 
-    useEffect(async () => {
+    async function onAuthModeSelected(authMode){
         setError('');
-        if(selectedAuthMode === "AADHAAR OTP") {
+        if(authMode === "AADHAAR OTP") {
             await onVerify();
         }
-        if(selectedAuthMode === "AADHAAR DEMOGRAHICS") {
+        if(authMode === "AADHAAR DEMOGRAHICS") {
             setShowDemographics(true);
         }
-    }, [selectedAuthMode])
+    }
 
 
     return (
@@ -101,7 +100,7 @@ const VerifyAadhaar = props => {
                 <button type="button" disabled={!isConsentGranted} name="verify-btn" onClick={getAuthModes}>Accept & Proceed</button>
             </div>}
             {showAuthMode &&
-                <AuthModes showOtpInput={showOtpInput} setSelectedAuthMode={setSelectedAuthMode}/>
+                <AuthModes showOtpInput={showOtpInput} setSelectedAuthMode={onAuthModeSelected}/>
             }
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}

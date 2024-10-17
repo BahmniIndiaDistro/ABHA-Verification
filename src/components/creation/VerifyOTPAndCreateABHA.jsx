@@ -40,6 +40,7 @@ const VerifyOTPAndCreateABHA = (props) => {
 	}, [patient]);
 
 	async function verifyOTP() {
+        setError("");
 		setIsLoading(true);
 		var response = await verifyAadhaarOtpAndCreateABHA(otp, mobile);
 		setIsLoading(false);
