@@ -3,6 +3,7 @@ import "./creation.scss";
 import Spinner from "../spinner/spinner";
 import { verifyAadhaarOtpAndCreateABHA } from "../../api/hipServiceApi";
 import VerifyMobile from "./VerifyMobile";
+import LinkABHAAddress from "./LinkABHAAddress";
 
 const VerifyOTPAndCreateABHA = (props) => {
 	const [otp, setOtp] = useState("");
@@ -10,7 +11,11 @@ const VerifyOTPAndCreateABHA = (props) => {
 	const [confirmDisabled, setConfirmDisabled] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState("");
-	const [isMobileVerification, setIsMobileVerification] = useState(false);
+	const [requireMobileVerification, setRequireMobileVerification] =
+		useState(false);
+	const [isMobileVerified, setIsMobileVerified] = useState(false);
+	const [patient, setPatient] = useState({});
+	const [mappedPatient, setMappedPatient] = useState({});
 
 	function otpOnChangeHandler(e) {
 		setOtp(e.target.value);
@@ -28,6 +33,12 @@ const VerifyOTPAndCreateABHA = (props) => {
 		}
 	}, [otp, mobile]);
 
+	useEffect(() => {
+		if (Object.keys(patient).length !== 0) {
+			mapPatient();
+		}
+	}, [patient]);
+
 	async function verifyOTP() {
 		setIsLoading(true);
 		var response = await verifyAadhaarOtpAndCreateABHA(otp, mobile);
@@ -36,17 +47,51 @@ const VerifyOTPAndCreateABHA = (props) => {
 			setError(response.error.message);
 		} else {
 			let abhaProfile = response.data.abhaProfile;
-			if (!abhaProfile.mobile) {
-				setIsMobileVerification(true);
+			setPatient(response.data.abhaProfile);
+			if (abhaProfile.mobile === null) {
+				setRequireMobileVerification(true);
 			} else {
-				setIsMobileVerification(true);
+				setIsMobileVerified(true);
 			}
 		}
 	}
 
+	function onMobileVerifySuccess() {
+		setIsMobileVerified(true);
+	}
+
+	function mapPatient() {
+		var identifier = [
+			{
+				type: "MOBILE",
+				value: patient.mobile || mobile,
+			},
+		];
+		var address = {
+			line: patient.address,
+			district: patient?.districtName,
+			state: patient?.stateName,
+			pincode: patient?.pinCode,
+		};
+		const mappedPatientDetails = {
+			healthIdNumber: patient?.abhaNumber,
+			id: patient?.healthId,
+			gender: patient.gender,
+			name: [patient.firstName, patient.middleName, patient.lastName]
+				.filter((i) => i !== "" && i !== null)
+				.join(" "),
+			isBirthDateEstimated: patient?.dob !== undefined ? false : true,
+			dateOfBirth: patient?.dob.split("-").reverse().join("-"),
+			address: address,
+			identifiers: identifier,
+			uuid: patient?.uuid,
+		};
+		setMappedPatient(mappedPatientDetails);
+	}
+
 	return (
 		<div>
-			{!isMobileVerification && (
+			{!requireMobileVerification && !isMobileVerified && (
 				<div>
 					<h3>Verify Aadhaar OTP</h3>
 					<div className="input-and-label">
@@ -94,7 +139,12 @@ const VerifyOTPAndCreateABHA = (props) => {
 				</div>
 			)}
 			{isLoading && <Spinner />}
-			{isMobileVerification && <VerifyMobile mobile={mobile} />}
+			{requireMobileVerification && (
+				<VerifyMobile mobile={mobile} onVerifySuccess={onMobileVerifySuccess} />
+			)}
+			{isMobileVerified && (
+				<LinkABHAAddress patient={patient} mappedPatient={mappedPatient} />
+			)}
 		</div>
 	);
 };

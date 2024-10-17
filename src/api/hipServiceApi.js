@@ -390,13 +390,9 @@ export const transaction = async (authMethod) => {
     }
 }
 
-export const createABHAAddress = async (phrAddress,preferred) => {
-    const data = {
-        "phrAddress": phrAddress,
-        "preferred": preferred
-    };
+export const getAbhaAddressSuggestions = async () => {
     try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.createABHAAddress, data, Constants.headers);
+        const response = await axios.get(Constants.hipServiceUrl + Constants.getAbhaAddressSuggestions);
         return response;
     }
     catch (error) {
@@ -407,9 +403,12 @@ export const createABHAAddress = async (phrAddress,preferred) => {
     }
 }
 
-export const checkIfABHAAddressExists = async (phrAddress) => {
+export const createABHAAddress = async (abhaAddress) => {
+    const data = {
+        "abhaAddress": abhaAddress
+    };
     try {
-        const response = await axios.get(Constants.hipServiceUrl + Constants.checkIfABHAAddressExists + "?phrAddress=" + phrAddress, Constants.headers);
+        const response = await axios.post(Constants.hipServiceUrl + Constants.createABHAAddress, data, Constants.headers);
         return response;
     }
     catch (error) {
