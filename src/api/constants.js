@@ -21,7 +21,6 @@ export const verifyAadhaarOtpAndCreateABHA = "/v3/hip/verifyOtpAndCreateABHA"
 export const generateABHAMobileOTP = "/v3/hip/generateMobileOtp"
 export const verifyMobileOTP = "/v3/hip/verifyMobileOtp"
 export const getAbhaAddressSuggestions = "/v3/hip/getAbhaAddressSuggestions"
-export const createHealthIdByAdhaar = "/v2/registration/aadhaar/createHealthIdByAdhaar"
 export const getPngCard = "/v3/hip/getAbhaCard";
 export const searchHealthId = "/v2/search/searchHealthIdToLogin"
 export const healthIdAuthInit = "/v2/auth/init"

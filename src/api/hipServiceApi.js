@@ -268,19 +268,6 @@ export const verifyMobileOtp = async (otp) => {
     }
 }
 
-export const createABHA = async () => {
-    try {
-        const response = await axios.post(Constants.hipServiceUrl + Constants.createHealthIdByAdhaar, Constants.headers);
-        return response;
-    }
-    catch (error) {
-        if (error.response !== undefined)
-            return error.response.data;
-        else
-            return Constants.serviceUnavailableError;
-    }
-}
-
 export const getCard = async () => {
     try {
         const response = await axios.get(Constants.hipServiceUrl + Constants.getPngCard,{
