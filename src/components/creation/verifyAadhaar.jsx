@@ -85,7 +85,8 @@ const VerifyAadhaar = props => {
 
     return (
        <div className="abha-creation">
-           {!showDemographics && <div>
+           {(!showDemographics && !showOtpInput) && <div>
+            <h3>Aadhaar Consent and Authentication</h3>
            <div className="aadhaar">
                 <label htmlFor="aadhaar" className="label">Enter AADHAAR Number</label>
                 <div className="verify-aadhaar-input-btn">
@@ -102,10 +103,10 @@ const VerifyAadhaar = props => {
             {showAuthMode &&
                 <AuthModes showOtpInput={showOtpInput} setSelectedAuthMode={setSelectedAuthMode}/>
             }
-            {showOtpInput && <VerifyOTPAndCreateABHA mobile={otpReceivingNumber}/>}
             {error !== '' && <h6 className="error">{error}</h6>}
             {loader && <Spinner />}
            </div>}
+           {showOtpInput && <VerifyOTPAndCreateABHA mobile={otpReceivingNumber}/>}
            {showDemographics && <DemoAuth aadhaar={aadhaar} isAadhaarDemoAuth={true} />}
         </div>
 

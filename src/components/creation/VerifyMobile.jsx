@@ -93,7 +93,6 @@ const VerifyMobile = (props) => {
                         value:  response.data?.mobile
                     }] : undefined
                 }
-                setABHACreated(true);
             }
         }
     }
@@ -103,6 +102,7 @@ const VerifyMobile = (props) => {
         <div>
             {!proceed &&
                 <div>
+                    <h3>Verify ABHA Communication Mobile Number</h3>
                     <div>
                         <div className="mobile">
                             <label htmlFor="mobile" className="label">Mobile Number:</label>
@@ -110,18 +110,18 @@ const VerifyMobile = (props) => {
                                 <div className="verify-mobile-input">
                                     <input type="text" id="mobile" name="mobile" value={props.mobile} disabled={true}/>
                                 </div>
-                                <button name="verify-btn" type="submit" onClick={onVerify} disabled={abhaCreated}>Verify</button>
+                                <button name="verify-btn" type="submit" onClick={onVerify} disabled={loader || otpVerified || showOtpInput}>Verify</button>
                             </div>
                         </div>
                     </div>
-                    {showOtpInput && <VerifyOTP setOtp={setOtp} disabled={otpVerified}/>}
+                    {showOtpInput && <VerifyOTP setOtp={setOtp} disabled={otpVerified} mobile={mobile}/>}
                     {error !== '' && <h6 className="error">{error}</h6>}
                     {showSuccessMsg && <div>
                         {otpVerified && <p className="note success"><GoVerified/> <strong>OTP Verfied Successfully</strong></p>}
                     </div>}
                     {(otpVerified) &&
                     <div className="create-btn">
-                        <button type="button" className="proceed" onClick={createABHANumber} disabled={abhaCreated}>
+                        <button type="button" className="proceed" onClick={createABHANumber}>
                             Create ABHA Number
                         </button>
                     </div>}
