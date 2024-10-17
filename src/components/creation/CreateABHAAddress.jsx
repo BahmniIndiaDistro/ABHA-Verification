@@ -17,21 +17,22 @@ const CreateABHAAddress = (props) => {
 		props.setNewAbhaAddress,
 	];
 	const cmSuffix = localStorage.getItem(cmSuffixProperty);
+    const [lodingAbhaAddressSuggestions, setLodingAbhaAddressSuggestions] = useState(false);
 	const [abhaAddressSuggestions, setAbhaAddressSuggestions] = useState([]);
 
 	useEffect(async () => {
-		setLoader(true);
+		setLodingAbhaAddressSuggestions(true);
 		let response = await getAbhaAddressSuggestions();
 		if (response.data !== undefined) {
-			setLoader(false);
+			setLodingAbhaAddressSuggestions(false);
 			const fetchedOptions = response.data.abhaAddressList.map((item) => ({
 				label: item,
 				value: item,
 			}));
 			setAbhaAddressSuggestions(fetchedOptions);
 		} else {
-			setLoader(false);
-			setError("An error occurred while getting suggestions");
+			setLodingAbhaAddressSuggestions(false);
+			console.error("An error occurred while getting suggestions");
 		}
 	}, []);
 
@@ -62,13 +63,14 @@ const CreateABHAAddress = (props) => {
 	return (
 		<div>
 			<div className="abha-address">
-				<label htmlFor="abhaAdddress">Enter new ABHA ADDRESS </label>
+				<label htmlFor="abhaAdddress">Enter custom ABHA Address or Select from suggestions </label>
 				<div className="abha-adddress-input">
 					<div>
 						<Autocomplete
 							id="free-solo-demo"
 							freeSolo
 							options={abhaAddressSuggestions.map((option) => option.label)}
+							loading={lodingAbhaAddressSuggestions}
 							inputValue={newAbhaAddress}
 							onInputChange={(event, value) => setNewAbhaAddress(value)}
 							renderInput={(params) => (
@@ -82,6 +84,11 @@ const CreateABHAAddress = (props) => {
 											<InputAdornment position="end">{cmSuffix}</InputAdornment>
 										),
 									}}
+									noOptionsText={
+										lodingAbhaAddressSuggestions
+											? "Getting suggestions..."
+											: "No suggestions"
+									}
 								/>
 							)}
 						/>
